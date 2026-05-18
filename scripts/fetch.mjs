@@ -8,7 +8,7 @@ import { REGISTRY } from '../src/registry.mjs';
 import { fetchAllSeries } from '../src/fred.mjs';
 import { normalizeIndicator, buildSnapshot } from '../src/scoring.mjs';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
 async function main() {
   const apiKey = process.env.FRED_API_KEY;

@@ -21,8 +21,8 @@ let historyData = [];
 
 async function loadData() {
   const [currentRes, historyRes] = await Promise.all([
-    fetch('../data/current.json'),
-    fetch('../data/history.json')
+    fetch('./data/current.json'),
+    fetch('./data/history.json')
   ]);
 
   if (!currentRes.ok) throw new Error('No snapshot found. Run the GitHub Action once to generate data.');
