@@ -1,0 +1,13 @@
+{
+  "name": "recession-tracker",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test tests/*.mjs",
+    "fetch": "node scripts/fetch.mjs"
+  }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recession Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Recession Tracker</h1>
+        <p class="subtitle">Macro + micro indicators from FRED. Updated twice weekly.</p>
+      </div>
+      <div class="meta">
+        <div>As of <span id="asOf">loading...</span></div>
+        <div class="muted">Generated <span id="generatedAt">loading...</span></div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-label">Composite Recession Risk</div>
+      <div class="hero-score" id="compositeScore">--</div>
+      <div class="hero-alert"><span class="badge" id="compositeAlert">--</span></div>
+    </section>
+
+    <section class="layers" id="layerCards"></section>
+
+    <section class="panel">
+      <h2>Composite History</h2>
+      <p class="muted">History accumulates from each scheduled snapshot. Chart populates as data builds.</p>
+      <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
+    </section>
+
+    <section class="panel">
+      <h2>Indicator Detail</h2>
+      <div class="filter-row">
+        <select id="layerFilter">
+          <option value="">All layers</option>
+        </select>
+        <select id="categoryFilter">
+          <option value="">Macro + micro</option>
+          <option value="macro">Macro only</option>
+          <option value="micro">Micro only</option>
+        </select>
+      </div>
+      <table id="indicatorTable">
+        <thead>
+          <tr>
+            <th>Indicator</th>
+            <th>Layer</th>
+            <th>Cat</th>
+            <th>Latest</th>
+            <th>Date</th>
+            <th>Threshold</th>
+            <th>Score</th>
+            <th>Alert</th>
+          </tr>
+        </thead>
+        <tbody id="indicatorTableBody"></tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p class="muted">Data: <a href="https://fred.stlouisfed.org" target="_blank">FRED, Federal Reserve Bank of St. Louis</a>. Source: <a id="repoLink" href="#" target="_blank">GitHub</a>.</p>
+    </footer>
+  </div>
+
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
