@@ -44,7 +44,7 @@ export const REGISTRY = [
   { name: "Bank Lending Standards (C&I)", fred_id: "DRTSCILM", layer: "micro", frequency: "quarterly", direction: "inverse", weight: 0.20, threshold: 20.0, category: "micro", description: "Net % of banks tightening C&I loan standards. Survey." },
   { name: "Consumer Credit Delinquency", fred_id: "DRCCLACBS", layer: "micro", frequency: "quarterly", direction: "inverse", weight: 0.20, threshold: 3.0, category: "micro", description: "Credit card delinquency rate. Household stress." },
   { name: "Small Business Optimism", fred_id: "NFIBOPTMI", layer: "micro", frequency: "monthly", direction: "direct", weight: 0.20, threshold: 95.0, category: "micro", description: "NFIB Small Business Optimism Index." },
-  { name: "JOLTS Job Openings", fred_id: "JTSJOL", layer: "micro", frequency: "monthly", direction: "direct", weight: 0.20, threshold: 5500000, category: "micro", description: "Employer demand. Threshold calibrated to recessionary trough range." }
+  { name: "JOLTS Job Openings", fred_id: "JTSJOL", layer: "micro", frequency: "monthly", direction: "direct", weight: 0.20, threshold: 5500, category: "micro", description: "Employer demand. FRED reports in thousands; 5500 = 5.5M openings, recessionary trough range." }
 ];
 
 export const LAYER_WEIGHTS = {
