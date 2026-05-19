@@ -67,6 +67,10 @@
     .trend.up   { color: var(--red); }
     .trend.down { color: var(--green); }
     .trend.flat { color: var(--muted); }
+    .rating-badge { font-size: 13px; font-weight: 700; padding: 3px 10px;
+                    border-radius: 999px; background: rgba(255,255,255,0.07);
+                    color: var(--text); letter-spacing: 0.02em; }
+    .confidence-badge { font-size: 11px; color: var(--muted); margin-left: 4px; }
     .hero-right { }
     .risk-bar-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
                       letter-spacing: 0.1em; margin-bottom: 10px; }
@@ -134,6 +138,10 @@
     th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); }
     th { font-weight: 600; color: var(--muted); text-transform: uppercase;
          font-size: 11px; letter-spacing: 0.06em; white-space: nowrap; }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { color: var(--text); }
+    th.sort-asc::after  { content: ' ↑'; color: var(--accent); }
+    th.sort-desc::after { content: ' ↓'; color: var(--accent); }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255,255,255,0.02); }
     .ind-name { font-weight: 600; cursor: default; }
@@ -216,7 +224,11 @@
       <div class="hero-score" id="compositeScore">—</div>
       <div class="hero-badge-row">
         <span class="badge" id="compositeAlert">—</span>
+        <span class="rating-badge" id="ratingBadge">—/10</span>
         <span class="trend" id="compositeTrend"></span>
+      </div>
+      <div style="margin-top:6px">
+        <span class="confidence-badge" id="confidenceBadge"></span>
       </div>
     </div>
     <div class="hero-right">
@@ -276,14 +288,14 @@
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Indicator</th>
-          <th>Layer</th>
+          <th class="sortable" data-col="name">Indicator</th>
+          <th class="sortable" data-col="layer">Layer</th>
           <th>Latest</th>
-          <th>As of</th>
+          <th class="sortable" data-col="latest_date">As of</th>
           <th>Threshold</th>
           <th>Direction</th>
-          <th>Score</th>
-          <th>Alert</th>
+          <th class="sortable sort-desc" data-col="score">Score</th>
+          <th class="sortable" data-col="alert">Alert</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -487,6 +499,8 @@ function renderHeader(current) {
 function renderHero(current, history) {
   const score = current.composite?.score ?? 0;
   const alert = current.composite?.alert ?? 'GREEN';
+  const rating = current.composite?.rating ?? '—';
+  const confidence = current.composite?.confidence ?? null;
   const color = scoreColor(score);
 
   const scoreEl = document.getElementById('compositeScore');
@@ -496,6 +510,15 @@ function renderHero(current, history) {
   const alertEl = document.getElementById('compositeAlert');
   alertEl.textContent = alert;
   alertEl.className   = `badge ${alertClass(alert)}`;
+
+  document.getElementById('ratingBadge').textContent = `${rating}/10`;
+
+  if (confidence !== null) {
+    const pct = Math.round(confidence * 100);
+    const confEl = document.getElementById('confidenceBadge');
+    confEl.textContent = `${pct}% indicators live`;
+    confEl.style.color = pct < 80 ? 'var(--yellow)' : 'var(--muted)';
+  }
 
   // Trend vs previous history entry
   const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
@@ -725,9 +748,32 @@ function renderChart(history) {
 
 // ─── RENDER: TABLE ───────────────────────────────────────────────────────────
 let allIndicators = [];
+let sortCol = 'score';
+let sortDir = 'desc';
+
+const ALERT_ORDER = { RED: 2, YELLOW: 1, GREEN: 0 };
+
+function sortIndicators(list) {
+  return [...list].sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (sortCol === 'alert') { av = ALERT_ORDER[av] ?? 0; bv = ALERT_ORDER[bv] ?? 0; }
+    if (av === null || av === undefined) av = sortDir === 'asc' ? Infinity : -Infinity;
+    if (bv === null || bv === undefined) bv = sortDir === 'asc' ? Infinity : -Infinity;
+    if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    return sortDir === 'asc' ? av - bv : bv - av;
+  });
+}
+
+function updateSortHeaders() {
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (th.dataset.col === sortCol) th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+  });
+}
 
 function renderTable(indicators) {
   allIndicators = indicators;
+  updateSortHeaders();
   applyFilters();
 }
 
@@ -736,12 +782,12 @@ function applyFilters() {
   const cat   = document.getElementById('categoryFilter').value;
   const alrt  = document.getElementById('alertFilter').value;
 
-  const filtered = allIndicators.filter(ind => {
+  const filtered = sortIndicators(allIndicators.filter(ind => {
     if (layer && ind.layer !== layer) return false;
     if (cat   && ind.category !== cat) return false;
     if (alrt  && ind.alert !== alrt)   return false;
     return true;
-  });
+  }));
 
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
@@ -796,6 +842,21 @@ document.getElementById('methToggle').addEventListener('click', () => {
 // ─── FILTER LISTENERS ─────────────────────────────────────────────────────────
 ['layerFilter','categoryFilter','alertFilter'].forEach(id => {
   document.getElementById(id).addEventListener('change', applyFilters);
+});
+
+// ─── SORT LISTENERS ───────────────────────────────────────────────────────────
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) {
+      sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortCol = col;
+      sortDir = col === 'score' || col === 'alert' ? 'desc' : 'asc';
+    }
+    updateSortHeaders();
+    applyFilters();
+  });
 });
 
 // ─── ERROR ────────────────────────────────────────────────────────────────────

@@ -130,13 +130,18 @@ export function ratingScore(score) {
 export function buildSnapshot(normalizedIndicators, asOfDate) {
   const layerScores = computeLayerScores(normalizedIndicators);
   const compositeScore = computeCompositeScore(layerScores);
+  const withData = normalizedIndicators.filter(x => x.latest !== null).length;
+  const confidence = normalizedIndicators.length > 0
+    ? Number((withData / normalizedIndicators.length).toFixed(2))
+    : 0;
   return {
     as_of: asOfDate || new Date().toISOString().slice(0, 10),
     generated_at: new Date().toISOString(),
     composite: {
       score: compositeScore,
       alert: alertState(compositeScore),
-      rating: ratingScore(compositeScore)
+      rating: ratingScore(compositeScore),
+      confidence
     },
     layers: Object.fromEntries(
       Object.entries(layerScores).map(([layer, score]) => [
