@@ -68,6 +68,22 @@
     .banner-stale  { background: rgba(241,200,74,0.08); border: 1px solid rgba(241,200,74,0.25);
                      color: var(--yellow); }
 
+    /* ── TABS ────────────────────────────────────────────────────────────────── */
+    .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border);
+            margin-bottom: 24px; flex-wrap: wrap; }
+    .tab-btn { background: none; border: none; color: var(--muted);
+               padding: 10px 18px; font-size: 14px; font-weight: 600;
+               cursor: pointer; font-family: inherit; border-bottom: 2px solid transparent;
+               margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
+               text-decoration: none; display: inline-block; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-content[hidden] { display: none !important; }
+
+    /* ── BACKTEST STATS GRID ─────────────────────────────────────────────────── */
+    .bt-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+                gap:14px; margin-bottom:20px; }
+
     /* ── EXTRA STATS ROW ─────────────────────────────────────────────────────── */
     .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
                  margin-bottom: 20px; }
@@ -280,6 +296,17 @@
   <div class="banner banner-error"  id="errorBanner"></div>
   <div class="banner banner-stale"  id="staleBanner"></div>
 
+  <!-- TAB NAVIGATION -->
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="live">Live Dashboard</button>
+    <button class="tab-btn"        data-tab="backtest">30-Year Backtest</button>
+    <button class="tab-btn"        data-tab="methodology">Methodology</button>
+    <a class="tab-btn" href="feed.xml" target="_blank" rel="noopener">RSS Feed ↗</a>
+    <a class="tab-btn" href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub ↗</a>
+  </nav>
+
+  <div class="tab-content" id="tab-live">
+
   <!-- COMPOSITE HERO -->
   <section class="hero">
     <div class="hero-left">
@@ -324,11 +351,9 @@
       <div class="stat-sub" id="ycSub">—</div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">More views</div>
-      <div class="stat-value" style="font-size:16px;font-weight:600;line-height:1.5">
-        <a href="backtest.html">30-year backtest →</a><br>
-        <a href="feed.xml">RSS feed →</a>
-      </div>
+      <div class="stat-label">Data confidence</div>
+      <div class="stat-value" id="confidenceValue">—</div>
+      <div class="stat-sub" id="confidenceSub">fraction of indicators reporting live data</div>
     </div>
   </section>
 
@@ -392,13 +417,45 @@
     </div>
   </section>
 
-  <!-- METHODOLOGY -->
+  </div><!-- /tab-live -->
+
+  <!-- BACKTEST TAB -->
+  <div class="tab-content" id="tab-backtest" hidden>
+    <section class="bt-stats" id="btStats"></section>
+    <section class="panel">
+      <div class="panel-header"><h2>Composite score · 30-year backtest</h2></div>
+      <p class="panel-sub">Each point = end-of-month replay using only data available at that cutoff (no look-ahead). Shaded bands = NBER-dated US recessions.</p>
+      <div class="chart-wrap" style="height:420px"><canvas id="backtestChart"></canvas></div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted)">
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:#66b3ff;margin-right:6px;vertical-align:middle"></span>Composite score</span>
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:rgba(255,122,122,0.3);margin-right:6px;vertical-align:middle"></span>NBER recession</span>
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:rgba(241,200,74,0.5);margin-right:6px;vertical-align:middle"></span>30 = YELLOW threshold</span>
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:rgba(255,122,122,0.5);margin-right:6px;vertical-align:middle"></span>60 = RED threshold</span>
+      </div>
+    </section>
+    <section class="panel">
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">
+        <strong>How to read this:</strong> the model is calibrated for relative signal monitoring,
+        not point-prediction. A useful model should spend most pre-recession periods in YELLOW
+        or RED before NBER calls a recession, and most expansion periods in GREEN.
+        Crossings into RED during expansions are false positives; ideally there are few.
+      </p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px">
+        <strong>Limitations:</strong> the z-score window is 60 months (5 years), so very early
+        backtest years have noisier scores. Layer weights are doctrinal, not optimized against
+        NBER chronology, so this is a sanity check rather than a hold-out evaluation.
+      </p>
+    </section>
+  </div>
+
+  <!-- METHODOLOGY TAB -->
+  <div class="tab-content" id="tab-methodology" hidden>
   <section class="panel">
-    <button class="methodology-toggle" id="methToggle" aria-expanded="false">
+    <button class="methodology-toggle" id="methToggle" aria-expanded="true">
       <h2>How it works</h2>
-      <span class="chevron" id="chevron">▾</span>
+      <span class="chevron open" id="chevron">▾</span>
     </button>
-    <div class="methodology-body" id="methBody">
+    <div class="methodology-body open" id="methBody">
       <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">
         The composite score blends 24 FRED indicators across 5 economic layers.
         Each indicator is normalized to a 0–100 risk scale, then weighted and
@@ -451,20 +508,14 @@
         <strong>Limitations:</strong> Layer weights are doctrinal, not empirically optimized against NBER
         chronology. Alert thresholds are calibrated by intuition. Series have different release lags
         (daily ≈ 1 day stale, monthly ≈ 1–2 months, quarterly ≈ 3–4 months). The composite blends
-        these without stale-adjusting. No backtest has been run. Treat as relative signal monitoring,
-        not a recession prediction model.
+        these without stale-adjusting. See the Backtest tab for a 30-year NBER-overlaid replay.
       </div>
     </div>
   </section>
+  </div><!-- /tab-methodology -->
 
   <footer>
-    <p>Data: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED, Federal Reserve Bank of St. Louis</a>
-    &nbsp;·&nbsp;
-    <a href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub Source</a>
-    &nbsp;·&nbsp;
-    <a href="feed.xml">RSS</a>
-    &nbsp;·&nbsp;
-    <a href="backtest.html">Backtest</a></p>
+    <p>Data: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED, Federal Reserve Bank of St. Louis</a></p>
   </footer>
 </div>
 
@@ -625,6 +676,10 @@ function renderHero(current, history) {
     const confEl = document.getElementById('confidenceBadge');
     confEl.textContent = `${pct}% indicators live`;
     confEl.style.color = pct < 80 ? 'var(--yellow)' : 'var(--muted)';
+
+    const cv = document.getElementById('confidenceValue');
+    cv.textContent = `${pct}%`;
+    cv.style.color = pct < 80 ? 'var(--yellow)' : pct < 100 ? 'var(--text)' : 'var(--green)';
   }
 
   // Recession probability + yield curve cards
@@ -965,15 +1020,7 @@ function applyFilters() {
   });
 }
 
-// ─── METHODOLOGY TOGGLE ───────────────────────────────────────────────────────
-document.getElementById('methToggle').addEventListener('click', () => {
-  const body = document.getElementById('methBody');
-  const chev = document.getElementById('chevron');
-  const btn  = document.getElementById('methToggle');
-  const open = body.classList.toggle('open');
-  chev.classList.toggle('open', open);
-  btn.setAttribute('aria-expanded', open);
-});
+// Methodology lives in its own tab now; the collapse toggle is a no-op kept for compat.
 
 // ─── FILTER LISTENERS ─────────────────────────────────────────────────────────
 ['layerFilter','categoryFilter','alertFilter'].forEach(id => {
@@ -1021,6 +1068,7 @@ function writeUrlState() {
   set('alertFilter', 'alert');
   if (sortCol !== 'score') params.set('sort', sortCol);
   if (sortDir !== 'desc')  params.set('dir', sortDir);
+  if (activeTab && activeTab !== 'live') params.set('tab', activeTab);
   const str = params.toString();
   history.replaceState(null, '', str ? `#${str}` : location.pathname);
 }
@@ -1242,8 +1290,148 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+const NBER_RECESSIONS = [
+  { start: '1990-07-01', end: '1991-03-31' },
+  { start: '2001-03-01', end: '2001-11-30' },
+  { start: '2007-12-01', end: '2009-06-30' },
+  { start: '2020-02-01', end: '2020-04-30' }
+];
+let backtestRendered = false;
+let activeTab = 'live';
+
+function setTab(name) {
+  if (!['live','backtest','methodology'].includes(name)) name = 'live';
+  activeTab = name;
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.hidden = c.id !== `tab-${name}`;
+  });
+  writeUrlState();
+  if (name === 'backtest' && !backtestRendered) {
+    renderBacktest();
+    backtestRendered = true;
+  }
+}
+
+document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => setTab(btn.dataset.tab));
+});
+
+async function renderBacktest() {
+  let data;
+  try {
+    data = await fetch(`data/backtest.json?t=${Date.now()}`).then(r => r.json());
+  } catch (err) {
+    document.getElementById('btStats').innerHTML =
+      `<p style="color:var(--red)">Failed to load backtest: ${err.message}</p>`;
+    return;
+  }
+  const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
+  const tally = { GREEN: 0, YELLOW: 0, RED: 0 };
+  sorted.forEach(d => tally[d.alert]++);
+  const total = sorted.length || 1;
+
+  const inRecession = date => NBER_RECESSIONS.some(r => date >= r.start && date <= r.end);
+  let inRecHits = 0, inRecCount = 0;
+  sorted.forEach(d => {
+    if (inRecession(d.date)) {
+      inRecCount++;
+      if (d.alert !== 'GREEN') inRecHits++;
+    }
+  });
+
+  document.getElementById('btStats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Months replayed</div>
+      <div class="stat-value">${total}</div>
+      <div class="stat-sub">${sorted[0]?.date ?? '—'} → ${sorted[sorted.length-1]?.date ?? '—'}</div></div>
+    <div class="stat-card"><div class="stat-label">% in GREEN</div>
+      <div class="stat-value" style="color:var(--green)">${Math.round(tally.GREEN/total*100)}%</div>
+      <div class="stat-sub">${tally.GREEN} months</div></div>
+    <div class="stat-card"><div class="stat-label">% in YELLOW</div>
+      <div class="stat-value" style="color:var(--yellow)">${Math.round(tally.YELLOW/total*100)}%</div>
+      <div class="stat-sub">${tally.YELLOW} months</div></div>
+    <div class="stat-card"><div class="stat-label">% in RED</div>
+      <div class="stat-value" style="color:var(--red)">${Math.round(tally.RED/total*100)}%</div>
+      <div class="stat-sub">${tally.RED} months</div></div>
+    <div class="stat-card"><div class="stat-label">NBER sensitivity</div>
+      <div class="stat-value">${inRecCount > 0 ? Math.round(inRecHits/inRecCount*100) + '%' : '—'}</div>
+      <div class="stat-sub">% of recession months ≥ YELLOW</div></div>
+  `;
+
+  const nberPlugin = {
+    id: 'nberBands',
+    beforeDatasetsDraw(chart) {
+      const { ctx, chartArea, scales } = chart;
+      if (!scales.x) return;
+      ctx.save();
+      ctx.fillStyle = 'rgba(255,122,122,0.18)';
+      NBER_RECESSIONS.forEach(r => {
+        const idxStart = sorted.findIndex(d => d.date >= r.start);
+        const idxEnd   = sorted.findIndex(d => d.date >  r.end);
+        if (idxStart < 0) return;
+        const left  = scales.x.getPixelForValue(idxStart);
+        const right = idxEnd < 0
+          ? chartArea.right
+          : scales.x.getPixelForValue(Math.max(idxStart, idxEnd - 1));
+        ctx.fillRect(left, chartArea.top, Math.max(right - left, 2), chartArea.bottom - chartArea.top);
+      });
+      ctx.restore();
+    }
+  };
+
+  const labels = sorted.map(d => d.date.slice(0, 7));
+  const ctx = document.getElementById('backtestChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Composite', data: sorted.map(d => d.composite),
+          borderColor: '#66b3ff', backgroundColor: 'rgba(102,179,255,0.07)',
+          borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, fill: true, tension: 0.25 },
+        { label: '60 RED', data: sorted.map(() => 60),
+          borderColor: 'rgba(255,122,122,0.45)', borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false },
+        { label: '30 YELLOW', data: sorted.map(() => 30),
+          borderColor: 'rgba(241,200,74,0.45)', borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2340', titleColor: '#eef2ff', bodyColor: '#7a84a8',
+          borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
+          callbacks: {
+            label: item => {
+              const d = sorted[item.dataIndex];
+              if (!d) return '';
+              const tag = inRecession(d.date) ? ' [NBER recession]' : '';
+              return ` ${d.composite.toFixed(1)} (${d.alert})${tag}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#7a84a8', maxTicksLimit: 14, font: { size: 11 } },
+             grid: { color: 'rgba(255,255,255,0.03)' } },
+        y: { min: 0, max: 100,
+             ticks: { color: '#7a84a8', font: { size: 11 } },
+             grid: { color: 'rgba(255,255,255,0.03)' } }
+      }
+    },
+    plugins: [nberPlugin]
+  });
+}
+
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 readUrlState();
+const initialTab = new URLSearchParams(location.hash.slice(1)).get('tab') || 'live';
+setTab(initialTab);
 await refresh({ initial: true });
 startPolling();
 </script>
