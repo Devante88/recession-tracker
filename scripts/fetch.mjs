@@ -52,6 +52,14 @@ async function main() {
     JSON.stringify(history, null, 2)
   );
 
+  // Long-horizon backtest (30 years if FRED has it). Used by /backtest.html.
+  console.log('\nBuilding 30-year backtest from series data...');
+  const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 360, windowMonths: 60 });
+  await fs.writeFile(
+    path.join(DATA_DIR, 'backtest.json'),
+    JSON.stringify(backtest)   // no pretty-printing — this file is large
+  );
+
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert}) — Rating: ${snapshot.composite.rating}/10 — Confidence: ${Math.round(snapshot.composite.confidence * 100)}%`);
   console.log(`Layers:`, Object.fromEntries(
     Object.entries(snapshot.layers).map(([k, v]) => [k, v.score])
