@@ -222,7 +222,7 @@
   <header>
     <div class="header-left">
       <h1>Recession Tracker</h1>
-      <p>24 macro + micro indicators · FRED data · Updated twice weekly</p>
+      <p>24 macro + micro indicators · FRED data · Updated daily</p>
     </div>
     <div class="header-right">
       <div class="as-of">As of <span id="asOf">—</span></div>
@@ -497,7 +497,7 @@ function renderHeader(current) {
     if (days > 5) {
       document.getElementById('staleTag').style.display = 'inline-block';
       const sb = document.getElementById('staleBanner');
-      sb.textContent = `⚠ Data is ${days} days old — next scheduled refresh is Tuesday or Saturday at 13:00 UTC.`;
+      sb.textContent = `⚠ Data is ${days} days old — next scheduled refresh is daily at 13:00 UTC.`;
       sb.style.display = 'block';
     }
   }
