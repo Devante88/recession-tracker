@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-05-19",
+    "composite": 0,
+    "alert": "GREEN",
+    "layers": {
+      "financial_lead": 0,
+      "labor": 0,
+      "inflation": 0,
+      "real_economy": 0,
+      "micro": 0
+    }
+  }
+]
