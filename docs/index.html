@@ -68,6 +68,49 @@
     .banner-stale  { background: rgba(241,200,74,0.08); border: 1px solid rgba(241,200,74,0.25);
                      color: var(--yellow); }
 
+    /* ── EXTRA STATS ROW ─────────────────────────────────────────────────────── */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+                 margin-bottom: 20px; }
+    .stat-card { background: var(--panel); border: 1px solid var(--border);
+                 border-radius: 14px; padding: 16px 18px; }
+    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                  letter-spacing: 0.1em; margin-bottom: 6px; }
+    .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+    .stat-sub   { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    @media (max-width: 700px) { .stats-row { grid-template-columns: 1fr; } }
+
+    /* ── EXPORT BUTTONS ──────────────────────────────────────────────────────── */
+    .export-row { display: flex; gap: 8px; }
+    .export-btn { background: var(--panel-2); border: 1px solid var(--border);
+                  border-radius: 6px; padding: 5px 10px; font-size: 12px;
+                  color: var(--muted); cursor: pointer; font-family: inherit; }
+    .export-btn:hover { color: var(--text); border-color: var(--accent); }
+
+    /* ── MODAL ───────────────────────────────────────────────────────────────── */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+                      display: none; align-items: center; justify-content: center;
+                      z-index: 100; padding: 24px; }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: var(--panel); border: 1px solid var(--border);
+             border-radius: 16px; padding: 28px; max-width: 640px; width: 100%;
+             max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: flex-start;
+                    gap: 16px; margin-bottom: 12px; }
+    .modal-header h3 { font-size: 18px; font-weight: 700; }
+    .modal-header .badge { margin-top: 4px; }
+    .modal-close { background: none; border: none; color: var(--muted);
+                   font-size: 24px; cursor: pointer; line-height: 1; padding: 0; }
+    .modal-close:hover { color: var(--text); }
+    .modal-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+    .modal-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+                   margin-bottom: 18px; }
+    .modal-stat { background: var(--panel-2); border-radius: 10px; padding: 10px 12px; }
+    .modal-stat .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase;
+                       letter-spacing: 0.08em; }
+    .modal-stat .val { font-size: 18px; font-weight: 700; margin-top: 2px; }
+    .modal-chart-wrap { height: 200px; position: relative; margin-bottom: 12px; }
+    .modal-footer { font-size: 12px; color: var(--muted); }
+
     /* ── HERO ────────────────────────────────────────────────────────────────── */
     .hero { background: linear-gradient(135deg, var(--panel), var(--panel-2));
             border: 1px solid var(--border); border-radius: 20px;
@@ -268,6 +311,27 @@
     </div>
   </section>
 
+  <!-- EXTRA STATS -->
+  <section class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Recession probability (12mo)</div>
+      <div class="stat-value" id="probValue">—</div>
+      <div class="stat-sub">Estrella-Mishkin probit on 10Y-3M spread</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Yield curve status</div>
+      <div class="stat-value" id="ycValue">—</div>
+      <div class="stat-sub" id="ycSub">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">More views</div>
+      <div class="stat-value" style="font-size:16px;font-weight:600;line-height:1.5">
+        <a href="backtest.html">30-year backtest →</a><br>
+        <a href="feed.xml">RSS feed →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- LAYER CARDS -->
   <section class="layers" id="layerCards"></section>
 
@@ -283,7 +347,13 @@
 
   <!-- INDICATOR TABLE -->
   <section class="panel">
-    <div class="panel-header"><h2>Indicator Detail</h2></div>
+    <div class="panel-header">
+      <h2>Indicator Detail</h2>
+      <div class="export-row">
+        <button class="export-btn" id="exportCsv" title="Download visible rows as CSV">Export CSV</button>
+        <button class="export-btn" id="exportJson" title="Download visible rows as JSON">Export JSON</button>
+      </div>
+    </div>
     <div class="filter-row">
       <select id="layerFilter">
         <option value="">All layers</option>
@@ -390,8 +460,37 @@
   <footer>
     <p>Data: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED, Federal Reserve Bank of St. Louis</a>
     &nbsp;·&nbsp;
-    <a href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub Source</a></p>
+    <a href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub Source</a>
+    &nbsp;·&nbsp;
+    <a href="feed.xml">RSS</a>
+    &nbsp;·&nbsp;
+    <a href="backtest.html">Backtest</a></p>
   </footer>
+</div>
+
+<!-- INDICATOR DETAIL MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitle">—</h3>
+        <span class="badge" id="modalAlert">—</span>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    </div>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-stats">
+      <div class="modal-stat"><div class="lbl">Score</div><div class="val" id="modalScore">—</div></div>
+      <div class="modal-stat"><div class="lbl">Level</div><div class="val" id="modalLevel">—</div></div>
+      <div class="modal-stat"><div class="lbl">Momentum</div><div class="val" id="modalMomentum">—</div></div>
+    </div>
+    <div class="modal-chart-wrap"><canvas id="modalChart"></canvas></div>
+    <div class="modal-footer">
+      Latest: <strong id="modalLatest">—</strong> on <span id="modalDate">—</span>
+      &nbsp;·&nbsp;
+      <a id="modalFredLink" href="#" target="_blank" rel="noopener">View on FRED →</a>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -526,6 +625,33 @@ function renderHero(current, history) {
     const confEl = document.getElementById('confidenceBadge');
     confEl.textContent = `${pct}% indicators live`;
     confEl.style.color = pct < 80 ? 'var(--yellow)' : 'var(--muted)';
+  }
+
+  // Recession probability + yield curve cards
+  const prob = current.composite?.recession_probability_12mo;
+  const probEl = document.getElementById('probValue');
+  if (prob !== null && prob !== undefined) {
+    probEl.textContent = `${Math.round(prob * 100)}%`;
+    probEl.style.color = prob >= 0.5 ? 'var(--red)' : prob >= 0.3 ? 'var(--yellow)' : 'var(--green)';
+  } else {
+    probEl.textContent = '—';
+  }
+
+  const inv = current.composite?.yield_curve_inversion_days ?? 0;
+  const spread = current.composite?.yield_curve_spread;
+  const ycEl = document.getElementById('ycValue');
+  const ycSub = document.getElementById('ycSub');
+  if (inv > 0) {
+    ycEl.textContent = `Inverted ${inv}d`;
+    ycEl.style.color = 'var(--red)';
+    ycSub.textContent = `10Y-3M spread = ${spread?.toFixed(2)}`;
+  } else if (spread !== null && spread !== undefined) {
+    ycEl.textContent = `+${spread.toFixed(2)}`;
+    ycEl.style.color = 'var(--green)';
+    ycSub.textContent = '10Y-3M spread — not inverted';
+  } else {
+    ycEl.textContent = '—';
+    ycSub.textContent = '';
   }
 
   // Trend vs previous history entry
@@ -815,6 +941,8 @@ function applyFilters() {
       ? `<div class="ind-desc">${ind.description}</div>` : '';
 
     const tr = document.createElement('tr');
+    tr.dataset.fredId = ind.fred_id;
+    tr.style.cursor = 'pointer';
     tr.innerHTML = `
       <td>
         <div class="ind-name">${ind.name}</div>
@@ -863,8 +991,172 @@ document.querySelectorAll('th.sortable').forEach(th => {
       sortDir = col === 'score' || col === 'alert' ? 'desc' : 'asc';
     }
     updateSortHeaders();
+    writeUrlState();
     applyFilters();
   });
+});
+
+// ─── PERMALINK STATE ──────────────────────────────────────────────────────────
+function readUrlState() {
+  const params = new URLSearchParams(location.hash.slice(1));
+  const apply = (id, key) => {
+    const v = params.get(key);
+    if (v !== null) document.getElementById(id).value = v;
+  };
+  apply('layerFilter', 'layer');
+  apply('categoryFilter', 'cat');
+  apply('alertFilter', 'alert');
+  if (params.get('sort')) sortCol = params.get('sort');
+  if (params.get('dir'))  sortDir = params.get('dir');
+}
+
+function writeUrlState() {
+  const params = new URLSearchParams();
+  const set = (id, key) => {
+    const v = document.getElementById(id).value;
+    if (v) params.set(key, v);
+  };
+  set('layerFilter', 'layer');
+  set('categoryFilter', 'cat');
+  set('alertFilter', 'alert');
+  if (sortCol !== 'score') params.set('sort', sortCol);
+  if (sortDir !== 'desc')  params.set('dir', sortDir);
+  const str = params.toString();
+  history.replaceState(null, '', str ? `#${str}` : location.pathname);
+}
+
+['layerFilter','categoryFilter','alertFilter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', writeUrlState);
+});
+
+window.addEventListener('hashchange', () => {
+  readUrlState();
+  updateSortHeaders();
+  applyFilters();
+});
+
+// ─── EXPORT ───────────────────────────────────────────────────────────────────
+function visibleIndicators() {
+  const layer = document.getElementById('layerFilter').value;
+  const cat   = document.getElementById('categoryFilter').value;
+  const alrt  = document.getElementById('alertFilter').value;
+  return sortIndicators(allIndicators.filter(ind => {
+    if (layer && ind.layer !== layer) return false;
+    if (cat   && ind.category !== cat) return false;
+    if (alrt  && ind.alert !== alrt)   return false;
+    return true;
+  }));
+}
+
+function download(filename, content, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('exportCsv').addEventListener('click', () => {
+  const rows = visibleIndicators();
+  const cols = ['name','fred_id','layer','category','latest_value','latest_date','score','level_score','momentum_score','alert','threshold','direction'];
+  const csv = [
+    cols.join(','),
+    ...rows.map(r => cols.map(c => {
+      const v = r[c];
+      if (v === null || v === undefined) return '';
+      const s = String(v);
+      return /[,"\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+    }).join(','))
+  ].join('\n');
+  download(`recession-tracker-${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv');
+});
+
+document.getElementById('exportJson').addEventListener('click', () => {
+  const rows = visibleIndicators().map(({ history, ...rest }) => rest);
+  download(
+    `recession-tracker-${new Date().toISOString().slice(0,10)}.json`,
+    JSON.stringify(rows, null, 2),
+    'application/json'
+  );
+});
+
+// ─── INDICATOR DETAIL MODAL ───────────────────────────────────────────────────
+let modalChart = null;
+function openModal(ind) {
+  document.getElementById('modalTitle').textContent = ind.name;
+  const alertEl = document.getElementById('modalAlert');
+  alertEl.textContent = ind.alert;
+  alertEl.className = `badge ${alertClass(ind.alert)}`;
+  document.getElementById('modalDesc').textContent = ind.description || '';
+  document.getElementById('modalScore').textContent = ind.score?.toFixed?.(1) ?? ind.score ?? '—';
+  document.getElementById('modalLevel').textContent = ind.level_score !== null && ind.level_score !== undefined
+    ? ind.level_score.toFixed(1) : '—';
+  document.getElementById('modalMomentum').textContent = ind.momentum_score !== null && ind.momentum_score !== undefined
+    ? ind.momentum_score.toFixed(1) : '—';
+  document.getElementById('modalLatest').textContent = fmtVal(ind.latest_value);
+  document.getElementById('modalDate').textContent = fmtDate(ind.latest_date);
+  document.getElementById('modalFredLink').href = `https://fred.stlouisfed.org/series/${ind.fred_id}`;
+
+  const ctx = document.getElementById('modalChart').getContext('2d');
+  if (modalChart) modalChart.destroy();
+  const history = ind.history || [];
+  const labels = history.map(p => p.date.slice(0, 7));
+  const values = history.map(p => p.value);
+  const datasets = [{
+    label: ind.name,
+    data: values,
+    borderColor: LAYER_COLORS[ind.layer] || '#66b3ff',
+    backgroundColor: 'rgba(102,179,255,0.08)',
+    borderWidth: 2,
+    pointRadius: 2,
+    pointHoverRadius: 5,
+    fill: true,
+    tension: 0.3
+  }];
+  if (ind.threshold !== null && ind.threshold !== undefined) {
+    datasets.push({
+      label: `Threshold (${ind.threshold})`,
+      data: history.map(() => ind.threshold),
+      borderColor: 'rgba(255,255,255,0.3)',
+      borderDash: [4, 4], borderWidth: 1, pointRadius: 0, fill: false
+    });
+  }
+  modalChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#7a84a8', font: { size: 10 }, maxTicksLimit: 8 },
+             grid: { color: 'rgba(255,255,255,0.03)' } },
+        y: { ticks: { color: '#7a84a8', font: { size: 10 } },
+             grid: { color: 'rgba(255,255,255,0.03)' } }
+      }
+    }
+  });
+
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+  if (modalChart) { modalChart.destroy(); modalChart = null; }
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalBackdrop').addEventListener('click', e => {
+  if (e.target.id === 'modalBackdrop') closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.getElementById('tableBody').addEventListener('click', e => {
+  const tr = e.target.closest('tr');
+  if (!tr) return;
+  const fredId = tr.dataset.fredId;
+  const ind = allIndicators.find(x => x.fred_id === fredId);
+  if (ind) openModal(ind);
 });
 
 // ─── ERROR ────────────────────────────────────────────────────────────────────
@@ -951,6 +1243,7 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
+readUrlState();
 await refresh({ initial: true });
 startPolling();
 </script>
