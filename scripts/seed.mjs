@@ -121,6 +121,11 @@ async function main() {
 
   await fs.writeFile(path.join(DATA_DIR, 'history.json'), JSON.stringify(history, null, 2));
 
+  // Long backtest: synthetic seed only goes back 4 years so this matches.
+  // In production, fetch.mjs writes 30 years here.
+  const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 36, windowMonths: 24 });
+  await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
+
   // Print summary
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert})\n`);
   console.log('Layers:');
