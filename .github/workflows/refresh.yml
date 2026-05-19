@@ -2,8 +2,8 @@ name: Refresh FRED Data
 
 on:
   schedule:
-    # Tuesday and Saturday at 13:00 UTC (08:00 CT)
-    - cron: '0 13 * * 2,6'
+    # Daily at 13:00 UTC (08:00 CT) — after FRED's typical morning releases
+    - cron: '0 13 * * *'
   workflow_dispatch:
 
 permissions:
