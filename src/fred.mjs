@@ -30,17 +30,23 @@ export async function fetchFredSeries(fredId, apiKey, opts = {}) {
 /**
  * Fetch all series with simple sequential calls and a small delay to be polite.
  * FRED's rate limit is generous (120 req/min) but sequential keeps us safe.
+ * Returns { data, successCount, failureCount }.
  */
 export async function fetchAllSeries(fredIds, apiKey, delayMs = 200) {
-  const results = {};
+  const data = {};
+  let successCount = 0;
+  let failureCount = 0;
   for (const id of fredIds) {
     try {
-      results[id] = await fetchFredSeries(id, apiKey);
+      data[id] = await fetchFredSeries(id, apiKey);
+      successCount++;
+      console.log(`  ✓ ${id}: ${data[id].length} observations`);
     } catch (err) {
-      console.error(`Error fetching ${id}: ${err.message}`);
-      results[id] = [];
+      console.error(`  ✗ ${id}: ${err.message}`);
+      data[id] = [];
+      failureCount++;
     }
     if (delayMs > 0) await new Promise(r => setTimeout(r, delayMs));
   }
-  return results;
+  return { data, successCount, failureCount };
 }
