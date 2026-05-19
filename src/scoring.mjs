@@ -140,6 +140,7 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       fred_id: x.fred_id,
       layer: x.layer,
       category: x.category,
+      description: x.description || '',
       latest_value: x.latest?.value ?? null,
       latest_date: x.latest?.date ?? null,
       score: Number(((x.score || 0) * 100).toFixed(1)),
@@ -149,4 +150,46 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       frequency: x.frequency
     }))
   };
+}
+
+/**
+ * Build a 24-month history by replaying monthly snapshots from FRED series data.
+ * Uses a rolling windowMonths window for z-score normalization at each cutoff,
+ * matching the same window used by the live scoring engine.
+ *
+ * @param {object} rawData  Map of fredId → [{date, value}] (ascending)
+ * @param {Array}  registry REGISTRY array
+ * @param {object} opts
+ * @returns {Array<{date, composite, alert, layers}>}
+ */
+export function buildHistoryFromSeries(rawData, registry, { windowMonths = 36, historyMonths = 24 } = {}) {
+  const today = new Date();
+  const entries = [];
+
+  for (let i = historyMonths - 1; i >= 0; i--) {
+    // Last calendar day of the target month
+    const lastDay = new Date(today.getFullYear(), today.getMonth() - i + 1, 0);
+    // Rolling window start: windowMonths before the cutoff
+    const windowStart = new Date(today.getFullYear(), today.getMonth() - i - windowMonths + 1, 1);
+    const cutoff = lastDay.toISOString().slice(0, 10);
+    const windowStartStr = windowStart.toISOString().slice(0, 10);
+
+    const normalized = registry.map(indicator => {
+      const series = (rawData[indicator.fred_id] || []).filter(
+        x => x.date >= windowStartStr && x.date <= cutoff
+      );
+      return { ...indicator, ...normalizeIndicator(series, indicator) };
+    });
+
+    const layerScores = computeLayerScores(normalized);
+    const composite = computeCompositeScore(layerScores);
+    entries.push({
+      date: cutoff,
+      composite,
+      alert: alertState(composite),
+      layers: { ...layerScores }
+    });
+  }
+
+  return entries;
 }

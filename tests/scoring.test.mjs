@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   logistic, meanStd, normalizeIndicator,
-  computeLayerScores, computeCompositeScore, alertState, buildSnapshot
+  computeLayerScores, computeCompositeScore, alertState, buildSnapshot,
+  buildHistoryFromSeries
 } from '../src/scoring.mjs';
 
 test('logistic returns 0.5 at zero', () => {
@@ -92,6 +93,41 @@ test('alertState thresholds', () => {
   assert.equal(alertState(59.9), 'YELLOW');
   assert.equal(alertState(60), 'RED');
   assert.equal(alertState(100), 'RED');
+});
+
+test('buildHistoryFromSeries produces N monthly entries', () => {
+  const registry = [
+    { name: 'X', fred_id: 'X', layer: 'labor', category: 'macro', weight: 1.0,
+      threshold: null, direction: 'inverse', frequency: 'monthly', description: '' }
+  ];
+  const today = new Date();
+  // Build a 3-year synthetic series
+  const series = [];
+  for (let i = 35; i >= 0; i--) {
+    const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    series.push({ date: d.toISOString().slice(0, 10), value: 4 + Math.sin(i) });
+  }
+  const rawData = { X: series };
+  const history = buildHistoryFromSeries(rawData, registry, { historyMonths: 6 });
+  assert.equal(history.length, 6, 'should produce 6 monthly entries');
+  for (const entry of history) {
+    assert.ok(entry.date, 'entry has date');
+    assert.ok(typeof entry.composite === 'number', 'entry has composite score');
+    assert.ok(['GREEN','YELLOW','RED'].includes(entry.alert), 'entry has valid alert');
+    assert.ok(entry.layers?.labor !== undefined, 'entry has layer scores');
+  }
+});
+
+test('buildHistoryFromSeries with empty data returns zero scores', () => {
+  const registry = [
+    { name: 'X', fred_id: 'X', layer: 'labor', category: 'macro', weight: 1.0,
+      threshold: null, direction: 'inverse', frequency: 'monthly', description: '' }
+  ];
+  const history = buildHistoryFromSeries({}, registry, { historyMonths: 3 });
+  assert.equal(history.length, 3);
+  for (const entry of history) {
+    assert.equal(entry.composite, 0);
+  }
 });
 
 test('buildSnapshot produces full payload schema', () => {

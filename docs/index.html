@@ -7,128 +7,187 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #0b1020;
-      --panel: #121a2f;
+      --bg:      #0b1020;
+      --panel:   #121a2f;
       --panel-2: #1a2340;
-      --border: rgba(255,255,255,0.08);
-      --text: #eef2ff;
-      --muted: #8b95b8;
-      --accent: #66b3ff;
-      --green: #2ddc8c;
-      --yellow: #f1c84a;
-      --red: #ff7a7a;
+      --panel-3: #1f2b4a;
+      --border:  rgba(255,255,255,0.07);
+      --text:    #eef2ff;
+      --muted:   #7a84a8;
+      --accent:  #66b3ff;
+      --green:   #2ddc8c;
+      --yellow:  #f1c84a;
+      --red:     #ff7a7a;
+      --layer-fin:   #66b3ff;
+      --layer-lab:   #ff9f7a;
+      --layer-inf:   #c97af1;
+      --layer-real:  #4dd9c0;
+      --layer-micro: #f0e442;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
-      background: var(--bg); color: var(--text); line-height: 1.5;
-    }
-    .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+           background: var(--bg); color: var(--text); line-height: 1.5; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 32px 24px; }
 
-    /* ── HEADER ── */
-    header {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      margin-bottom: 32px; flex-wrap: wrap; gap: 16px;
-    }
-    h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
-    .subtitle { color: var(--muted); font-size: 14px; }
-    .meta { text-align: right; font-size: 13px; color: var(--muted); }
-    .meta span { color: var(--text); }
+    /* ── HEADER ─────────────────────────────────────────────────────────────── */
+    header { display: flex; justify-content: space-between; align-items: flex-start;
+             margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+    .header-left h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+    .header-left p  { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .header-right   { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .as-of          { font-size: 13px; color: var(--muted); }
+    .as-of span     { color: var(--text); font-weight: 600; }
+    .stale-tag      { display: none; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+                      padding: 3px 10px; border-radius: 999px;
+                      background: rgba(241,200,74,0.15); color: var(--yellow); }
 
-    /* ── HERO ── */
-    .hero {
-      background: linear-gradient(135deg, var(--panel), var(--panel-2));
-      border: 1px solid var(--border); border-radius: 20px;
-      padding: 40px 32px; margin-bottom: 24px; text-align: center;
-    }
-    .hero-label {
-      font-size: 13px; color: var(--muted); text-transform: uppercase;
-      letter-spacing: 0.12em; margin-bottom: 12px;
-    }
-    .hero-score {
-      font-size: 96px; font-weight: 900; line-height: 1;
-      margin-bottom: 16px; letter-spacing: -0.04em;
-      transition: color 0.4s;
-    }
+    /* ── BANNERS ─────────────────────────────────────────────────────────────── */
+    .banner { border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
+              font-size: 14px; display: none; }
+    .banner-error  { background: rgba(255,122,122,0.1); border: 1px solid rgba(255,122,122,0.3);
+                     color: var(--red); }
+    .banner-stale  { background: rgba(241,200,74,0.08); border: 1px solid rgba(241,200,74,0.25);
+                     color: var(--yellow); }
 
-    /* ── BADGE ── */
-    .badge {
-      display: inline-block; padding: 5px 14px; border-radius: 999px;
-      font-weight: 700; font-size: 12px; letter-spacing: 0.06em;
-    }
-    .GREEN { background: rgba(45,220,140,0.15); color: var(--green); }
-    .YELLOW { background: rgba(241,200,74,0.15); color: var(--yellow); }
-    .RED { background: rgba(255,122,122,0.15); color: var(--red); }
+    /* ── HERO ────────────────────────────────────────────────────────────────── */
+    .hero { background: linear-gradient(135deg, var(--panel), var(--panel-2));
+            border: 1px solid var(--border); border-radius: 20px;
+            padding: 36px 40px; margin-bottom: 20px;
+            display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; }
+    .hero-left { text-align: center; min-width: 160px; }
+    .hero-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                  letter-spacing: 0.12em; margin-bottom: 8px; }
+    .hero-score { font-size: 88px; font-weight: 900; line-height: 1;
+                  letter-spacing: -0.04em; transition: color 0.4s; }
+    .hero-badge-row { margin-top: 10px; display: flex; gap: 8px; align-items: center;
+                      justify-content: center; }
+    .trend { font-size: 13px; font-weight: 600; }
+    .trend.up   { color: var(--red); }
+    .trend.down { color: var(--green); }
+    .trend.flat { color: var(--muted); }
+    .hero-right { }
+    .risk-bar-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                      letter-spacing: 0.1em; margin-bottom: 10px; }
+    .risk-bar-outer { height: 10px; border-radius: 5px; position: relative;
+                      background: var(--panel-3); overflow: visible; margin-bottom: 6px; }
+    .risk-bar-fill  { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+    .risk-bar-tick  { position: absolute; top: -4px; width: 2px; height: 18px;
+                      background: rgba(255,255,255,0.2); border-radius: 1px; }
+    .risk-bar-nums  { display: flex; justify-content: space-between; font-size: 11px;
+                      color: var(--muted); position: relative; margin-bottom: 20px; }
+    .risk-bar-zone-label { font-size: 11px; position: absolute; transform: translateX(-50%); }
 
-    /* ── LAYER CARDS ── */
-    .layers {
-      display: grid; grid-template-columns: repeat(5,1fr);
-      gap: 16px; margin-bottom: 24px;
-    }
-    .card {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: 16px; padding: 20px;
-    }
-    .card h3 {
-      font-size: 11px; color: var(--muted); text-transform: uppercase;
-      letter-spacing: 0.08em; margin-bottom: 10px;
-    }
-    .card-score { font-size: 38px; font-weight: 800; margin-bottom: 8px; }
-    .card-weight { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    /* ── LAYER CARDS ─────────────────────────────────────────────────────────── */
+    .layers { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; margin-bottom: 20px; }
+    .card   { background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
+              padding: 18px 16px; }
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start;
+                margin-bottom: 8px; }
+    .card-name { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                 letter-spacing: 0.08em; }
+    .card-score { font-size: 34px; font-weight: 800; line-height: 1; }
+    .card-bottom { display: flex; justify-content: space-between; align-items: center;
+                   margin-top: 10px; }
+    .card-weight { font-size: 11px; color: var(--muted); }
+    .card-trend  { font-size: 12px; font-weight: 600; }
+    .sparkline   { display: block; margin-top: 10px; opacity: 0.7; }
 
-    /* ── PANEL ── */
-    .panel {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: 16px; padding: 24px; margin-bottom: 24px;
-    }
-    .panel h2 { font-size: 18px; margin-bottom: 4px; }
-    .panel .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+    /* ── BADGE ───────────────────────────────────────────────────────────────── */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 999px;
+             font-weight: 700; font-size: 11px; letter-spacing: 0.06em; white-space: nowrap; }
+    .GREEN  { background: rgba(45,220,140,0.15);  color: var(--green); }
+    .YELLOW { background: rgba(241,200,74,0.15);  color: var(--yellow); }
+    .RED    { background: rgba(255,122,122,0.15); color: var(--red); }
+
+    /* ── PANELS ──────────────────────────────────────────────────────────────── */
+    .panel { background: var(--panel); border: 1px solid var(--border);
+             border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center;
+                    margin-bottom: 6px; flex-wrap: wrap; gap: 12px; }
+    .panel-header h2 { font-size: 17px; font-weight: 700; }
+    .panel-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
     .chart-wrap { height: 300px; position: relative; }
 
-    /* ── FILTERS ── */
-    .filter-row { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
-    select {
-      background: var(--panel-2); color: var(--text);
-      border: 1px solid var(--border); border-radius: 8px;
-      padding: 8px 12px; font-size: 14px; cursor: pointer;
-    }
+    /* ── CHART TOGGLES ───────────────────────────────────────────────────────── */
+    .layer-toggles { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ltbtn { background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px;
+             padding: 4px 10px; font-size: 12px; color: var(--muted); cursor: pointer;
+             transition: all 0.15s; }
+    .ltbtn.active { border-color: currentColor; }
+    .ltbtn.active.l-composite  { color: var(--accent); }
+    .ltbtn.active.l-fin        { color: var(--layer-fin); }
+    .ltbtn.active.l-lab        { color: var(--layer-lab); }
+    .ltbtn.active.l-inf        { color: var(--layer-inf); }
+    .ltbtn.active.l-real       { color: var(--layer-real); }
+    .ltbtn.active.l-micro      { color: var(--layer-micro); }
 
-    /* ── TABLE ── */
+    /* ── FILTERS ─────────────────────────────────────────────────────────────── */
+    .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+    select { background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+             border-radius: 8px; padding: 7px 12px; font-size: 13px; cursor: pointer; }
+
+    /* ── TABLE ───────────────────────────────────────────────────────────────── */
     .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
-    th { font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); }
+    th { font-weight: 600; color: var(--muted); text-transform: uppercase;
+         font-size: 11px; letter-spacing: 0.06em; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255,255,255,0.02); }
-    .score-bar-wrap { display: flex; align-items: center; gap: 8px; }
-    .score-bar { height: 6px; border-radius: 3px; min-width: 4px; transition: width 0.3s; }
+    .ind-name { font-weight: 600; cursor: default; }
+    .ind-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .score-bar-wrap { display: flex; align-items: center; gap: 7px; }
+    .score-bar { height: 5px; border-radius: 3px; min-width: 3px; }
+    .stale-days { font-size: 11px; color: var(--muted); }
+    .dir-label  { font-size: 11px; }
+    .dir-up   { color: var(--green); }
+    .dir-down { color: var(--red); }
 
-    /* ── FOOTER ── */
-    footer {
-      margin-top: 48px; padding-top: 24px;
-      border-top: 1px solid var(--border); text-align: center;
-      font-size: 13px; color: var(--muted);
-    }
-    footer a { color: var(--accent); text-decoration: none; }
+    /* ── METHODOLOGY ─────────────────────────────────────────────────────────── */
+    .methodology-toggle { width: 100%; background: none; border: none; color: inherit;
+                          cursor: pointer; display: flex; justify-content: space-between;
+                          align-items: center; padding: 0; }
+    .methodology-toggle h2 { font-size: 17px; font-weight: 700; }
+    .chevron { font-size: 18px; color: var(--muted); transition: transform 0.2s; }
+    .chevron.open { transform: rotate(180deg); }
+    .methodology-body { margin-top: 20px; display: none; }
+    .methodology-body.open { display: block; }
+    .meth-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+                 gap: 16px; margin-bottom: 20px; }
+    .meth-card { background: var(--panel-2); border-radius: 12px; padding: 16px; }
+    .meth-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .meth-card p  { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .meth-weights { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px;
+                    margin: 16px 0; text-align: center; }
+    .meth-weight  { background: var(--panel-2); border-radius: 10px; padding: 12px 8px; }
+    .meth-weight .pct { font-size: 22px; font-weight: 800; }
+    .meth-weight .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .meth-disclaimer { font-size: 12px; color: var(--muted); line-height: 1.7;
+                        background: var(--panel-2); border-radius: 10px; padding: 14px 16px; }
 
-    /* ── ERROR STATE ── */
-    .error-banner {
-      background: rgba(255,122,122,0.1); border: 1px solid rgba(255,122,122,0.3);
-      border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
-      font-size: 14px; color: var(--red); display: none;
-    }
+    /* ── FOOTER ──────────────────────────────────────────────────────────────── */
+    footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
+             text-align: center; font-size: 12px; color: var(--muted); }
 
-    /* ── RESPONSIVE ── */
-    @media (max-width: 1024px) {
+    /* ── RESPONSIVE ──────────────────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
       .layers { grid-template-columns: repeat(3,1fr); }
+    }
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 24px; }
+      .hero-left { display: flex; align-items: center; gap: 20px; justify-content: center; }
       .hero-score { font-size: 72px; }
     }
-    @media (max-width: 600px) {
+    @media (max-width: 640px) {
       .layers { grid-template-columns: repeat(2,1fr); }
-      .hero { padding: 24px 16px; }
       .hero-score { font-size: 56px; }
-      table { font-size: 12px; }
-      th, td { padding: 8px 8px; }
-      h1 { font-size: 24px; }
+      .meth-weights { grid-template-columns: repeat(3,1fr); }
+      .wrap { padding: 20px 16px; }
+    }
+    @media (max-width: 400px) {
+      .layers { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -136,23 +195,45 @@
 <div class="wrap">
 
   <header>
-    <div>
+    <div class="header-left">
       <h1>Recession Tracker</h1>
-      <p class="subtitle">24 macro + micro indicators from FRED · Updated twice weekly</p>
+      <p>24 macro + micro indicators · FRED data · Updated twice weekly</p>
     </div>
-    <div class="meta">
-      <div>As of <span id="asOf">—</span></div>
-      <div>Generated <span id="generatedAt">—</span></div>
+    <div class="header-right">
+      <div class="as-of">As of <span id="asOf">—</span></div>
+      <div class="as-of">Updated <span id="generatedAt">—</span></div>
+      <span class="stale-tag" id="staleTag">DATA STALE</span>
     </div>
   </header>
 
-  <div class="error-banner" id="errorBanner"></div>
+  <div class="banner banner-error"  id="errorBanner"></div>
+  <div class="banner banner-stale"  id="staleBanner"></div>
 
   <!-- COMPOSITE HERO -->
   <section class="hero">
-    <div class="hero-label">Composite Recession Risk Score</div>
-    <div class="hero-score" id="compositeScore">—</div>
-    <div><span class="badge" id="compositeAlert">—</span></div>
+    <div class="hero-left">
+      <div class="hero-label">Composite Risk Score</div>
+      <div class="hero-score" id="compositeScore">—</div>
+      <div class="hero-badge-row">
+        <span class="badge" id="compositeAlert">—</span>
+        <span class="trend" id="compositeTrend"></span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="risk-bar-label">Risk scale — 0 (no risk) → 100 (maximum risk)</div>
+      <div class="risk-bar-outer">
+        <div class="risk-bar-fill" id="riskBarFill"></div>
+        <div class="risk-bar-tick" style="left:30%"></div>
+        <div class="risk-bar-tick" style="left:60%"></div>
+      </div>
+      <div class="risk-bar-nums">
+        <span>0 GREEN</span>
+        <span class="risk-bar-zone-label" style="left:30%">30 YELLOW</span>
+        <span class="risk-bar-zone-label" style="left:60%">60 RED</span>
+        <span>100</span>
+      </div>
+      <div id="layerBars"></div>
+    </div>
   </section>
 
   <!-- LAYER CARDS -->
@@ -160,14 +241,17 @@
 
   <!-- HISTORY CHART -->
   <section class="panel">
-    <h2>Composite History</h2>
-    <p class="sub">36-month backfill · Each dot = one scheduled snapshot</p>
+    <div class="panel-header">
+      <h2>24-Month Risk History</h2>
+      <div class="layer-toggles" id="layerToggles"></div>
+    </div>
+    <p class="panel-sub">Each point = end-of-month snapshot · Computed from real FRED series</p>
     <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
   </section>
 
   <!-- INDICATOR TABLE -->
   <section class="panel">
-    <h2>Indicator Detail</h2>
+    <div class="panel-header"><h2>Indicator Detail</h2></div>
     <div class="filter-row">
       <select id="layerFilter">
         <option value="">All layers</option>
@@ -191,288 +275,548 @@
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Indicator</th>
-            <th>Layer</th>
-            <th>Cat</th>
-            <th>Latest Value</th>
-            <th>Date</th>
-            <th>Threshold</th>
-            <th>Score</th>
-            <th>Alert</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>Indicator</th>
+          <th>Layer</th>
+          <th>Latest</th>
+          <th>As of</th>
+          <th>Threshold</th>
+          <th>Direction</th>
+          <th>Score</th>
+          <th>Alert</th>
+        </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
     </div>
   </section>
 
-  <footer>
-    <p>Data: <a href="https://fred.stlouisfed.org" target="_blank">FRED, Federal Reserve Bank of St. Louis</a>
-    &nbsp;·&nbsp; <a href="https://github.com" id="repoLink" target="_blank">GitHub Source</a></p>
-  </footer>
+  <!-- METHODOLOGY -->
+  <section class="panel">
+    <button class="methodology-toggle" id="methToggle" aria-expanded="false">
+      <h2>How it works</h2>
+      <span class="chevron" id="chevron">▾</span>
+    </button>
+    <div class="methodology-body" id="methBody">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">
+        The composite score blends 24 FRED indicators across 5 economic layers.
+        Each indicator is normalized to a 0–100 risk scale, then weighted and
+        aggregated into layer scores, then into a single composite.
+        No machine learning. No backtested thresholds. Pure signal monitoring.
+      </p>
 
+      <h3 style="font-size:14px;margin-bottom:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Layer weights</h3>
+      <div class="meth-weights">
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-fin)">30%</div><div class="lbl">Financial<br>Leading</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-lab)">25%</div><div class="lbl">Labor</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-real)">20%</div><div class="lbl">Real<br>Economy</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-inf)">15%</div><div class="lbl">Inflation</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-micro)">10%</div><div class="lbl">Micro</div></div>
+      </div>
+
+      <h3 style="font-size:14px;margin-bottom:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Scoring approach</h3>
+      <div class="meth-grid">
+        <div class="meth-card">
+          <h4>Threshold-based indicators</h4>
+          <p>For indicators with a defined threshold (e.g. yield curve at 0, Sahm Rule at 0.5),
+             risk is computed as the signed distance from the threshold, passed through a
+             logistic function: <code style="font-size:11px">1 / (1 + e^(−4x))</code>.
+             Crossing the threshold gives a score of 50.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Z-score indicators</h4>
+          <p>For indicators without a fixed threshold (e.g. unemployment, GDP),
+             a z-score is computed over a rolling 36-month window.
+             The z-score is then passed through the same logistic function.
+             Mean = 50, ±1σ ≈ 73 and 27.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Alert states</h4>
+          <p>Composite score 0–29: <strong style="color:var(--green)">GREEN</strong> (low risk).
+             30–59: <strong style="color:var(--yellow)">YELLOW</strong> (elevated watch).
+             60–100: <strong style="color:var(--red)">RED</strong> (high risk).
+             Thresholds reflect judgment, not backtested calibration.</p>
+        </div>
+        <div class="meth-card">
+          <h4>History backfill</h4>
+          <p>On each data refresh, the full 24-month history is recomputed by
+             replaying monthly snapshots against the FRED series, using only
+             data available at each cutoff date (real-time z-score windows).
+             No look-ahead bias.</p>
+        </div>
+      </div>
+
+      <div class="meth-disclaimer">
+        <strong>Limitations:</strong> Layer weights are doctrinal, not empirically optimized against NBER
+        chronology. Alert thresholds are calibrated by intuition. Series have different release lags
+        (daily ≈ 1 day stale, monthly ≈ 1–2 months, quarterly ≈ 3–4 months). The composite blends
+        these without stale-adjusting. No backtest has been run. Treat as relative signal monitoring,
+        not a recession prediction model.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Data: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED, Federal Reserve Bank of St. Louis</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub Source</a></p>
+  </footer>
 </div>
 
 <script type="module">
-  // ─── CONFIG ───────────────────────────────────────────────────────────────
-  const LAYER_NAMES = {
-    financial_lead: 'Financial Leading',
-    labor: 'Labor',
-    inflation: 'Inflation',
-    real_economy: 'Real Economy',
-    micro: 'Micro'
-  };
+// ─── CONFIG ─────────────────────────────────────────────────────────────────
+const LAYER_NAMES = {
+  financial_lead: 'Financial Leading',
+  labor:          'Labor',
+  inflation:      'Inflation',
+  real_economy:   'Real Economy',
+  micro:          'Micro'
+};
+const LAYER_ORDER  = ['financial_lead','labor','inflation','real_economy','micro'];
+const LAYER_COLORS = {
+  financial_lead: '#66b3ff',
+  labor:          '#ff9f7a',
+  inflation:      '#c97af1',
+  real_economy:   '#4dd9c0',
+  micro:          '#f0e442'
+};
+const LAYER_BTN_CLASS = {
+  financial_lead: 'l-fin',
+  labor:          'l-lab',
+  inflation:      'l-inf',
+  real_economy:   'l-real',
+  micro:          'l-micro'
+};
 
-  const LAYER_ORDER = ['financial_lead','labor','real_economy','micro','inflation'];
+// ─── UTILITIES ───────────────────────────────────────────────────────────────
+function scoreColor(s) {
+  if (s >= 60) return '#ff7a7a';
+  if (s >= 30) return '#f1c84a';
+  return '#2ddc8c';
+}
 
-  const ALERT_COLOR = { GREEN: '#2ddc8c', YELLOW: '#f1c84a', RED: '#ff7a7a' };
+function alertClass(a) {
+  return ['GREEN','YELLOW','RED'].includes(a) ? a : 'GREEN';
+}
 
-  // ─── DATA FETCH ───────────────────────────────────────────────────────────
-  async function loadData() {
-    const [current, history] = await Promise.all([
-      fetch('data/current.json').then(r => {
-        if (!r.ok) throw new Error(`current.json: HTTP ${r.status}`);
-        return r.json();
-      }),
-      fetch('data/history.json').then(r => {
-        if (!r.ok) return [];
-        return r.json();
-      }).catch(() => [])
-    ]);
-    return { current, history };
-  }
+function fmtVal(v) {
+  if (v === null || v === undefined) return '—';
+  const n = Number(v);
+  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+  if (Math.abs(n) >= 1e4) return n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  if (Math.abs(n) >= 1e3) return n.toLocaleString(undefined, { maximumFractionDigits: 1 });
+  return n.toFixed(2);
+}
 
-  // ─── RENDER HELPERS ───────────────────────────────────────────────────────
-  function setEl(id, val) { document.getElementById(id).textContent = val; }
+function fmtDate(d) {
+  if (!d) return '—';
+  return d.slice(0, 10);
+}
 
-  function alertClass(alert) {
-    return ['GREEN','YELLOW','RED'].includes(alert) ? alert : 'GREEN';
-  }
+function staleDays(dateStr) {
+  if (!dateStr) return null;
+  return Math.floor((Date.now() - new Date(dateStr)) / 86400000);
+}
 
-  function scoreColor(score) {
-    if (score >= 60) return '#ff7a7a';
-    if (score >= 30) return '#f1c84a';
-    return '#2ddc8c';
-  }
+function trendText(curr, prev) {
+  if (prev === null || prev === undefined) return { text: '', cls: 'flat' };
+  const delta = curr - prev;
+  if (Math.abs(delta) < 0.05) return { text: '→ unchanged', cls: 'flat' };
+  const sign = delta > 0 ? '+' : '';
+  const cls  = delta > 0 ? 'up' : 'down';
+  const arrow = delta > 0 ? '▲' : '▼';
+  return { text: `${arrow} ${sign}${delta.toFixed(1)} vs prev`, cls };
+}
 
-  function fmtValue(val) {
-    if (val === null || val === undefined) return '—';
-    if (Math.abs(val) > 100000) return (val / 1000000).toFixed(2) + 'M';
-    if (Math.abs(val) > 1000) return val.toLocaleString();
-    return Number(val).toFixed(2);
-  }
+function riskBarGradient(score) {
+  const g = '#2ddc8c', y = '#f1c84a', r = '#ff7a7a', d = '#1a2340';
+  const s = Math.max(0, Math.min(100, score));
+  if (s <= 30) return `linear-gradient(to right,${g} 0%,${g} ${s}%,${d} ${s}%,${d} 100%)`;
+  if (s <= 60) return `linear-gradient(to right,${g} 0%,${g} 30%,${y} 30%,${y} ${s}%,${d} ${s}%,${d} 100%)`;
+  return `linear-gradient(to right,${g} 0%,${g} 30%,${y} 30%,${y} 60%,${r} 60%,${r} ${s}%,${d} ${s}%,${d} 100%)`;
+}
 
-  function fmtLayerName(key) {
-    return LAYER_NAMES[key] || key;
-  }
+function sparklineSvg(values, color) {
+  const vals = values.filter(v => v !== null && v !== undefined);
+  if (vals.length < 2) return '';
+  const w = 100, h = 28, pad = 2;
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const range = max - min || 1;
+  const pts = vals.map((v, i) => {
+    const x = pad + (i / (vals.length - 1)) * (w - pad * 2);
+    const y = h - pad - ((v - min) / range) * (h - pad * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" class="sparkline" width="${w}" height="${h}">
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="1.8"
+      stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
 
-  // ─── MAIN RENDER ─────────────────────────────────────────────────────────
-  function renderDashboard(current, history) {
-    // Header meta
-    setEl('asOf', current.as_of || '—');
-    setEl('generatedAt', current.generated_at
-      ? new Date(current.generated_at).toLocaleString()
-      : '—');
+// ─── DATA LOADING ─────────────────────────────────────────────────────────────
+async function loadData() {
+  const [current, history] = await Promise.all([
+    fetch('data/current.json').then(r => {
+      if (!r.ok) throw new Error(`current.json HTTP ${r.status}`);
+      return r.json();
+    }),
+    fetch('data/history.json').then(r => r.ok ? r.json() : []).catch(() => [])
+  ]);
+  return { current, history };
+}
 
-    // Composite hero
-    const score = current.composite?.score ?? 0;
-    const alert = current.composite?.alert ?? 'GREEN';
-    const scoreEl = document.getElementById('compositeScore');
-    scoreEl.textContent = score;
-    scoreEl.style.color = scoreColor(score);
-    const alertEl = document.getElementById('compositeAlert');
-    alertEl.textContent = alert;
-    alertEl.className = `badge ${alertClass(alert)}`;
+// ─── RENDER: HEADER ──────────────────────────────────────────────────────────
+function renderHeader(current) {
+  document.getElementById('asOf').textContent = current.as_of || '—';
+  const genAt = current.generated_at ? new Date(current.generated_at) : null;
+  document.getElementById('generatedAt').textContent = genAt
+    ? genAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
+    : '—';
 
-    // Layer cards
-    const cardsEl = document.getElementById('layerCards');
-    cardsEl.innerHTML = '';
-    LAYER_ORDER.forEach(key => {
-      const layer = current.layers?.[key];
-      if (!layer) return;
-      const s = layer.score ?? 0;
-      const a = layer.alert ?? 'GREEN';
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <h3>${fmtLayerName(key)}</h3>
-        <div class="card-score" style="color:${scoreColor(s)}">${s}</div>
-        <span class="badge ${alertClass(a)}">${a}</span>
-        <div class="card-weight">Weight: ${Math.round((layer.weight || 0) * 100)}%</div>
-      `;
-      cardsEl.appendChild(card);
-    });
-
-    // Indicator table
-    renderTable(current.indicators || []);
-
-    // History chart
-    renderChart(history);
-  }
-
-  // ─── TABLE ────────────────────────────────────────────────────────────────
-  let allIndicators = [];
-
-  function renderTable(indicators) {
-    allIndicators = indicators;
-    applyFilters();
-  }
-
-  function applyFilters() {
-    const layer = document.getElementById('layerFilter').value;
-    const cat   = document.getElementById('categoryFilter').value;
-    const alrt  = document.getElementById('alertFilter').value;
-
-    const filtered = allIndicators.filter(ind => {
-      if (layer && ind.layer !== layer) return false;
-      if (cat   && ind.category !== cat) return false;
-      if (alrt  && ind.alert !== alrt) return false;
-      return true;
-    });
-
-    const tbody = document.getElementById('tableBody');
-    tbody.innerHTML = '';
-
-    filtered.forEach(ind => {
-      const s = ind.score ?? 0;
-      const a = alertClass(ind.alert);
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><strong>${ind.name}</strong></td>
-        <td style="color:var(--muted);font-size:12px">${fmtLayerName(ind.layer)}</td>
-        <td><span style="font-size:11px;color:var(--muted);text-transform:uppercase">${ind.category}</span></td>
-        <td>${fmtValue(ind.latest_value)}</td>
-        <td style="color:var(--muted);font-size:12px">${ind.latest_date || '—'}</td>
-        <td style="color:var(--muted);font-size:12px">${ind.threshold !== null && ind.threshold !== undefined ? fmtValue(ind.threshold) : 'z-score'}</td>
-        <td>
-          <div class="score-bar-wrap">
-            <div class="score-bar" style="width:${s}px;max-width:80px;background:${scoreColor(s)}"></div>
-            <span>${s}</span>
-          </div>
-        </td>
-        <td><span class="badge ${a}">${ind.alert}</span></td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  // ─── HISTORY CHART ────────────────────────────────────────────────────────
-  let chartInstance = null;
-
-  function renderChart(history) {
-    const ctx = document.getElementById('historyChart').getContext('2d');
-    if (chartInstance) chartInstance.destroy();
-
-    if (!history || history.length === 0) {
-      ctx.fillStyle = '#8b95b8';
-      ctx.font = '14px Inter, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText('History builds after first scheduled run', ctx.canvas.width / 2, 150);
-      return;
+  if (genAt) {
+    const days = Math.floor((Date.now() - genAt) / 86400000);
+    if (days > 5) {
+      document.getElementById('staleTag').style.display = 'inline-block';
+      const sb = document.getElementById('staleBanner');
+      sb.textContent = `⚠ Data is ${days} days old — next scheduled refresh is Tuesday or Saturday at 13:00 UTC.`;
+      sb.style.display = 'block';
     }
-
-    const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
-    const labels = sorted.map(x => x.date);
-    const composite = sorted.map(x => x.composite);
-    const pointColors = composite.map(s => scoreColor(s));
-
-    chartInstance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Composite Score',
-            data: composite,
-            borderColor: '#66b3ff',
-            backgroundColor: 'rgba(102,179,255,0.08)',
-            borderWidth: 2,
-            pointBackgroundColor: pointColors,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            fill: true,
-            tension: 0.35
-          },
-          {
-            label: 'RED threshold (60)',
-            data: labels.map(() => 60),
-            borderColor: 'rgba(255,122,122,0.35)',
-            borderDash: [4,4],
-            borderWidth: 1,
-            pointRadius: 0,
-            fill: false
-          },
-          {
-            label: 'YELLOW threshold (30)',
-            data: labels.map(() => 30),
-            borderColor: 'rgba(241,200,74,0.35)',
-            borderDash: [4,4],
-            borderWidth: 1,
-            pointRadius: 0,
-            fill: false
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: { mode: 'index', intersect: false },
-        plugins: {
-          legend: {
-            labels: { color: '#8b95b8', font: { size: 12 } }
-          },
-          tooltip: {
-            backgroundColor: '#1a2340',
-            titleColor: '#eef2ff',
-            bodyColor: '#8b95b8',
-            borderColor: 'rgba(255,255,255,0.08)',
-            borderWidth: 1,
-            callbacks: {
-              afterBody: (items) => {
-                const s = items[0]?.parsed?.y;
-                if (s === undefined) return '';
-                return `Alert: ${s >= 60 ? 'RED' : s >= 30 ? 'YELLOW' : 'GREEN'}`;
-              }
-            }
-          }
-        },
-        scales: {
-          x: {
-            ticks: { color: '#8b95b8', maxTicksLimit: 12, font: { size: 11 } },
-            grid: { color: 'rgba(255,255,255,0.04)' }
-          },
-          y: {
-            min: 0, max: 100,
-            ticks: { color: '#8b95b8', font: { size: 11 } },
-            grid: { color: 'rgba(255,255,255,0.04)' }
-          }
-        }
-      }
-    });
   }
+}
 
-  // ─── ERROR HANDLER ────────────────────────────────────────────────────────
-  function showError(msg) {
-    const el = document.getElementById('errorBanner');
-    el.textContent = `⚠ ${msg}`;
-    el.style.display = 'block';
-  }
+// ─── RENDER: HERO ─────────────────────────────────────────────────────────────
+function renderHero(current, history) {
+  const score = current.composite?.score ?? 0;
+  const alert = current.composite?.alert ?? 'GREEN';
+  const color = scoreColor(score);
 
-  // ─── FILTER LISTENERS ─────────────────────────────────────────────────────
-  ['layerFilter','categoryFilter','alertFilter'].forEach(id => {
-    document.getElementById(id).addEventListener('change', applyFilters);
+  const scoreEl = document.getElementById('compositeScore');
+  scoreEl.textContent = score;
+  scoreEl.style.color  = color;
+
+  const alertEl = document.getElementById('compositeAlert');
+  alertEl.textContent = alert;
+  alertEl.className   = `badge ${alertClass(alert)}`;
+
+  // Trend vs previous history entry
+  const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
+  const prevEntry = sorted.length >= 2 ? sorted[sorted.length - 2] : null;
+  const { text, cls } = trendText(score, prevEntry?.composite ?? null);
+  const trendEl = document.getElementById('compositeTrend');
+  trendEl.textContent = text;
+  trendEl.className   = `trend ${cls}`;
+
+  // Risk bar
+  const fill = document.getElementById('riskBarFill');
+  fill.style.width      = `${score}%`;
+  fill.style.background = color;
+
+  // Mini layer bars
+  const lb = document.getElementById('layerBars');
+  lb.innerHTML = '';
+  LAYER_ORDER.forEach(key => {
+    const layer = current.layers?.[key];
+    if (!layer) return;
+    const s = layer.score ?? 0;
+    lb.innerHTML += `
+      <div style="margin-bottom:7px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px">
+          <span>${LAYER_NAMES[key]}</span>
+          <span style="color:${scoreColor(s)};font-weight:600">${s}</span>
+        </div>
+        <div style="height:4px;border-radius:2px;background:var(--panel-3);position:relative">
+          <div style="height:100%;width:${s}%;border-radius:2px;background:${scoreColor(s)}"></div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// ─── RENDER: LAYER CARDS ──────────────────────────────────────────────────────
+function renderLayerCards(current, history) {
+  const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
+  const prevEntry = sorted.length >= 2 ? sorted[sorted.length - 2] : null;
+
+  const el = document.getElementById('layerCards');
+  el.innerHTML = '';
+  LAYER_ORDER.forEach(key => {
+    const layer = current.layers?.[key];
+    if (!layer) return;
+    const s = layer.score ?? 0;
+    const a = layer.alert ?? 'GREEN';
+    const color = LAYER_COLORS[key];
+    const prevLayerScore = prevEntry?.layers?.[key] ?? null;
+    const { text, cls } = trendText(s, prevLayerScore);
+
+    // Sparkline from history
+    const sparkVals = sorted.slice(-10).map(h => h.layers?.[key] ?? null);
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="card-name">${LAYER_NAMES[key]}</span>
+        <span class="badge ${alertClass(a)}">${a}</span>
+      </div>
+      <div class="card-score" style="color:${scoreColor(s)}">${s}</div>
+      ${sparklineSvg(sparkVals, color)}
+      <div class="card-bottom">
+        <span class="card-weight">${Math.round((layer.weight || 0) * 100)}% weight</span>
+        <span class="card-trend trend ${cls}">${text}</span>
+      </div>
+    `;
+    el.appendChild(card);
+  });
+}
+
+// ─── RENDER: HISTORY CHART ───────────────────────────────────────────────────
+let chartInstance   = null;
+let chartDatasets   = [];
+let visibleDatasets = new Set(['composite']);
+
+function buildChartDatasets(history) {
+  const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
+  const labels = sorted.map(x => x.date.slice(0, 7)); // YYYY-MM
+
+  const datasets = [];
+
+  // Composite
+  datasets.push({
+    id: 'composite',
+    label: 'Composite',
+    data: sorted.map(x => x.composite),
+    borderColor: '#66b3ff',
+    backgroundColor: 'rgba(102,179,255,0.07)',
+    borderWidth: 2.5,
+    pointBackgroundColor: sorted.map(x => scoreColor(x.composite)),
+    pointRadius: 3,
+    pointHoverRadius: 6,
+    fill: true,
+    tension: 0.3,
+    hidden: false
   });
 
-  // ─── BOOT ─────────────────────────────────────────────────────────────────
-  try {
-    const { current, history } = await loadData();
-    renderDashboard(current, history);
-  } catch (err) {
-    showError(`Failed to load data: ${err.message}. Run the workflow first or check data/current.json exists.`);
-    console.error(err);
+  // Layer lines
+  LAYER_ORDER.forEach(key => {
+    datasets.push({
+      id: key,
+      label: LAYER_NAMES[key],
+      data: sorted.map(x => x.layers?.[key] ?? null),
+      borderColor: LAYER_COLORS[key],
+      backgroundColor: 'transparent',
+      borderWidth: 1.5,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      fill: false,
+      tension: 0.3,
+      hidden: true
+    });
+  });
+
+  // Threshold lines
+  datasets.push({
+    id: '_red',
+    label: '60 RED',
+    data: sorted.map(() => 60),
+    borderColor: 'rgba(255,122,122,0.3)',
+    borderDash: [4,4],
+    borderWidth: 1,
+    pointRadius: 0,
+    fill: false,
+    hidden: false
+  });
+  datasets.push({
+    id: '_yellow',
+    label: '30 YELLOW',
+    data: sorted.map(() => 30),
+    borderColor: 'rgba(241,200,74,0.3)',
+    borderDash: [4,4],
+    borderWidth: 1,
+    pointRadius: 0,
+    fill: false,
+    hidden: false
+  });
+
+  return { labels, datasets };
+}
+
+function renderChart(history) {
+  const ctx = document.getElementById('historyChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+
+  if (!history || history.length === 0) {
+    ctx.fillStyle = '#7a84a8';
+    ctx.font = '14px system-ui';
+    ctx.textAlign = 'center';
+    ctx.fillText('No history available yet', ctx.canvas.width / 2, 150);
+    return;
   }
+
+  const { labels, datasets } = buildChartDatasets(history);
+  chartDatasets = datasets;
+
+  // Build toggle buttons
+  const togglesEl = document.getElementById('layerToggles');
+  togglesEl.innerHTML = '';
+
+  const toggleDef = [
+    { id: 'composite', label: 'Composite', cls: 'l-composite' },
+    ...LAYER_ORDER.map(k => ({ id: k, label: LAYER_NAMES[k], cls: LAYER_BTN_CLASS[k] }))
+  ];
+
+  toggleDef.forEach(({ id, label, cls }) => {
+    const btn = document.createElement('button');
+    btn.className = `ltbtn ${cls}${visibleDatasets.has(id) ? ' active' : ''}`;
+    btn.textContent = label;
+    btn.dataset.id = id;
+    btn.addEventListener('click', () => {
+      if (visibleDatasets.has(id)) visibleDatasets.delete(id);
+      else visibleDatasets.add(id);
+      btn.classList.toggle('active', visibleDatasets.has(id));
+      const dsIdx = chartInstance.data.datasets.findIndex(d => d.id === id);
+      if (dsIdx >= 0) {
+        chartInstance.setDatasetVisibility(dsIdx, visibleDatasets.has(id));
+        chartInstance.update();
+      }
+    });
+    togglesEl.appendChild(btn);
+  });
+
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2340',
+          titleColor: '#eef2ff',
+          bodyColor: '#7a84a8',
+          borderColor: 'rgba(255,255,255,0.08)',
+          borderWidth: 1,
+          callbacks: {
+            title: items => items[0]?.label || '',
+            label: item => {
+              if (item.dataset.id?.startsWith('_')) return null;
+              const s = item.parsed.y;
+              if (s === null) return null;
+              const state = s >= 60 ? 'RED' : s >= 30 ? 'YELLOW' : 'GREEN';
+              return ` ${item.dataset.label}: ${s.toFixed(1)} (${state})`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#7a84a8', maxTicksLimit: 12, font: { size: 11 } },
+          grid:  { color: 'rgba(255,255,255,0.03)' }
+        },
+        y: {
+          min: 0, max: 100,
+          ticks: { color: '#7a84a8', font: { size: 11 } },
+          grid:  { color: 'rgba(255,255,255,0.03)' }
+        }
+      }
+    }
+  });
+}
+
+// ─── RENDER: TABLE ───────────────────────────────────────────────────────────
+let allIndicators = [];
+
+function renderTable(indicators) {
+  allIndicators = indicators;
+  applyFilters();
+}
+
+function applyFilters() {
+  const layer = document.getElementById('layerFilter').value;
+  const cat   = document.getElementById('categoryFilter').value;
+  const alrt  = document.getElementById('alertFilter').value;
+
+  const filtered = allIndicators.filter(ind => {
+    if (layer && ind.layer !== layer) return false;
+    if (cat   && ind.category !== cat) return false;
+    if (alrt  && ind.alert !== alrt)   return false;
+    return true;
+  });
+
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  filtered.forEach(ind => {
+    const s     = ind.score ?? 0;
+    const a     = alertClass(ind.alert);
+    const days  = staleDays(ind.latest_date);
+    const staleHtml = days !== null
+      ? `<div class="stale-days">${days === 0 ? 'today' : `${days}d ago`}</div>` : '';
+    const dirHtml = ind.direction === 'direct'
+      ? '<span class="dir-label dir-up" title="Higher value = safer">Higher safer</span>'
+      : '<span class="dir-label dir-down" title="Lower value = safer">Lower safer</span>';
+    const thr = (ind.threshold !== null && ind.threshold !== undefined)
+      ? fmtVal(ind.threshold) : 'z-score';
+    const descHtml = ind.description
+      ? `<div class="ind-desc">${ind.description}</div>` : '';
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>
+        <div class="ind-name">${ind.name}</div>
+        ${descHtml}
+      </td>
+      <td style="color:var(--muted);font-size:12px;white-space:nowrap">${LAYER_NAMES[ind.layer] || ind.layer}</td>
+      <td style="white-space:nowrap"><strong>${fmtVal(ind.latest_value)}</strong></td>
+      <td>${fmtDate(ind.latest_date)}${staleHtml}</td>
+      <td style="color:var(--muted);font-size:12px">${thr}</td>
+      <td>${dirHtml}</td>
+      <td>
+        <div class="score-bar-wrap">
+          <div class="score-bar" style="width:${Math.max(s,2)}px;max-width:80px;background:${scoreColor(s)}"></div>
+          <span style="font-weight:600;color:${scoreColor(s)}">${s}</span>
+        </div>
+      </td>
+      <td><span class="badge ${a}">${ind.alert}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─── METHODOLOGY TOGGLE ───────────────────────────────────────────────────────
+document.getElementById('methToggle').addEventListener('click', () => {
+  const body = document.getElementById('methBody');
+  const chev = document.getElementById('chevron');
+  const btn  = document.getElementById('methToggle');
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
+});
+
+// ─── FILTER LISTENERS ─────────────────────────────────────────────────────────
+['layerFilter','categoryFilter','alertFilter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', applyFilters);
+});
+
+// ─── ERROR ────────────────────────────────────────────────────────────────────
+function showError(msg) {
+  const el = document.getElementById('errorBanner');
+  el.textContent = `⚠ ${msg}`;
+  el.style.display = 'block';
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+try {
+  const { current, history } = await loadData();
+  renderHeader(current);
+  renderHero(current, history);
+  renderLayerCards(current, history);
+  renderChart(history);
+  renderTable(current.indicators || []);
+} catch (err) {
+  showError(`Failed to load data: ${err.message}. Check that data/current.json exists.`);
+  console.error(err);
+}
 </script>
 </body>
 </html>

@@ -6,7 +6,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { REGISTRY } from '../src/registry.mjs';
 import { fetchAllSeries } from '../src/fred.mjs';
-import { normalizeIndicator, buildSnapshot } from '../src/scoring.mjs';
+import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -42,34 +42,18 @@ async function main() {
     JSON.stringify(snapshot, null, 2)
   );
 
-  // Append to history (compact form: just date + composite + layer scores)
-  const historyPath = path.join(DATA_DIR, 'history.json');
-  let history = [];
-  try {
-    const raw = await fs.readFile(historyPath, 'utf-8');
-    history = JSON.parse(raw);
-  } catch {
-    history = [];
-  }
+  // Rebuild full 24-month history from FRED series data (rolling 36-month z-score window)
+  console.log('\nBuilding 24-month history from series data...');
+  const history = buildHistoryFromSeries(rawData, REGISTRY);
+  await fs.writeFile(
+    path.join(DATA_DIR, 'history.json'),
+    JSON.stringify(history, null, 2)
+  );
 
-  const historyEntry = {
-    date: snapshot.as_of,
-    composite: snapshot.composite.score,
-    alert: snapshot.composite.alert,
-    layers: Object.fromEntries(
-      Object.entries(snapshot.layers).map(([k, v]) => [k, v.score])
-    )
-  };
-
-  // Replace today's entry if it exists (idempotent), else append
-  const idx = history.findIndex(x => x.date === historyEntry.date);
-  if (idx >= 0) history[idx] = historyEntry;
-  else history.push(historyEntry);
-
-  await fs.writeFile(historyPath, JSON.stringify(history, null, 2));
-
-  console.log(`Composite: ${snapshot.composite.score} (${snapshot.composite.alert})`);
-  console.log(`Layers:`, snapshot.layers);
+  console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert})`);
+  console.log(`Layers:`, Object.fromEntries(
+    Object.entries(snapshot.layers).map(([k, v]) => [k, v.score])
+  ));
   console.log(`History entries: ${history.length}`);
 }
 

@@ -6,7 +6,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { REGISTRY } from '../src/registry.mjs';
-import { normalizeIndicator, buildSnapshot } from '../src/scoring.mjs';
+import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -73,7 +73,7 @@ const SEED = {
  */
 function makeSeries(fredId) {
   const { latest, mean, std } = SEED[fredId];
-  const MONTHS = 36;
+  const MONTHS = 48; // 4 years — enough for 24-month history with 36-month z-score window
   const now = new Date('2026-05-01');
 
   // Generate MONTHS-1 raw pseudo-random values using deterministic hash
@@ -113,23 +113,11 @@ async function main() {
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(path.join(DATA_DIR, 'current.json'), JSON.stringify(snapshot, null, 2));
 
-  // Seed history with a plausible 8-month arc
-  const history = [
-    { date: '2025-09-06', composite: 18.2, alert: 'GREEN', layers: { financial_lead: 14.1, labor: 22.8, inflation: 15.3, real_economy:  9.4, micro: 24.1 } },
-    { date: '2025-10-04', composite: 17.8, alert: 'GREEN', layers: { financial_lead: 13.5, labor: 23.4, inflation: 14.8, real_economy: 10.1, micro: 23.6 } },
-    { date: '2025-11-01', composite: 18.9, alert: 'GREEN', layers: { financial_lead: 12.9, labor: 24.7, inflation: 16.2, real_economy:  9.8, micro: 25.3 } },
-    { date: '2025-12-06', composite: 19.3, alert: 'GREEN', layers: { financial_lead: 12.4, labor: 26.1, inflation: 17.0, real_economy:  9.5, micro: 25.8 } },
-    { date: '2026-01-10', composite: 20.1, alert: 'GREEN', layers: { financial_lead: 12.0, labor: 27.5, inflation: 19.4, real_economy:  9.2, micro: 26.2 } },
-    { date: '2026-02-07', composite: 19.6, alert: 'GREEN', layers: { financial_lead: 11.8, labor: 27.9, inflation: 18.8, real_economy:  8.9, micro: 26.9 } },
-    { date: '2026-03-07', composite: 20.4, alert: 'GREEN', layers: { financial_lead: 12.2, labor: 28.8, inflation: 21.3, real_economy:  8.6, micro: 27.1 } },
-    { date: '2026-04-04', composite: 19.8, alert: 'GREEN', layers: { financial_lead: 12.5, labor: 29.4, inflation: 22.8, real_economy:  8.4, micro: 26.8 } },
-    {
-      date: '2026-05-19',
-      composite: snapshot.composite.score,
-      alert: snapshot.composite.alert,
-      layers: Object.fromEntries(Object.entries(snapshot.layers).map(([k, v]) => [k, v.score]))
-    }
-  ];
+  // Build 24-month computed history from the synthetic series
+  const rawData = Object.fromEntries(
+    REGISTRY.map(ind => [ind.fred_id, SEED[ind.fred_id] ? makeSeries(ind.fred_id) : []])
+  );
+  const history = buildHistoryFromSeries(rawData, REGISTRY);
 
   await fs.writeFile(path.join(DATA_DIR, 'history.json'), JSON.stringify(history, null, 2));
 
