@@ -23,6 +23,10 @@ const SEED = {
   BAA10YM:       { latest:  2.22,    mean:  2.55, std: 0.45 },
   // Financial conditions loose; threshold=0.5
   NFCI:          { latest: -0.40,    mean: -0.10, std: 0.30 },
+  // VIX subdued (below 25 threshold); occasional spikes
+  VIXCLS:        { latest: 16.8,     mean: 18.5,  std: 5.5  },
+  // HY spread tight (below 5.0 threshold)
+  BAMLH0A0HYM2:  { latest:  3.45,    mean:  4.15, std: 0.95 },
 
   // ── Labor ────────────────────────────────────────────────────────────────
   // Unemployment rose from 3.4% lows to 4.2%; z-score picks this up

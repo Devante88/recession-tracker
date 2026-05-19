@@ -13,10 +13,12 @@
 
 export const REGISTRY = [
   // ─── Financial leading indicators ─────────────────────────────────────
-  { name: "Yield Curve 10Y-3M", fred_id: "T10Y3M", layer: "financial_lead", frequency: "daily", direction: "direct", weight: 0.35, threshold: 0.0, category: "macro", description: "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession." },
-  { name: "Yield Curve 10Y-2Y", fred_id: "T10Y2Y", layer: "financial_lead", frequency: "daily", direction: "direct", weight: 0.20, threshold: 0.0, category: "macro", description: "Spread between 10Y and 2Y Treasury yields. Classic recession signal." },
-  { name: "Baa-10Y Credit Spread", fred_id: "BAA10YM", layer: "financial_lead", frequency: "monthly", direction: "inverse", weight: 0.25, threshold: 3.0, category: "macro", description: "Corporate spread as a credit-stress proxy. Threshold calibrated to widening regimes." },
-  { name: "Chicago Fed NFCI", fred_id: "NFCI", layer: "financial_lead", frequency: "weekly", direction: "inverse", weight: 0.20, threshold: 0.5, category: "macro", description: "Broad financial conditions index. Positive = tighter than average." },
+  { name: "Yield Curve 10Y-3M", fred_id: "T10Y3M", layer: "financial_lead", frequency: "daily", direction: "direct", weight: 0.30, threshold: 0.0, category: "macro", description: "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession." },
+  { name: "Yield Curve 10Y-2Y", fred_id: "T10Y2Y", layer: "financial_lead", frequency: "daily", direction: "direct", weight: 0.15, threshold: 0.0, category: "macro", description: "Spread between 10Y and 2Y Treasury yields. Classic recession signal." },
+  { name: "Baa-10Y Credit Spread", fred_id: "BAA10YM", layer: "financial_lead", frequency: "monthly", direction: "inverse", weight: 0.20, threshold: 3.0, category: "macro", description: "Corporate spread as a credit-stress proxy. Threshold calibrated to widening regimes." },
+  { name: "Chicago Fed NFCI", fred_id: "NFCI", layer: "financial_lead", frequency: "weekly", direction: "inverse", weight: 0.15, threshold: 0.5, category: "macro", description: "Broad financial conditions index. Positive = tighter than average." },
+  { name: "VIX (Equity Vol)", fred_id: "VIXCLS", layer: "financial_lead", frequency: "daily", direction: "inverse", weight: 0.10, threshold: 25.0, category: "macro", description: "CBOE volatility index. Sustained levels above 25 indicate market stress." },
+  { name: "High Yield Spread", fred_id: "BAMLH0A0HYM2", layer: "financial_lead", frequency: "daily", direction: "inverse", weight: 0.10, threshold: 5.0, category: "macro", description: "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk." },
 
   // ─── Labor ─────────────────────────────────────────────────────────────
   { name: "Unemployment Rate", fred_id: "UNRATE", layer: "labor", frequency: "monthly", direction: "inverse", weight: 0.20, threshold: null, category: "macro", description: "Headline U3 unemployment. Z-score normalized." },
