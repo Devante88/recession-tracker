@@ -18,6 +18,45 @@ export function logistic(x, k = 4) {
 }
 
 /**
+ * Standard normal CDF via Abramowitz-Stegun 7.1.26 approximation.
+ * Accurate to ~7.5e-8.
+ */
+export function normalCdf(z) {
+  const t = 1 / (1 + 0.2316419 * Math.abs(z));
+  const d = 0.3989422804 * Math.exp(-z * z / 2);
+  const p = d * t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+  return z < 0 ? p : 1 - p;
+}
+
+/**
+ * Estrella-Mishkin (1996) probit model for 12-month-ahead recession probability.
+ * Inputs the 10Y-3M Treasury spread (FRED: T10Y3M) in percentage points.
+ * Coefficients refit to the original published probability table.
+ * Spread of 0 → ~33% probability; -1 → ~63%; +1 → ~16%.
+ */
+export function recessionProbability(spread) {
+  if (spread === null || spread === undefined || !Number.isFinite(spread)) return null;
+  return Number(normalCdf(-0.307 - 0.667 * spread).toFixed(3));
+}
+
+/**
+ * Count consecutive observations at the end of a series where `value < threshold`
+ * (or > threshold if `inverted=true`). Returns 0 if the latest observation is
+ * not in the triggered state. Useful for yield-curve inversion dwell time.
+ */
+export function thresholdDwell(series, threshold, { inverted = false } = {}) {
+  if (!Array.isArray(series) || !series.length) return 0;
+  let count = 0;
+  for (let i = series.length - 1; i >= 0; i--) {
+    const v = series[i].value;
+    const triggered = inverted ? v > threshold : v < threshold;
+    if (triggered) count++;
+    else break;
+  }
+  return count;
+}
+
+/**
  * Compute mean and standard deviation of a numeric array.
  */
 export function meanStd(values) {
@@ -62,11 +101,34 @@ export function normalizeIndicator(series, indicator) {
     });
   }
 
+  const last = normalized[normalized.length - 1];
+  const levelScore = last?.score ?? 0;
+  const momentum = computeMomentum(normalized);
+  // Blend level and momentum: turning points matter, level is the anchor.
+  const blendedScore = momentum === null
+    ? levelScore
+    : clamp01(0.7 * levelScore + 0.3 * momentum);
+
   return {
-    latest: normalized[normalized.length - 1],
-    score: normalized[normalized.length - 1]?.score ?? 0,
+    latest: last,
+    levelScore,
+    momentumScore: momentum,
+    score: blendedScore,
     series: normalized
   };
+}
+
+/**
+ * Momentum sub-score in [0, 1]. Computed from the 3-month change in the
+ * normalized score series. Rising risk (score going up) → high momentum.
+ * Returns null when the series is too short.
+ */
+function computeMomentum(normalized) {
+  if (!normalized || normalized.length < 4) return null;
+  const recent = normalized[normalized.length - 1].score;
+  const past   = normalized[normalized.length - 4].score;
+  const delta  = recent - past;   // in [-1, 1]
+  return clamp01(0.5 + delta);    // 0.5 = no change, 1 = fast rise, 0 = fast fall
 }
 
 function clamp01(x) {
@@ -117,17 +179,55 @@ export function alertState(score) {
 }
 
 /**
+ * Convert a composite score in [0, 100] to a 1–10 recession risk rating.
+ * 1 = minimal risk, 10 = extreme risk.
+ */
+export function ratingScore(score) {
+  return Math.min(10, Math.max(1, Math.round((score / 100) * 9) + 1));
+}
+
+/**
+ * Downsample a series to the last `months` calendar months, taking the last
+ * observation in each month. Used to keep the embedded per-indicator history
+ * compact in current.json.
+ */
+function lastMonthly(series, months = 24) {
+  if (!Array.isArray(series) || !series.length) return [];
+  const byMonth = new Map();
+  for (const p of series) {
+    byMonth.set(p.date.slice(0, 7), p);   // last-write-wins (series is ascending)
+  }
+  return [...byMonth.values()].slice(-months).map(p => ({ date: p.date, value: p.value }));
+}
+
+/**
  * Top-level: take normalized indicators, produce the full snapshot payload.
  */
 export function buildSnapshot(normalizedIndicators, asOfDate) {
   const layerScores = computeLayerScores(normalizedIndicators);
   const compositeScore = computeCompositeScore(layerScores);
+  const withData = normalizedIndicators.filter(x => x.latest !== null).length;
+  const confidence = normalizedIndicators.length > 0
+    ? Number((withData / normalizedIndicators.length).toFixed(2))
+    : 0;
+
+  // Yield-curve probit (Estrella-Mishkin) using T10Y3M if present.
+  const yc = normalizedIndicators.find(x => x.fred_id === 'T10Y3M');
+  const ycSpread = yc?.latest?.value ?? null;
+  const recessionProb = recessionProbability(ycSpread);
+  const inversionDays = yc?.series ? thresholdDwell(yc.series, 0, { inverted: false }) : 0;
+
   return {
     as_of: asOfDate || new Date().toISOString().slice(0, 10),
     generated_at: new Date().toISOString(),
     composite: {
       score: compositeScore,
-      alert: alertState(compositeScore)
+      alert: alertState(compositeScore),
+      rating: ratingScore(compositeScore),
+      confidence,
+      recession_probability_12mo: recessionProb,
+      yield_curve_inversion_days: inversionDays,
+      yield_curve_spread: ycSpread
     },
     layers: Object.fromEntries(
       Object.entries(layerScores).map(([layer, score]) => [
@@ -144,10 +244,14 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       latest_value: x.latest?.value ?? null,
       latest_date: x.latest?.date ?? null,
       score: Number(((x.score || 0) * 100).toFixed(1)),
+      level_score: x.levelScore !== undefined ? Number((x.levelScore * 100).toFixed(1)) : null,
+      momentum_score: x.momentumScore !== null && x.momentumScore !== undefined
+        ? Number((x.momentumScore * 100).toFixed(1)) : null,
       alert: alertState((x.score || 0) * 100),
       threshold: x.threshold,
       direction: x.direction,
-      frequency: x.frequency
+      frequency: x.frequency,
+      history: lastMonthly(x.series || [], 24)
     }))
   };
 }

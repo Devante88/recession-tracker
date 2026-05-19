@@ -42,6 +42,23 @@
     .stale-tag      { display: none; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
                       padding: 3px 10px; border-radius: 999px;
                       background: rgba(241,200,74,0.15); color: var(--yellow); }
+    .live-tag       { display: inline-flex; align-items: center; gap: 6px;
+                      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+                      padding: 3px 10px; border-radius: 999px;
+                      background: rgba(45,220,140,0.12); color: var(--green); }
+    .live-tag.paused { background: rgba(122,132,168,0.12); color: var(--muted); }
+    .live-dot       { width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+                      animation: live-pulse 1.6s ease-in-out infinite; }
+    .live-tag.paused .live-dot { background: var(--muted); animation: none; }
+    @keyframes live-pulse {
+      0%, 100% { opacity: 1;   transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.85); }
+    }
+    .flash-update { animation: flash 0.8s ease-out; }
+    @keyframes flash {
+      0%   { background-color: rgba(102,179,255,0.18); }
+      100% { background-color: transparent; }
+    }
 
     /* ── BANNERS ─────────────────────────────────────────────────────────────── */
     .banner { border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
@@ -50,6 +67,65 @@
                      color: var(--red); }
     .banner-stale  { background: rgba(241,200,74,0.08); border: 1px solid rgba(241,200,74,0.25);
                      color: var(--yellow); }
+
+    /* ── TABS ────────────────────────────────────────────────────────────────── */
+    .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border);
+            margin-bottom: 24px; flex-wrap: wrap; }
+    .tab-btn { background: none; border: none; color: var(--muted);
+               padding: 10px 18px; font-size: 14px; font-weight: 600;
+               cursor: pointer; font-family: inherit; border-bottom: 2px solid transparent;
+               margin-bottom: -1px; transition: color 0.15s, border-color 0.15s;
+               text-decoration: none; display: inline-block; }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-content[hidden] { display: none !important; }
+
+    /* ── BACKTEST STATS GRID ─────────────────────────────────────────────────── */
+    .bt-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+                gap:14px; margin-bottom:20px; }
+
+    /* ── EXTRA STATS ROW ─────────────────────────────────────────────────────── */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+                 margin-bottom: 20px; }
+    .stat-card { background: var(--panel); border: 1px solid var(--border);
+                 border-radius: 14px; padding: 16px 18px; }
+    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                  letter-spacing: 0.1em; margin-bottom: 6px; }
+    .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
+    .stat-sub   { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    @media (max-width: 700px) { .stats-row { grid-template-columns: 1fr; } }
+
+    /* ── EXPORT BUTTONS ──────────────────────────────────────────────────────── */
+    .export-row { display: flex; gap: 8px; }
+    .export-btn { background: var(--panel-2); border: 1px solid var(--border);
+                  border-radius: 6px; padding: 5px 10px; font-size: 12px;
+                  color: var(--muted); cursor: pointer; font-family: inherit; }
+    .export-btn:hover { color: var(--text); border-color: var(--accent); }
+
+    /* ── MODAL ───────────────────────────────────────────────────────────────── */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+                      display: none; align-items: center; justify-content: center;
+                      z-index: 100; padding: 24px; }
+    .modal-backdrop.open { display: flex; }
+    .modal { background: var(--panel); border: 1px solid var(--border);
+             border-radius: 16px; padding: 28px; max-width: 640px; width: 100%;
+             max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: flex-start;
+                    gap: 16px; margin-bottom: 12px; }
+    .modal-header h3 { font-size: 18px; font-weight: 700; }
+    .modal-header .badge { margin-top: 4px; }
+    .modal-close { background: none; border: none; color: var(--muted);
+                   font-size: 24px; cursor: pointer; line-height: 1; padding: 0; }
+    .modal-close:hover { color: var(--text); }
+    .modal-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+    .modal-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+                   margin-bottom: 18px; }
+    .modal-stat { background: var(--panel-2); border-radius: 10px; padding: 10px 12px; }
+    .modal-stat .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase;
+                       letter-spacing: 0.08em; }
+    .modal-stat .val { font-size: 18px; font-weight: 700; margin-top: 2px; }
+    .modal-chart-wrap { height: 200px; position: relative; margin-bottom: 12px; }
+    .modal-footer { font-size: 12px; color: var(--muted); }
 
     /* ── HERO ────────────────────────────────────────────────────────────────── */
     .hero { background: linear-gradient(135deg, var(--panel), var(--panel-2));
@@ -67,6 +143,10 @@
     .trend.up   { color: var(--red); }
     .trend.down { color: var(--green); }
     .trend.flat { color: var(--muted); }
+    .rating-badge { font-size: 13px; font-weight: 700; padding: 3px 10px;
+                    border-radius: 999px; background: rgba(255,255,255,0.07);
+                    color: var(--text); letter-spacing: 0.02em; }
+    .confidence-badge { font-size: 11px; color: var(--muted); margin-left: 4px; }
     .hero-right { }
     .risk-bar-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
                       letter-spacing: 0.1em; margin-bottom: 10px; }
@@ -134,6 +214,10 @@
     th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); }
     th { font-weight: 600; color: var(--muted); text-transform: uppercase;
          font-size: 11px; letter-spacing: 0.06em; white-space: nowrap; }
+    th.sortable { cursor: pointer; user-select: none; }
+    th.sortable:hover { color: var(--text); }
+    th.sort-asc::after  { content: ' ↑'; color: var(--accent); }
+    th.sort-desc::after { content: ' ↓'; color: var(--accent); }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255,255,255,0.02); }
     .ind-name { font-weight: 600; cursor: default; }
@@ -197,17 +281,31 @@
   <header>
     <div class="header-left">
       <h1>Recession Tracker</h1>
-      <p>24 macro + micro indicators · FRED data · Updated twice weekly</p>
+      <p>26 macro + market + micro indicators · FRED data · Updated daily</p>
     </div>
     <div class="header-right">
       <div class="as-of">As of <span id="asOf">—</span></div>
       <div class="as-of">Updated <span id="generatedAt">—</span></div>
+      <span class="live-tag" id="liveTag" title="Auto-refreshing every 5 minutes">
+        <span class="live-dot"></span>LIVE
+      </span>
       <span class="stale-tag" id="staleTag">DATA STALE</span>
     </div>
   </header>
 
   <div class="banner banner-error"  id="errorBanner"></div>
   <div class="banner banner-stale"  id="staleBanner"></div>
+
+  <!-- TAB NAVIGATION -->
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="live">Live Dashboard</button>
+    <button class="tab-btn"        data-tab="backtest">30-Year Backtest</button>
+    <button class="tab-btn"        data-tab="methodology">Methodology</button>
+    <a class="tab-btn" href="feed.xml" target="_blank" rel="noopener">RSS Feed ↗</a>
+    <a class="tab-btn" href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub ↗</a>
+  </nav>
+
+  <div class="tab-content" id="tab-live">
 
   <!-- COMPOSITE HERO -->
   <section class="hero">
@@ -216,7 +314,11 @@
       <div class="hero-score" id="compositeScore">—</div>
       <div class="hero-badge-row">
         <span class="badge" id="compositeAlert">—</span>
+        <span class="rating-badge" id="ratingBadge">—/10</span>
         <span class="trend" id="compositeTrend"></span>
+      </div>
+      <div style="margin-top:6px">
+        <span class="confidence-badge" id="confidenceBadge"></span>
       </div>
     </div>
     <div class="hero-right">
@@ -236,6 +338,25 @@
     </div>
   </section>
 
+  <!-- EXTRA STATS -->
+  <section class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Recession probability (12mo)</div>
+      <div class="stat-value" id="probValue">—</div>
+      <div class="stat-sub">Estrella-Mishkin probit on 10Y-3M spread</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Yield curve status</div>
+      <div class="stat-value" id="ycValue">—</div>
+      <div class="stat-sub" id="ycSub">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Data confidence</div>
+      <div class="stat-value" id="confidenceValue">—</div>
+      <div class="stat-sub" id="confidenceSub">fraction of indicators reporting live data</div>
+    </div>
+  </section>
+
   <!-- LAYER CARDS -->
   <section class="layers" id="layerCards"></section>
 
@@ -251,7 +372,13 @@
 
   <!-- INDICATOR TABLE -->
   <section class="panel">
-    <div class="panel-header"><h2>Indicator Detail</h2></div>
+    <div class="panel-header">
+      <h2>Indicator Detail</h2>
+      <div class="export-row">
+        <button class="export-btn" id="exportCsv" title="Download visible rows as CSV">Export CSV</button>
+        <button class="export-btn" id="exportJson" title="Download visible rows as JSON">Export JSON</button>
+      </div>
+    </div>
     <div class="filter-row">
       <select id="layerFilter">
         <option value="">All layers</option>
@@ -276,27 +403,59 @@
     <div class="table-wrap">
       <table>
         <thead><tr>
-          <th>Indicator</th>
-          <th>Layer</th>
+          <th class="sortable" data-col="name">Indicator</th>
+          <th class="sortable" data-col="layer">Layer</th>
           <th>Latest</th>
-          <th>As of</th>
+          <th class="sortable" data-col="latest_date">As of</th>
           <th>Threshold</th>
           <th>Direction</th>
-          <th>Score</th>
-          <th>Alert</th>
+          <th class="sortable sort-desc" data-col="score">Score</th>
+          <th class="sortable" data-col="alert">Alert</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
     </div>
   </section>
 
-  <!-- METHODOLOGY -->
+  </div><!-- /tab-live -->
+
+  <!-- BACKTEST TAB -->
+  <div class="tab-content" id="tab-backtest" hidden>
+    <section class="bt-stats" id="btStats"></section>
+    <section class="panel">
+      <div class="panel-header"><h2>Composite score · 30-year backtest</h2></div>
+      <p class="panel-sub">Each point = end-of-month replay using only data available at that cutoff (no look-ahead). Shaded bands = NBER-dated US recessions.</p>
+      <div class="chart-wrap" style="height:420px"><canvas id="backtestChart"></canvas></div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:12px;color:var(--muted)">
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:#66b3ff;margin-right:6px;vertical-align:middle"></span>Composite score</span>
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:rgba(255,122,122,0.3);margin-right:6px;vertical-align:middle"></span>NBER recession</span>
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:rgba(241,200,74,0.5);margin-right:6px;vertical-align:middle"></span>30 = YELLOW threshold</span>
+        <span><span style="display:inline-block;width:14px;height:10px;border-radius:2px;background:rgba(255,122,122,0.5);margin-right:6px;vertical-align:middle"></span>60 = RED threshold</span>
+      </div>
+    </section>
+    <section class="panel">
+      <p style="font-size:13px;color:var(--muted);line-height:1.7">
+        <strong>How to read this:</strong> the model is calibrated for relative signal monitoring,
+        not point-prediction. A useful model should spend most pre-recession periods in YELLOW
+        or RED before NBER calls a recession, and most expansion periods in GREEN.
+        Crossings into RED during expansions are false positives; ideally there are few.
+      </p>
+      <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px">
+        <strong>Limitations:</strong> the z-score window is 60 months (5 years), so very early
+        backtest years have noisier scores. Layer weights are doctrinal, not optimized against
+        NBER chronology, so this is a sanity check rather than a hold-out evaluation.
+      </p>
+    </section>
+  </div>
+
+  <!-- METHODOLOGY TAB -->
+  <div class="tab-content" id="tab-methodology" hidden>
   <section class="panel">
-    <button class="methodology-toggle" id="methToggle" aria-expanded="false">
+    <button class="methodology-toggle" id="methToggle" aria-expanded="true">
       <h2>How it works</h2>
-      <span class="chevron" id="chevron">▾</span>
+      <span class="chevron open" id="chevron">▾</span>
     </button>
-    <div class="methodology-body" id="methBody">
+    <div class="methodology-body open" id="methBody">
       <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">
         The composite score blends 24 FRED indicators across 5 economic layers.
         Each indicator is normalized to a 0–100 risk scale, then weighted and
@@ -349,17 +508,40 @@
         <strong>Limitations:</strong> Layer weights are doctrinal, not empirically optimized against NBER
         chronology. Alert thresholds are calibrated by intuition. Series have different release lags
         (daily ≈ 1 day stale, monthly ≈ 1–2 months, quarterly ≈ 3–4 months). The composite blends
-        these without stale-adjusting. No backtest has been run. Treat as relative signal monitoring,
-        not a recession prediction model.
+        these without stale-adjusting. See the Backtest tab for a 30-year NBER-overlaid replay.
       </div>
     </div>
   </section>
+  </div><!-- /tab-methodology -->
 
   <footer>
-    <p>Data: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED, Federal Reserve Bank of St. Louis</a>
-    &nbsp;·&nbsp;
-    <a href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub Source</a></p>
+    <p>Data: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED, Federal Reserve Bank of St. Louis</a></p>
   </footer>
+</div>
+
+<!-- INDICATOR DETAIL MODAL -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <div>
+        <h3 id="modalTitle">—</h3>
+        <span class="badge" id="modalAlert">—</span>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    </div>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-stats">
+      <div class="modal-stat"><div class="lbl">Score</div><div class="val" id="modalScore">—</div></div>
+      <div class="modal-stat"><div class="lbl">Level</div><div class="val" id="modalLevel">—</div></div>
+      <div class="modal-stat"><div class="lbl">Momentum</div><div class="val" id="modalMomentum">—</div></div>
+    </div>
+    <div class="modal-chart-wrap"><canvas id="modalChart"></canvas></div>
+    <div class="modal-footer">
+      Latest: <strong id="modalLatest">—</strong> on <span id="modalDate">—</span>
+      &nbsp;·&nbsp;
+      <a id="modalFredLink" href="#" target="_blank" rel="noopener">View on FRED →</a>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -452,18 +634,6 @@ function sparklineSvg(values, color) {
   </svg>`;
 }
 
-// ─── DATA LOADING ─────────────────────────────────────────────────────────────
-async function loadData() {
-  const [current, history] = await Promise.all([
-    fetch('data/current.json').then(r => {
-      if (!r.ok) throw new Error(`current.json HTTP ${r.status}`);
-      return r.json();
-    }),
-    fetch('data/history.json').then(r => r.ok ? r.json() : []).catch(() => [])
-  ]);
-  return { current, history };
-}
-
 // ─── RENDER: HEADER ──────────────────────────────────────────────────────────
 function renderHeader(current) {
   document.getElementById('asOf').textContent = current.as_of || '—';
@@ -477,7 +647,7 @@ function renderHeader(current) {
     if (days > 5) {
       document.getElementById('staleTag').style.display = 'inline-block';
       const sb = document.getElementById('staleBanner');
-      sb.textContent = `⚠ Data is ${days} days old — next scheduled refresh is Tuesday or Saturday at 13:00 UTC.`;
+      sb.textContent = `⚠ Data is ${days} days old — next scheduled refresh is daily at 13:00 UTC.`;
       sb.style.display = 'block';
     }
   }
@@ -487,6 +657,8 @@ function renderHeader(current) {
 function renderHero(current, history) {
   const score = current.composite?.score ?? 0;
   const alert = current.composite?.alert ?? 'GREEN';
+  const rating = current.composite?.rating ?? '—';
+  const confidence = current.composite?.confidence ?? null;
   const color = scoreColor(score);
 
   const scoreEl = document.getElementById('compositeScore');
@@ -496,6 +668,46 @@ function renderHero(current, history) {
   const alertEl = document.getElementById('compositeAlert');
   alertEl.textContent = alert;
   alertEl.className   = `badge ${alertClass(alert)}`;
+
+  document.getElementById('ratingBadge').textContent = `${rating}/10`;
+
+  if (confidence !== null) {
+    const pct = Math.round(confidence * 100);
+    const confEl = document.getElementById('confidenceBadge');
+    confEl.textContent = `${pct}% indicators live`;
+    confEl.style.color = pct < 80 ? 'var(--yellow)' : 'var(--muted)';
+
+    const cv = document.getElementById('confidenceValue');
+    cv.textContent = `${pct}%`;
+    cv.style.color = pct < 80 ? 'var(--yellow)' : pct < 100 ? 'var(--text)' : 'var(--green)';
+  }
+
+  // Recession probability + yield curve cards
+  const prob = current.composite?.recession_probability_12mo;
+  const probEl = document.getElementById('probValue');
+  if (prob !== null && prob !== undefined) {
+    probEl.textContent = `${Math.round(prob * 100)}%`;
+    probEl.style.color = prob >= 0.5 ? 'var(--red)' : prob >= 0.3 ? 'var(--yellow)' : 'var(--green)';
+  } else {
+    probEl.textContent = '—';
+  }
+
+  const inv = current.composite?.yield_curve_inversion_days ?? 0;
+  const spread = current.composite?.yield_curve_spread;
+  const ycEl = document.getElementById('ycValue');
+  const ycSub = document.getElementById('ycSub');
+  if (inv > 0) {
+    ycEl.textContent = `Inverted ${inv}d`;
+    ycEl.style.color = 'var(--red)';
+    ycSub.textContent = `10Y-3M spread = ${spread?.toFixed(2)}`;
+  } else if (spread !== null && spread !== undefined) {
+    ycEl.textContent = `+${spread.toFixed(2)}`;
+    ycEl.style.color = 'var(--green)';
+    ycSub.textContent = '10Y-3M spread — not inverted';
+  } else {
+    ycEl.textContent = '—';
+    ycSub.textContent = '';
+  }
 
   // Trend vs previous history entry
   const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
@@ -725,9 +937,32 @@ function renderChart(history) {
 
 // ─── RENDER: TABLE ───────────────────────────────────────────────────────────
 let allIndicators = [];
+let sortCol = 'score';
+let sortDir = 'desc';
+
+const ALERT_ORDER = { RED: 2, YELLOW: 1, GREEN: 0 };
+
+function sortIndicators(list) {
+  return [...list].sort((a, b) => {
+    let av = a[sortCol], bv = b[sortCol];
+    if (sortCol === 'alert') { av = ALERT_ORDER[av] ?? 0; bv = ALERT_ORDER[bv] ?? 0; }
+    if (av === null || av === undefined) av = sortDir === 'asc' ? Infinity : -Infinity;
+    if (bv === null || bv === undefined) bv = sortDir === 'asc' ? Infinity : -Infinity;
+    if (typeof av === 'string') return sortDir === 'asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+    return sortDir === 'asc' ? av - bv : bv - av;
+  });
+}
+
+function updateSortHeaders() {
+  document.querySelectorAll('th.sortable').forEach(th => {
+    th.classList.remove('sort-asc', 'sort-desc');
+    if (th.dataset.col === sortCol) th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+  });
+}
 
 function renderTable(indicators) {
   allIndicators = indicators;
+  updateSortHeaders();
   applyFilters();
 }
 
@@ -736,12 +971,12 @@ function applyFilters() {
   const cat   = document.getElementById('categoryFilter').value;
   const alrt  = document.getElementById('alertFilter').value;
 
-  const filtered = allIndicators.filter(ind => {
+  const filtered = sortIndicators(allIndicators.filter(ind => {
     if (layer && ind.layer !== layer) return false;
     if (cat   && ind.category !== cat) return false;
     if (alrt  && ind.alert !== alrt)   return false;
     return true;
-  });
+  }));
 
   const tbody = document.getElementById('tableBody');
   tbody.innerHTML = '';
@@ -761,6 +996,8 @@ function applyFilters() {
       ? `<div class="ind-desc">${ind.description}</div>` : '';
 
     const tr = document.createElement('tr');
+    tr.dataset.fredId = ind.fred_id;
+    tr.style.cursor = 'pointer';
     tr.innerHTML = `
       <td>
         <div class="ind-name">${ind.name}</div>
@@ -783,19 +1020,191 @@ function applyFilters() {
   });
 }
 
-// ─── METHODOLOGY TOGGLE ───────────────────────────────────────────────────────
-document.getElementById('methToggle').addEventListener('click', () => {
-  const body = document.getElementById('methBody');
-  const chev = document.getElementById('chevron');
-  const btn  = document.getElementById('methToggle');
-  const open = body.classList.toggle('open');
-  chev.classList.toggle('open', open);
-  btn.setAttribute('aria-expanded', open);
-});
+// Methodology lives in its own tab now; the collapse toggle is a no-op kept for compat.
 
 // ─── FILTER LISTENERS ─────────────────────────────────────────────────────────
 ['layerFilter','categoryFilter','alertFilter'].forEach(id => {
   document.getElementById(id).addEventListener('change', applyFilters);
+});
+
+// ─── SORT LISTENERS ───────────────────────────────────────────────────────────
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) {
+      sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortCol = col;
+      sortDir = col === 'score' || col === 'alert' ? 'desc' : 'asc';
+    }
+    updateSortHeaders();
+    writeUrlState();
+    applyFilters();
+  });
+});
+
+// ─── PERMALINK STATE ──────────────────────────────────────────────────────────
+function readUrlState() {
+  const params = new URLSearchParams(location.hash.slice(1));
+  const apply = (id, key) => {
+    const v = params.get(key);
+    if (v !== null) document.getElementById(id).value = v;
+  };
+  apply('layerFilter', 'layer');
+  apply('categoryFilter', 'cat');
+  apply('alertFilter', 'alert');
+  if (params.get('sort')) sortCol = params.get('sort');
+  if (params.get('dir'))  sortDir = params.get('dir');
+}
+
+function writeUrlState() {
+  const params = new URLSearchParams();
+  const set = (id, key) => {
+    const v = document.getElementById(id).value;
+    if (v) params.set(key, v);
+  };
+  set('layerFilter', 'layer');
+  set('categoryFilter', 'cat');
+  set('alertFilter', 'alert');
+  if (sortCol !== 'score') params.set('sort', sortCol);
+  if (sortDir !== 'desc')  params.set('dir', sortDir);
+  if (activeTab && activeTab !== 'live') params.set('tab', activeTab);
+  const str = params.toString();
+  history.replaceState(null, '', str ? `#${str}` : location.pathname);
+}
+
+['layerFilter','categoryFilter','alertFilter'].forEach(id => {
+  document.getElementById(id).addEventListener('change', writeUrlState);
+});
+
+window.addEventListener('hashchange', () => {
+  readUrlState();
+  updateSortHeaders();
+  applyFilters();
+});
+
+// ─── EXPORT ───────────────────────────────────────────────────────────────────
+function visibleIndicators() {
+  const layer = document.getElementById('layerFilter').value;
+  const cat   = document.getElementById('categoryFilter').value;
+  const alrt  = document.getElementById('alertFilter').value;
+  return sortIndicators(allIndicators.filter(ind => {
+    if (layer && ind.layer !== layer) return false;
+    if (cat   && ind.category !== cat) return false;
+    if (alrt  && ind.alert !== alrt)   return false;
+    return true;
+  }));
+}
+
+function download(filename, content, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById('exportCsv').addEventListener('click', () => {
+  const rows = visibleIndicators();
+  const cols = ['name','fred_id','layer','category','latest_value','latest_date','score','level_score','momentum_score','alert','threshold','direction'];
+  const csv = [
+    cols.join(','),
+    ...rows.map(r => cols.map(c => {
+      const v = r[c];
+      if (v === null || v === undefined) return '';
+      const s = String(v);
+      return /[,"\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s;
+    }).join(','))
+  ].join('\n');
+  download(`recession-tracker-${new Date().toISOString().slice(0,10)}.csv`, csv, 'text/csv');
+});
+
+document.getElementById('exportJson').addEventListener('click', () => {
+  const rows = visibleIndicators().map(({ history, ...rest }) => rest);
+  download(
+    `recession-tracker-${new Date().toISOString().slice(0,10)}.json`,
+    JSON.stringify(rows, null, 2),
+    'application/json'
+  );
+});
+
+// ─── INDICATOR DETAIL MODAL ───────────────────────────────────────────────────
+let modalChart = null;
+function openModal(ind) {
+  document.getElementById('modalTitle').textContent = ind.name;
+  const alertEl = document.getElementById('modalAlert');
+  alertEl.textContent = ind.alert;
+  alertEl.className = `badge ${alertClass(ind.alert)}`;
+  document.getElementById('modalDesc').textContent = ind.description || '';
+  document.getElementById('modalScore').textContent = ind.score?.toFixed?.(1) ?? ind.score ?? '—';
+  document.getElementById('modalLevel').textContent = ind.level_score !== null && ind.level_score !== undefined
+    ? ind.level_score.toFixed(1) : '—';
+  document.getElementById('modalMomentum').textContent = ind.momentum_score !== null && ind.momentum_score !== undefined
+    ? ind.momentum_score.toFixed(1) : '—';
+  document.getElementById('modalLatest').textContent = fmtVal(ind.latest_value);
+  document.getElementById('modalDate').textContent = fmtDate(ind.latest_date);
+  document.getElementById('modalFredLink').href = `https://fred.stlouisfed.org/series/${ind.fred_id}`;
+
+  const ctx = document.getElementById('modalChart').getContext('2d');
+  if (modalChart) modalChart.destroy();
+  const history = ind.history || [];
+  const labels = history.map(p => p.date.slice(0, 7));
+  const values = history.map(p => p.value);
+  const datasets = [{
+    label: ind.name,
+    data: values,
+    borderColor: LAYER_COLORS[ind.layer] || '#66b3ff',
+    backgroundColor: 'rgba(102,179,255,0.08)',
+    borderWidth: 2,
+    pointRadius: 2,
+    pointHoverRadius: 5,
+    fill: true,
+    tension: 0.3
+  }];
+  if (ind.threshold !== null && ind.threshold !== undefined) {
+    datasets.push({
+      label: `Threshold (${ind.threshold})`,
+      data: history.map(() => ind.threshold),
+      borderColor: 'rgba(255,255,255,0.3)',
+      borderDash: [4, 4], borderWidth: 1, pointRadius: 0, fill: false
+    });
+  }
+  modalChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#7a84a8', font: { size: 10 }, maxTicksLimit: 8 },
+             grid: { color: 'rgba(255,255,255,0.03)' } },
+        y: { ticks: { color: '#7a84a8', font: { size: 10 } },
+             grid: { color: 'rgba(255,255,255,0.03)' } }
+      }
+    }
+  });
+
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+  if (modalChart) { modalChart.destroy(); modalChart = null; }
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modalBackdrop').addEventListener('click', e => {
+  if (e.target.id === 'modalBackdrop') closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+document.getElementById('tableBody').addEventListener('click', e => {
+  const tr = e.target.closest('tr');
+  if (!tr) return;
+  const fredId = tr.dataset.fredId;
+  const ind = allIndicators.find(x => x.fred_id === fredId);
+  if (ind) openModal(ind);
 });
 
 // ─── ERROR ────────────────────────────────────────────────────────────────────
@@ -805,18 +1214,226 @@ function showError(msg) {
   el.style.display = 'block';
 }
 
-// ─── BOOT ─────────────────────────────────────────────────────────────────────
-try {
-  const { current, history } = await loadData();
-  renderHeader(current);
-  renderHero(current, history);
-  renderLayerCards(current, history);
-  renderChart(history);
-  renderTable(current.indicators || []);
-} catch (err) {
-  showError(`Failed to load data: ${err.message}. Check that data/current.json exists.`);
-  console.error(err);
+// ─── LIVE UPDATES ─────────────────────────────────────────────────────────────
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000;   // 5 minutes
+let lastGeneratedAt = null;
+let refreshTimer = null;
+
+function flashUpdate() {
+  const score = document.getElementById('compositeScore');
+  score.classList.remove('flash-update');
+  void score.offsetWidth;   // force reflow to restart animation
+  score.classList.add('flash-update');
 }
+
+function setLiveStatus(active) {
+  const tag = document.getElementById('liveTag');
+  tag.classList.toggle('paused', !active);
+  tag.firstChild.nextSibling.textContent = active ? 'LIVE' : 'PAUSED';
+  tag.title = active
+    ? 'Auto-refreshing every 5 minutes'
+    : 'Paused — tab is in background';
+}
+
+async function refresh({ initial = false } = {}) {
+  try {
+    // Cache-bust so CDN/edge caches don't mask new data
+    const bust = `?t=${Date.now()}`;
+    const [current, history] = await Promise.all([
+      fetch(`data/current.json${bust}`).then(r => {
+        if (!r.ok) throw new Error(`current.json HTTP ${r.status}`);
+        return r.json();
+      }),
+      fetch(`data/history.json${bust}`).then(r => r.ok ? r.json() : []).catch(() => [])
+    ]);
+
+    if (!initial && current.generated_at === lastGeneratedAt) {
+      return;   // unchanged — skip re-render
+    }
+    lastGeneratedAt = current.generated_at;
+
+    renderHeader(current);
+    renderHero(current, history);
+    renderLayerCards(current, history);
+    renderChart(history);
+    renderTable(current.indicators || []);
+
+    if (!initial) flashUpdate();
+    document.getElementById('errorBanner').style.display = 'none';
+  } catch (err) {
+    if (initial) {
+      showError(`Failed to load data: ${err.message}. Check that data/current.json exists.`);
+    }
+    console.error('refresh failed:', err);
+  }
+}
+
+function startPolling() {
+  if (refreshTimer) return;
+  refreshTimer = setInterval(refresh, REFRESH_INTERVAL_MS);
+  setLiveStatus(true);
+}
+
+function stopPolling() {
+  if (!refreshTimer) return;
+  clearInterval(refreshTimer);
+  refreshTimer = null;
+  setLiveStatus(false);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopPolling();
+  } else {
+    refresh();          // catch up immediately on return
+    startPolling();
+  }
+});
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+const NBER_RECESSIONS = [
+  { start: '1990-07-01', end: '1991-03-31' },
+  { start: '2001-03-01', end: '2001-11-30' },
+  { start: '2007-12-01', end: '2009-06-30' },
+  { start: '2020-02-01', end: '2020-04-30' }
+];
+let backtestRendered = false;
+let activeTab = 'live';
+
+function setTab(name) {
+  if (!['live','backtest','methodology'].includes(name)) name = 'live';
+  activeTab = name;
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.hidden = c.id !== `tab-${name}`;
+  });
+  writeUrlState();
+  if (name === 'backtest' && !backtestRendered) {
+    renderBacktest();
+    backtestRendered = true;
+  }
+}
+
+document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+  btn.addEventListener('click', () => setTab(btn.dataset.tab));
+});
+
+async function renderBacktest() {
+  let data;
+  try {
+    data = await fetch(`data/backtest.json?t=${Date.now()}`).then(r => r.json());
+  } catch (err) {
+    document.getElementById('btStats').innerHTML =
+      `<p style="color:var(--red)">Failed to load backtest: ${err.message}</p>`;
+    return;
+  }
+  const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
+  const tally = { GREEN: 0, YELLOW: 0, RED: 0 };
+  sorted.forEach(d => tally[d.alert]++);
+  const total = sorted.length || 1;
+
+  const inRecession = date => NBER_RECESSIONS.some(r => date >= r.start && date <= r.end);
+  let inRecHits = 0, inRecCount = 0;
+  sorted.forEach(d => {
+    if (inRecession(d.date)) {
+      inRecCount++;
+      if (d.alert !== 'GREEN') inRecHits++;
+    }
+  });
+
+  document.getElementById('btStats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Months replayed</div>
+      <div class="stat-value">${total}</div>
+      <div class="stat-sub">${sorted[0]?.date ?? '—'} → ${sorted[sorted.length-1]?.date ?? '—'}</div></div>
+    <div class="stat-card"><div class="stat-label">% in GREEN</div>
+      <div class="stat-value" style="color:var(--green)">${Math.round(tally.GREEN/total*100)}%</div>
+      <div class="stat-sub">${tally.GREEN} months</div></div>
+    <div class="stat-card"><div class="stat-label">% in YELLOW</div>
+      <div class="stat-value" style="color:var(--yellow)">${Math.round(tally.YELLOW/total*100)}%</div>
+      <div class="stat-sub">${tally.YELLOW} months</div></div>
+    <div class="stat-card"><div class="stat-label">% in RED</div>
+      <div class="stat-value" style="color:var(--red)">${Math.round(tally.RED/total*100)}%</div>
+      <div class="stat-sub">${tally.RED} months</div></div>
+    <div class="stat-card"><div class="stat-label">NBER sensitivity</div>
+      <div class="stat-value">${inRecCount > 0 ? Math.round(inRecHits/inRecCount*100) + '%' : '—'}</div>
+      <div class="stat-sub">% of recession months ≥ YELLOW</div></div>
+  `;
+
+  const nberPlugin = {
+    id: 'nberBands',
+    beforeDatasetsDraw(chart) {
+      const { ctx, chartArea, scales } = chart;
+      if (!scales.x) return;
+      ctx.save();
+      ctx.fillStyle = 'rgba(255,122,122,0.18)';
+      NBER_RECESSIONS.forEach(r => {
+        const idxStart = sorted.findIndex(d => d.date >= r.start);
+        const idxEnd   = sorted.findIndex(d => d.date >  r.end);
+        if (idxStart < 0) return;
+        const left  = scales.x.getPixelForValue(idxStart);
+        const right = idxEnd < 0
+          ? chartArea.right
+          : scales.x.getPixelForValue(Math.max(idxStart, idxEnd - 1));
+        ctx.fillRect(left, chartArea.top, Math.max(right - left, 2), chartArea.bottom - chartArea.top);
+      });
+      ctx.restore();
+    }
+  };
+
+  const labels = sorted.map(d => d.date.slice(0, 7));
+  const ctx = document.getElementById('backtestChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Composite', data: sorted.map(d => d.composite),
+          borderColor: '#66b3ff', backgroundColor: 'rgba(102,179,255,0.07)',
+          borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, fill: true, tension: 0.25 },
+        { label: '60 RED', data: sorted.map(() => 60),
+          borderColor: 'rgba(255,122,122,0.45)', borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false },
+        { label: '30 YELLOW', data: sorted.map(() => 30),
+          borderColor: 'rgba(241,200,74,0.45)', borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2340', titleColor: '#eef2ff', bodyColor: '#7a84a8',
+          borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
+          callbacks: {
+            label: item => {
+              const d = sorted[item.dataIndex];
+              if (!d) return '';
+              const tag = inRecession(d.date) ? ' [NBER recession]' : '';
+              return ` ${d.composite.toFixed(1)} (${d.alert})${tag}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#7a84a8', maxTicksLimit: 14, font: { size: 11 } },
+             grid: { color: 'rgba(255,255,255,0.03)' } },
+        y: { min: 0, max: 100,
+             ticks: { color: '#7a84a8', font: { size: 11 } },
+             grid: { color: 'rgba(255,255,255,0.03)' } }
+      }
+    },
+    plugins: [nberPlugin]
+  });
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+readUrlState();
+const initialTab = new URLSearchParams(location.hash.slice(1)).get('tab') || 'live';
+setTab(initialTab);
+await refresh({ initial: true });
+startPolling();
 </script>
 </body>
 </html>

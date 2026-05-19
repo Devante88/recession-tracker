@@ -2,8 +2,8 @@ name: Refresh FRED Data
 
 on:
   schedule:
-    # Tuesday and Saturday at 13:00 UTC (08:00 CT)
-    - cron: '0 13 * * 2,6'
+    # Daily at 13:00 UTC (08:00 CT) — after FRED's typical morning releases
+    - cron: '0 13 * * *'
   workflow_dispatch:
 
 permissions:
@@ -40,11 +40,14 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: node scripts/fetch.mjs
 
+      - name: Generate RSS feed for alert state changes
+        run: node scripts/feed.mjs
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/
+          git add docs/data/ docs/feed.xml
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
