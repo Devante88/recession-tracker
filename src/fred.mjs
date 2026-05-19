@@ -12,7 +12,9 @@ const FRED_BASE = 'https://api.stlouisfed.org/fred/series/observations';
 export async function fetchFredSeries(fredId, apiKey, opts = {}) {
   const limit = opts.limit ?? 2000;  // ~5 years of daily, much more for monthly
   const url = `${FRED_BASE}?series_id=${fredId}&api_key=${apiKey}&file_type=json&sort_order=desc&limit=${limit}`;
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    headers: { 'User-Agent': 'recession-tracker/1.0 (github.com/Devante88/recession-tracker)' }
+  });
   if (!res.ok) {
     throw new Error(`FRED fetch failed for ${fredId}: HTTP ${res.status}`);
   }
