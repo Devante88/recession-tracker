@@ -19,7 +19,13 @@ async function main() {
 
   console.log(`Fetching ${REGISTRY.length} series...`);
   const fredIds = REGISTRY.map(x => x.fred_id);
-  const rawData = await fetchAllSeries(fredIds, apiKey);
+  const { data: rawData, successCount, failureCount } = await fetchAllSeries(fredIds, apiKey);
+  console.log(`\nFetch complete: ${successCount} succeeded, ${failureCount} failed`);
+
+  if (successCount === 0) {
+    console.error('All FRED fetches failed — aborting to avoid overwriting data with zeros.');
+    process.exit(1);
+  }
 
   const normalized = REGISTRY.map(indicator => {
     const series = rawData[indicator.fred_id] || [];

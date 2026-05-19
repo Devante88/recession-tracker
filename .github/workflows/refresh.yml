@@ -1,9 +1,6 @@
 name: Refresh FRED Data
 
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/refresh.yml']
   schedule:
     # Tuesday and Saturday at 13:00 UTC (08:00 CT)
     - cron: '0 13 * * 2,6'
@@ -24,6 +21,19 @@ jobs:
 
       - name: Run tests
         run: node --test tests/*.mjs
+
+      - name: Check FRED connectivity
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          echo "API key set: $([ -n "$FRED_API_KEY" ] && echo yes || echo NO — secret missing)"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://api.stlouisfed.org/fred/series/observations?series_id=T10Y3M&api_key=${FRED_API_KEY}&file_type=json&limit=1")
+          echo "FRED probe HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::FRED API returned $STATUS — check FRED_API_KEY secret and API quota"
+            exit 1
+          fi
 
       - name: Fetch FRED data and compute snapshot
         env:
