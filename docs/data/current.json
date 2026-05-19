@@ -1,6 +1,6 @@
 {
   "as_of": "2026-05-19",
-  "generated_at": "2026-05-19T20:36:56.523Z",
+  "generated_at": "2026-05-19T20:37:50.146Z",
   "composite": {
     "score": 22.2,
     "alert": "GREEN",
@@ -12,7 +12,7 @@
   },
   "layers": {
     "financial_lead": {
-      "score": 18.7,
+      "score": 18.6,
       "alert": "GREEN",
       "weight": 0.3
     },
@@ -491,6 +491,234 @@
         {
           "date": "2026-05-01",
           "value": -0.4
+        }
+      ]
+    },
+    {
+      "name": "VIX (Equity Vol)",
+      "fred_id": "VIXCLS",
+      "layer": "financial_lead",
+      "category": "macro",
+      "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
+      "latest_value": 16.8,
+      "latest_date": "2026-05-01",
+      "score": 21.3,
+      "level_score": 21.2,
+      "momentum_score": 21.4,
+      "alert": "GREEN",
+      "threshold": 25,
+      "direction": "inverse",
+      "frequency": "daily",
+      "history": [
+        {
+          "date": "2024-06-01",
+          "value": 21.4469
+        },
+        {
+          "date": "2024-07-01",
+          "value": 10.8408
+        },
+        {
+          "date": "2024-08-01",
+          "value": 17.4991
+        },
+        {
+          "date": "2024-09-01",
+          "value": 20.1041
+        },
+        {
+          "date": "2024-10-01",
+          "value": 21.2868
+        },
+        {
+          "date": "2024-11-01",
+          "value": 23.1589
+        },
+        {
+          "date": "2024-12-01",
+          "value": 11.5862
+        },
+        {
+          "date": "2025-01-01",
+          "value": 19.2858
+        },
+        {
+          "date": "2025-02-01",
+          "value": 10.957
+        },
+        {
+          "date": "2025-03-01",
+          "value": 27.8426
+        },
+        {
+          "date": "2025-04-01",
+          "value": 15.9612
+        },
+        {
+          "date": "2025-05-01",
+          "value": 25.1496
+        },
+        {
+          "date": "2025-06-01",
+          "value": 9.3305
+        },
+        {
+          "date": "2025-07-01",
+          "value": 18.9176
+        },
+        {
+          "date": "2025-08-01",
+          "value": 15.1413
+        },
+        {
+          "date": "2025-09-01",
+          "value": 23.9441
+        },
+        {
+          "date": "2025-10-01",
+          "value": 21.6347
+        },
+        {
+          "date": "2025-11-01",
+          "value": 16.2468
+        },
+        {
+          "date": "2025-12-01",
+          "value": 17.0399
+        },
+        {
+          "date": "2026-01-01",
+          "value": 11.09
+        },
+        {
+          "date": "2026-02-01",
+          "value": 24.9419
+        },
+        {
+          "date": "2026-03-01",
+          "value": 16.5942
+        },
+        {
+          "date": "2026-04-01",
+          "value": 27.2941
+        },
+        {
+          "date": "2026-05-01",
+          "value": 16.8
+        }
+      ]
+    },
+    {
+      "name": "High Yield Spread",
+      "fred_id": "BAMLH0A0HYM2",
+      "layer": "financial_lead",
+      "category": "macro",
+      "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
+      "latest_value": 3.45,
+      "latest_date": "2026-05-01",
+      "score": 18.5,
+      "level_score": 22.4,
+      "momentum_score": 9.5,
+      "alert": "GREEN",
+      "threshold": 5,
+      "direction": "inverse",
+      "frequency": "daily",
+      "history": [
+        {
+          "date": "2024-06-01",
+          "value": 2.7393
+        },
+        {
+          "date": "2024-07-01",
+          "value": 4.6014
+        },
+        {
+          "date": "2024-08-01",
+          "value": 3.4691
+        },
+        {
+          "date": "2024-09-01",
+          "value": 5.996
+        },
+        {
+          "date": "2024-10-01",
+          "value": 3.4062
+        },
+        {
+          "date": "2024-11-01",
+          "value": 4.7932
+        },
+        {
+          "date": "2024-12-01",
+          "value": 2.4929
+        },
+        {
+          "date": "2025-01-01",
+          "value": 4.6954
+        },
+        {
+          "date": "2025-02-01",
+          "value": 4.1192
+        },
+        {
+          "date": "2025-03-01",
+          "value": 5.1838
+        },
+        {
+          "date": "2025-04-01",
+          "value": 4.2409
+        },
+        {
+          "date": "2025-05-01",
+          "value": 3.3565
+        },
+        {
+          "date": "2025-06-01",
+          "value": 3.971
+        },
+        {
+          "date": "2025-07-01",
+          "value": 3.457
+        },
+        {
+          "date": "2025-08-01",
+          "value": 5.7003
+        },
+        {
+          "date": "2025-09-01",
+          "value": 3.7501
+        },
+        {
+          "date": "2025-10-01",
+          "value": 5.1508
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2.359
+        },
+        {
+          "date": "2025-12-01",
+          "value": 4.6885
+        },
+        {
+          "date": "2026-01-01",
+          "value": 3.4443
+        },
+        {
+          "date": "2026-02-01",
+          "value": 5.6647
+        },
+        {
+          "date": "2026-03-01",
+          "value": 4.0451
+        },
+        {
+          "date": "2026-04-01",
+          "value": 4.1497
+        },
+        {
+          "date": "2026-05-01",
+          "value": 3.45
         }
       ]
     },
