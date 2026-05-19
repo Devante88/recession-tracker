@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recession Tracker — Backtest</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:#0b1020; --panel:#121a2f; --panel-2:#1a2340; --panel-3:#1f2b4a;
+      --border:rgba(255,255,255,0.07); --text:#eef2ff; --muted:#7a84a8;
+      --accent:#66b3ff; --green:#2ddc8c; --yellow:#f1c84a; --red:#ff7a7a;
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+           background: var(--bg); color: var(--text); line-height: 1.5; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 32px 24px; }
+    header { display: flex; justify-content: space-between; align-items: flex-start;
+             margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
+    h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+    .header-left p { color: var(--muted); font-size: 13px; margin-top: 3px; }
+    .panel { background: var(--panel); border: 1px solid var(--border);
+             border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    .panel-header h2 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .panel-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+    .chart-wrap { height: 420px; position: relative; }
+    .legend { display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; font-size:12px; color:var(--muted); }
+    .legend-swatch { display:inline-block; width:14px; height:10px; border-radius:2px;
+                     margin-right:6px; vertical-align:middle; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:20px; }
+    .stat { background: var(--panel); border: 1px solid var(--border);
+            border-radius: 14px; padding: 16px 18px; }
+    .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                  letter-spacing: 0.1em; margin-bottom: 6px; }
+    .stat-value { font-size: 26px; font-weight: 800; letter-spacing: -0.02em; }
+    .stat-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
+             text-align: center; font-size: 12px; color: var(--muted); }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="header-left">
+      <h1>Backtest — 30-year composite history</h1>
+      <p>Same scoring engine, replayed monthly against historical FRED data. NBER recession bands overlaid for calibration.</p>
+    </div>
+    <div><a href="index.html">← Live dashboard</a></div>
+  </header>
+
+  <section class="stats" id="stats"></section>
+
+  <section class="panel">
+    <div class="panel-header">
+      <h2>Composite score · 30-year backtest</h2>
+      <p class="panel-sub">Each point = end-of-month replay using only data available at that cutoff (no look-ahead). Shaded bars = NBER-dated recessions.</p>
+    </div>
+    <div class="chart-wrap"><canvas id="backtestChart"></canvas></div>
+    <div class="legend">
+      <span><span class="legend-swatch" style="background:#66b3ff"></span>Composite score</span>
+      <span><span class="legend-swatch" style="background:rgba(255,122,122,0.3)"></span>NBER recession</span>
+      <span><span class="legend-swatch" style="background:rgba(241,200,74,0.5)"></span>30 = YELLOW threshold</span>
+      <span><span class="legend-swatch" style="background:rgba(255,122,122,0.5)"></span>60 = RED threshold</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p style="font-size:13px;color:var(--muted);line-height:1.7">
+      <strong>How to read this:</strong> the model is calibrated for relative signal monitoring,
+      not point-prediction. A useful model should spend most pre-recession periods in the YELLOW
+      or RED zone before NBER calls a recession, and most expansion periods in GREEN.
+      Crossings between zones during expansions are false positives; ideally there are few.
+    </p>
+    <p style="font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px">
+      <strong>Limitations:</strong> the z-score window is 60 months (5 years), so very early
+      backtest years have noisier scores. Layer weights are doctrinal, not optimized against
+      NBER chronology, so this is a sanity check rather than a hold-out evaluation.
+    </p>
+  </section>
+
+  <footer>
+    <p><a href="index.html">Live dashboard</a> · <a href="feed.xml">RSS feed</a> ·
+       <a href="https://github.com/Devante88/recession-tracker">GitHub</a></p>
+  </footer>
+</div>
+
+<script type="module">
+// NBER recession dates (US, peak → trough), public domain, NBER BCDC.
+// https://www.nber.org/research/business-cycle-dating
+const NBER_RECESSIONS = [
+  { start: '1990-07-01', end: '1991-03-31' },
+  { start: '2001-03-01', end: '2001-11-30' },
+  { start: '2007-12-01', end: '2009-06-30' },
+  { start: '2020-02-01', end: '2020-04-30' }
+];
+
+const data = await fetch('data/backtest.json').then(r => r.json());
+const sorted = [...data].sort((a, b) => a.date.localeCompare(b.date));
+
+// Stats: how often was the model in each zone?
+const tally = { GREEN: 0, YELLOW: 0, RED: 0 };
+sorted.forEach(d => tally[d.alert]++);
+const total = sorted.length || 1;
+
+// True positives: months inside an NBER recession where alert ≥ YELLOW
+function inRecession(date) {
+  return NBER_RECESSIONS.some(r => date >= r.start && date <= r.end);
+}
+let inRecYellowOrRed = 0, inRecCount = 0;
+let preRec6moRedish = 0, preRec6moCount = 0;
+sorted.forEach(d => {
+  if (inRecession(d.date)) {
+    inRecCount++;
+    if (d.alert !== 'GREEN') inRecYellowOrRed++;
+  }
+});
+
+document.getElementById('stats').innerHTML = `
+  <div class="stat"><div class="stat-label">Months replayed</div>
+    <div class="stat-value">${total}</div>
+    <div class="stat-sub">${sorted[0]?.date ?? '—'} → ${sorted[sorted.length-1]?.date ?? '—'}</div>
+  </div>
+  <div class="stat"><div class="stat-label">% in GREEN</div>
+    <div class="stat-value" style="color:var(--green)">${Math.round(tally.GREEN/total*100)}%</div>
+    <div class="stat-sub">${tally.GREEN} months</div>
+  </div>
+  <div class="stat"><div class="stat-label">% in YELLOW</div>
+    <div class="stat-value" style="color:var(--yellow)">${Math.round(tally.YELLOW/total*100)}%</div>
+    <div class="stat-sub">${tally.YELLOW} months</div>
+  </div>
+  <div class="stat"><div class="stat-label">% in RED</div>
+    <div class="stat-value" style="color:var(--red)">${Math.round(tally.RED/total*100)}%</div>
+    <div class="stat-sub">${tally.RED} months</div>
+  </div>
+  <div class="stat"><div class="stat-label">In-recession sensitivity</div>
+    <div class="stat-value">${inRecCount > 0 ? Math.round(inRecYellowOrRed/inRecCount*100) + '%' : '—'}</div>
+    <div class="stat-sub">% of NBER recession months scored ≥ YELLOW</div>
+  </div>
+`;
+
+// NBER bands plugin
+const nberPlugin = {
+  id: 'nberBands',
+  beforeDatasetsDraw(chart) {
+    const { ctx, chartArea, scales } = chart;
+    const xScale = scales.x;
+    if (!xScale) return;
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,122,122,0.18)';
+    NBER_RECESSIONS.forEach(r => {
+      const idxStart = sorted.findIndex(d => d.date >= r.start);
+      const idxEnd   = sorted.findIndex(d => d.date >  r.end);
+      if (idxStart < 0) return;
+      const left  = xScale.getPixelForValue(idxStart);
+      const right = idxEnd < 0
+        ? chartArea.right
+        : xScale.getPixelForValue(Math.max(idxStart, idxEnd - 1));
+      ctx.fillRect(left, chartArea.top, Math.max(right - left, 2), chartArea.bottom - chartArea.top);
+    });
+    ctx.restore();
+  }
+};
+
+const labels = sorted.map(d => d.date.slice(0, 7));
+
+const ctx = document.getElementById('backtestChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Composite',
+        data: sorted.map(d => d.composite),
+        borderColor: '#66b3ff',
+        backgroundColor: 'rgba(102,179,255,0.07)',
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        fill: true,
+        tension: 0.25
+      },
+      {
+        label: '60 RED',
+        data: sorted.map(() => 60),
+        borderColor: 'rgba(255,122,122,0.45)',
+        borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false
+      },
+      {
+        label: '30 YELLOW',
+        data: sorted.map(() => 30),
+        borderColor: 'rgba(241,200,74,0.45)',
+        borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a2340',
+        titleColor: '#eef2ff', bodyColor: '#7a84a8',
+        borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
+        callbacks: {
+          label: item => {
+            const d = sorted[item.dataIndex];
+            if (!d) return '';
+            const tag = inRecession(d.date) ? ' [NBER recession]' : '';
+            return ` ${d.composite.toFixed(1)} (${d.alert})${tag}`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { color: '#7a84a8', maxTicksLimit: 14, font: { size: 11 } },
+           grid: { color: 'rgba(255,255,255,0.03)' } },
+      y: { min: 0, max: 100,
+           ticks: { color: '#7a84a8', font: { size: 11 } },
+           grid: { color: 'rgba(255,255,255,0.03)' } }
+    }
+  },
+  plugins: [nberPlugin]
+});
+</script>
+</body>
+</html>
