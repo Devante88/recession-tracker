@@ -16,7 +16,7 @@ the browser.
 1. Get a free FRED API key from https://fred.stlouisfed.org/docs/api/api_key.html
 2. Fork or clone this repo
 3. Add `FRED_API_KEY` to repo Secrets (Settings → Secrets and variables → Actions)
-4. Enable GitHub Pages (Settings → Pages → deploy from `main` branch, `/public` folder)
+4. Enable GitHub Pages (Settings → Pages → deploy from `main` branch, `/docs` folder)
 5. Manually trigger the "Refresh FRED Data" workflow once to generate initial data
 6. Visit your GitHub Pages URL
 
@@ -27,7 +27,7 @@ node --test tests/*.mjs                   # run tests
 FRED_API_KEY=xxx node scripts/fetch.mjs   # generate data locally
 ```
 
-Then open `public/index.html` via a local server (e.g. `python -m http.server 8000`)
+Then open `docs/index.html` via a local server (e.g. `python -m http.server 8000 --directory docs`)
 because ES modules won't load from `file://`.
 
 ## Limitations and honest disclosures

@@ -4,70 +4,475 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recession Tracker</title>
-  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a2f;
+      --panel-2: #1a2340;
+      --border: rgba(255,255,255,0.08);
+      --text: #eef2ff;
+      --muted: #8b95b8;
+      --accent: #66b3ff;
+      --green: #2ddc8c;
+      --yellow: #f1c84a;
+      --red: #ff7a7a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.5;
+    }
+    .wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+
+    /* ── HEADER ── */
+    header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 32px; flex-wrap: wrap; gap: 16px;
+    }
+    h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .subtitle { color: var(--muted); font-size: 14px; }
+    .meta { text-align: right; font-size: 13px; color: var(--muted); }
+    .meta span { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border); border-radius: 20px;
+      padding: 40px 32px; margin-bottom: 24px; text-align: center;
+    }
+    .hero-label {
+      font-size: 13px; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.12em; margin-bottom: 12px;
+    }
+    .hero-score {
+      font-size: 96px; font-weight: 900; line-height: 1;
+      margin-bottom: 16px; letter-spacing: -0.04em;
+      transition: color 0.4s;
+    }
+
+    /* ── BADGE ── */
+    .badge {
+      display: inline-block; padding: 5px 14px; border-radius: 999px;
+      font-weight: 700; font-size: 12px; letter-spacing: 0.06em;
+    }
+    .GREEN { background: rgba(45,220,140,0.15); color: var(--green); }
+    .YELLOW { background: rgba(241,200,74,0.15); color: var(--yellow); }
+    .RED { background: rgba(255,122,122,0.15); color: var(--red); }
+
+    /* ── LAYER CARDS ── */
+    .layers {
+      display: grid; grid-template-columns: repeat(5,1fr);
+      gap: 16px; margin-bottom: 24px;
+    }
+    .card {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px;
+    }
+    .card h3 {
+      font-size: 11px; color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 10px;
+    }
+    .card-score { font-size: 38px; font-weight: 800; margin-bottom: 8px; }
+    .card-weight { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    /* ── PANEL ── */
+    .panel {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; margin-bottom: 24px;
+    }
+    .panel h2 { font-size: 18px; margin-bottom: 4px; }
+    .panel .sub { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+    .chart-wrap { height: 300px; position: relative; }
+
+    /* ── FILTERS ── */
+    .filter-row { display: flex; gap: 12px; margin: 16px 0; flex-wrap: wrap; }
+    select {
+      background: var(--panel-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 8px 12px; font-size: 14px; cursor: pointer;
+    }
+
+    /* ── TABLE ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    th { font-weight: 600; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: 0.06em; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .score-bar-wrap { display: flex; align-items: center; gap: 8px; }
+    .score-bar { height: 6px; border-radius: 3px; min-width: 4px; transition: width 0.3s; }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 48px; padding-top: 24px;
+      border-top: 1px solid var(--border); text-align: center;
+      font-size: 13px; color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── ERROR STATE ── */
+    .error-banner {
+      background: rgba(255,122,122,0.1); border: 1px solid rgba(255,122,122,0.3);
+      border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
+      font-size: 14px; color: var(--red); display: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .layers { grid-template-columns: repeat(3,1fr); }
+      .hero-score { font-size: 72px; }
+    }
+    @media (max-width: 600px) {
+      .layers { grid-template-columns: repeat(2,1fr); }
+      .hero { padding: 24px 16px; }
+      .hero-score { font-size: 56px; }
+      table { font-size: 12px; }
+      th, td { padding: 8px 8px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Recession Tracker</h1>
-        <p class="subtitle">Macro + micro indicators from FRED. Updated twice weekly.</p>
-      </div>
-      <div class="meta">
-        <div>As of <span id="asOf">loading...</span></div>
-        <div class="muted">Generated <span id="generatedAt">loading...</span></div>
-      </div>
-    </header>
+<div class="wrap">
 
-    <section class="hero">
-      <div class="hero-label">Composite Recession Risk</div>
-      <div class="hero-score" id="compositeScore">--</div>
-      <div class="hero-alert"><span class="badge" id="compositeAlert">--</span></div>
-    </section>
+  <header>
+    <div>
+      <h1>Recession Tracker</h1>
+      <p class="subtitle">24 macro + micro indicators from FRED · Updated twice weekly</p>
+    </div>
+    <div class="meta">
+      <div>As of <span id="asOf">—</span></div>
+      <div>Generated <span id="generatedAt">—</span></div>
+    </div>
+  </header>
 
-    <section class="layers" id="layerCards"></section>
+  <div class="error-banner" id="errorBanner"></div>
 
-    <section class="panel">
-      <h2>Composite History</h2>
-      <p class="muted">History accumulates from each scheduled snapshot. Chart populates as data builds.</p>
-      <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
-    </section>
+  <!-- COMPOSITE HERO -->
+  <section class="hero">
+    <div class="hero-label">Composite Recession Risk Score</div>
+    <div class="hero-score" id="compositeScore">—</div>
+    <div><span class="badge" id="compositeAlert">—</span></div>
+  </section>
 
-    <section class="panel">
-      <h2>Indicator Detail</h2>
-      <div class="filter-row">
-        <select id="layerFilter">
-          <option value="">All layers</option>
-        </select>
-        <select id="categoryFilter">
-          <option value="">Macro + micro</option>
-          <option value="macro">Macro only</option>
-          <option value="micro">Micro only</option>
-        </select>
-      </div>
-      <table id="indicatorTable">
+  <!-- LAYER CARDS -->
+  <section class="layers" id="layerCards"></section>
+
+  <!-- HISTORY CHART -->
+  <section class="panel">
+    <h2>Composite History</h2>
+    <p class="sub">36-month backfill · Each dot = one scheduled snapshot</p>
+    <div class="chart-wrap"><canvas id="historyChart"></canvas></div>
+  </section>
+
+  <!-- INDICATOR TABLE -->
+  <section class="panel">
+    <h2>Indicator Detail</h2>
+    <div class="filter-row">
+      <select id="layerFilter">
+        <option value="">All layers</option>
+        <option value="financial_lead">Financial Leading</option>
+        <option value="labor">Labor</option>
+        <option value="inflation">Inflation</option>
+        <option value="real_economy">Real Economy</option>
+        <option value="micro">Micro</option>
+      </select>
+      <select id="categoryFilter">
+        <option value="">Macro + Micro</option>
+        <option value="macro">Macro only</option>
+        <option value="micro">Micro only</option>
+      </select>
+      <select id="alertFilter">
+        <option value="">All alerts</option>
+        <option value="RED">RED only</option>
+        <option value="YELLOW">YELLOW only</option>
+        <option value="GREEN">GREEN only</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
         <thead>
           <tr>
             <th>Indicator</th>
             <th>Layer</th>
             <th>Cat</th>
-            <th>Latest</th>
+            <th>Latest Value</th>
             <th>Date</th>
             <th>Threshold</th>
             <th>Score</th>
             <th>Alert</th>
           </tr>
         </thead>
-        <tbody id="indicatorTableBody"></tbody>
+        <tbody id="tableBody"></tbody>
       </table>
-    </section>
+    </div>
+  </section>
 
-    <footer>
-      <p class="muted">Data: <a href="https://fred.stlouisfed.org" target="_blank">FRED, Federal Reserve Bank of St. Louis</a>. Source: <a id="repoLink" href="#" target="_blank">GitHub</a>.</p>
-    </footer>
-  </div>
+  <footer>
+    <p>Data: <a href="https://fred.stlouisfed.org" target="_blank">FRED, Federal Reserve Bank of St. Louis</a>
+    &nbsp;·&nbsp; <a href="https://github.com" id="repoLink" target="_blank">GitHub Source</a></p>
+  </footer>
 
-  <script type="module" src="app.mjs"></script>
+</div>
+
+<script type="module">
+  // ─── CONFIG ───────────────────────────────────────────────────────────────
+  const LAYER_NAMES = {
+    financial_lead: 'Financial Leading',
+    labor: 'Labor',
+    inflation: 'Inflation',
+    real_economy: 'Real Economy',
+    micro: 'Micro'
+  };
+
+  const LAYER_ORDER = ['financial_lead','labor','real_economy','micro','inflation'];
+
+  const ALERT_COLOR = { GREEN: '#2ddc8c', YELLOW: '#f1c84a', RED: '#ff7a7a' };
+
+  // ─── DATA FETCH ───────────────────────────────────────────────────────────
+  async function loadData() {
+    const [current, history] = await Promise.all([
+      fetch('data/current.json').then(r => {
+        if (!r.ok) throw new Error(`current.json: HTTP ${r.status}`);
+        return r.json();
+      }),
+      fetch('data/history.json').then(r => {
+        if (!r.ok) return [];
+        return r.json();
+      }).catch(() => [])
+    ]);
+    return { current, history };
+  }
+
+  // ─── RENDER HELPERS ───────────────────────────────────────────────────────
+  function setEl(id, val) { document.getElementById(id).textContent = val; }
+
+  function alertClass(alert) {
+    return ['GREEN','YELLOW','RED'].includes(alert) ? alert : 'GREEN';
+  }
+
+  function scoreColor(score) {
+    if (score >= 60) return '#ff7a7a';
+    if (score >= 30) return '#f1c84a';
+    return '#2ddc8c';
+  }
+
+  function fmtValue(val) {
+    if (val === null || val === undefined) return '—';
+    if (Math.abs(val) > 100000) return (val / 1000000).toFixed(2) + 'M';
+    if (Math.abs(val) > 1000) return val.toLocaleString();
+    return Number(val).toFixed(2);
+  }
+
+  function fmtLayerName(key) {
+    return LAYER_NAMES[key] || key;
+  }
+
+  // ─── MAIN RENDER ─────────────────────────────────────────────────────────
+  function renderDashboard(current, history) {
+    // Header meta
+    setEl('asOf', current.as_of || '—');
+    setEl('generatedAt', current.generated_at
+      ? new Date(current.generated_at).toLocaleString()
+      : '—');
+
+    // Composite hero
+    const score = current.composite?.score ?? 0;
+    const alert = current.composite?.alert ?? 'GREEN';
+    const scoreEl = document.getElementById('compositeScore');
+    scoreEl.textContent = score;
+    scoreEl.style.color = scoreColor(score);
+    const alertEl = document.getElementById('compositeAlert');
+    alertEl.textContent = alert;
+    alertEl.className = `badge ${alertClass(alert)}`;
+
+    // Layer cards
+    const cardsEl = document.getElementById('layerCards');
+    cardsEl.innerHTML = '';
+    LAYER_ORDER.forEach(key => {
+      const layer = current.layers?.[key];
+      if (!layer) return;
+      const s = layer.score ?? 0;
+      const a = layer.alert ?? 'GREEN';
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <h3>${fmtLayerName(key)}</h3>
+        <div class="card-score" style="color:${scoreColor(s)}">${s}</div>
+        <span class="badge ${alertClass(a)}">${a}</span>
+        <div class="card-weight">Weight: ${Math.round((layer.weight || 0) * 100)}%</div>
+      `;
+      cardsEl.appendChild(card);
+    });
+
+    // Indicator table
+    renderTable(current.indicators || []);
+
+    // History chart
+    renderChart(history);
+  }
+
+  // ─── TABLE ────────────────────────────────────────────────────────────────
+  let allIndicators = [];
+
+  function renderTable(indicators) {
+    allIndicators = indicators;
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const layer = document.getElementById('layerFilter').value;
+    const cat   = document.getElementById('categoryFilter').value;
+    const alrt  = document.getElementById('alertFilter').value;
+
+    const filtered = allIndicators.filter(ind => {
+      if (layer && ind.layer !== layer) return false;
+      if (cat   && ind.category !== cat) return false;
+      if (alrt  && ind.alert !== alrt) return false;
+      return true;
+    });
+
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+
+    filtered.forEach(ind => {
+      const s = ind.score ?? 0;
+      const a = alertClass(ind.alert);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${ind.name}</strong></td>
+        <td style="color:var(--muted);font-size:12px">${fmtLayerName(ind.layer)}</td>
+        <td><span style="font-size:11px;color:var(--muted);text-transform:uppercase">${ind.category}</span></td>
+        <td>${fmtValue(ind.latest_value)}</td>
+        <td style="color:var(--muted);font-size:12px">${ind.latest_date || '—'}</td>
+        <td style="color:var(--muted);font-size:12px">${ind.threshold !== null && ind.threshold !== undefined ? fmtValue(ind.threshold) : 'z-score'}</td>
+        <td>
+          <div class="score-bar-wrap">
+            <div class="score-bar" style="width:${s}px;max-width:80px;background:${scoreColor(s)}"></div>
+            <span>${s}</span>
+          </div>
+        </td>
+        <td><span class="badge ${a}">${ind.alert}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ─── HISTORY CHART ────────────────────────────────────────────────────────
+  let chartInstance = null;
+
+  function renderChart(history) {
+    const ctx = document.getElementById('historyChart').getContext('2d');
+    if (chartInstance) chartInstance.destroy();
+
+    if (!history || history.length === 0) {
+      ctx.fillStyle = '#8b95b8';
+      ctx.font = '14px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('History builds after first scheduled run', ctx.canvas.width / 2, 150);
+      return;
+    }
+
+    const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
+    const labels = sorted.map(x => x.date);
+    const composite = sorted.map(x => x.composite);
+    const pointColors = composite.map(s => scoreColor(s));
+
+    chartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Composite Score',
+            data: composite,
+            borderColor: '#66b3ff',
+            backgroundColor: 'rgba(102,179,255,0.08)',
+            borderWidth: 2,
+            pointBackgroundColor: pointColors,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            fill: true,
+            tension: 0.35
+          },
+          {
+            label: 'RED threshold (60)',
+            data: labels.map(() => 60),
+            borderColor: 'rgba(255,122,122,0.35)',
+            borderDash: [4,4],
+            borderWidth: 1,
+            pointRadius: 0,
+            fill: false
+          },
+          {
+            label: 'YELLOW threshold (30)',
+            data: labels.map(() => 30),
+            borderColor: 'rgba(241,200,74,0.35)',
+            borderDash: [4,4],
+            borderWidth: 1,
+            pointRadius: 0,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: {
+            labels: { color: '#8b95b8', font: { size: 12 } }
+          },
+          tooltip: {
+            backgroundColor: '#1a2340',
+            titleColor: '#eef2ff',
+            bodyColor: '#8b95b8',
+            borderColor: 'rgba(255,255,255,0.08)',
+            borderWidth: 1,
+            callbacks: {
+              afterBody: (items) => {
+                const s = items[0]?.parsed?.y;
+                if (s === undefined) return '';
+                return `Alert: ${s >= 60 ? 'RED' : s >= 30 ? 'YELLOW' : 'GREEN'}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#8b95b8', maxTicksLimit: 12, font: { size: 11 } },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          },
+          y: {
+            min: 0, max: 100,
+            ticks: { color: '#8b95b8', font: { size: 11 } },
+            grid: { color: 'rgba(255,255,255,0.04)' }
+          }
+        }
+      }
+    });
+  }
+
+  // ─── ERROR HANDLER ────────────────────────────────────────────────────────
+  function showError(msg) {
+    const el = document.getElementById('errorBanner');
+    el.textContent = `⚠ ${msg}`;
+    el.style.display = 'block';
+  }
+
+  // ─── FILTER LISTENERS ─────────────────────────────────────────────────────
+  ['layerFilter','categoryFilter','alertFilter'].forEach(id => {
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+
+  // ─── BOOT ─────────────────────────────────────────────────────────────────
+  try {
+    const { current, history } = await loadData();
+    renderDashboard(current, history);
+  } catch (err) {
+    showError(`Failed to load data: ${err.message}. Run the workflow first or check data/current.json exists.`);
+    console.error(err);
+  }
+</script>
 </body>
 </html>
