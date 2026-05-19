@@ -22,8 +22,10 @@ async function main() {
   const { data: rawData, successCount, failureCount } = await fetchAllSeries(fredIds, apiKey);
   console.log(`\nFetch complete: ${successCount} succeeded, ${failureCount} failed`);
 
-  if (successCount === 0) {
-    console.error('All FRED fetches failed — aborting to avoid overwriting data with zeros.');
+  const total = successCount + failureCount;
+  const MIN_SUCCESS_RATIO = 0.75;
+  if (successCount === 0 || failureCount / total > (1 - MIN_SUCCESS_RATIO)) {
+    console.error(`Too many fetch failures (${failureCount}/${total}) — aborting to avoid publishing a degraded snapshot.`);
     process.exit(1);
   }
 
@@ -50,7 +52,7 @@ async function main() {
     JSON.stringify(history, null, 2)
   );
 
-  console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert})`);
+  console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert}) — Rating: ${snapshot.composite.rating}/10 — Confidence: ${Math.round(snapshot.composite.confidence * 100)}%`);
   console.log(`Layers:`, Object.fromEntries(
     Object.entries(snapshot.layers).map(([k, v]) => [k, v.score])
   ));

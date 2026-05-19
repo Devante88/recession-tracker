@@ -121,6 +121,32 @@ test('buildSnapshot composite includes rating field', () => {
   assert.ok(snap.composite.rating >= 1 && snap.composite.rating <= 10, 'rating should be in [1, 10]');
 });
 
+test('buildSnapshot confidence = 1.0 when all indicators have data', () => {
+  const indicators = [
+    { name: 'X', fred_id: 'X', layer: 'labor', category: 'macro', weight: 1.0,
+      score: 0.5, latest: { date: '2025-01-01', value: 5 },
+      threshold: null, direction: 'inverse', frequency: 'monthly' },
+    { name: 'Y', fred_id: 'Y', layer: 'labor', category: 'macro', weight: 1.0,
+      score: 0.5, latest: { date: '2025-01-01', value: 3 },
+      threshold: null, direction: 'inverse', frequency: 'monthly' }
+  ];
+  const snap = buildSnapshot(indicators, '2025-05-18');
+  assert.equal(snap.composite.confidence, 1.0);
+});
+
+test('buildSnapshot confidence reflects partial data coverage', () => {
+  const indicators = [
+    { name: 'X', fred_id: 'X', layer: 'labor', category: 'macro', weight: 1.0,
+      score: 0.5, latest: { date: '2025-01-01', value: 5 },
+      threshold: null, direction: 'inverse', frequency: 'monthly' },
+    { name: 'Y', fred_id: 'Y', layer: 'labor', category: 'macro', weight: 1.0,
+      score: 0, latest: null,
+      threshold: null, direction: 'inverse', frequency: 'monthly' }
+  ];
+  const snap = buildSnapshot(indicators, '2025-05-18');
+  assert.equal(snap.composite.confidence, 0.5);
+});
+
 test('buildHistoryFromSeries produces N monthly entries', () => {
   const registry = [
     { name: 'X', fred_id: 'X', layer: 'labor', category: 'macro', weight: 1.0,
