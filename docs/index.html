@@ -42,6 +42,23 @@
     .stale-tag      { display: none; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
                       padding: 3px 10px; border-radius: 999px;
                       background: rgba(241,200,74,0.15); color: var(--yellow); }
+    .live-tag       { display: inline-flex; align-items: center; gap: 6px;
+                      font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+                      padding: 3px 10px; border-radius: 999px;
+                      background: rgba(45,220,140,0.12); color: var(--green); }
+    .live-tag.paused { background: rgba(122,132,168,0.12); color: var(--muted); }
+    .live-dot       { width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+                      animation: live-pulse 1.6s ease-in-out infinite; }
+    .live-tag.paused .live-dot { background: var(--muted); animation: none; }
+    @keyframes live-pulse {
+      0%, 100% { opacity: 1;   transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.85); }
+    }
+    .flash-update { animation: flash 0.8s ease-out; }
+    @keyframes flash {
+      0%   { background-color: rgba(102,179,255,0.18); }
+      100% { background-color: transparent; }
+    }
 
     /* ── BANNERS ─────────────────────────────────────────────────────────────── */
     .banner { border-radius: 12px; padding: 14px 18px; margin-bottom: 20px;
@@ -210,6 +227,9 @@
     <div class="header-right">
       <div class="as-of">As of <span id="asOf">—</span></div>
       <div class="as-of">Updated <span id="generatedAt">—</span></div>
+      <span class="live-tag" id="liveTag" title="Auto-refreshing every 5 minutes">
+        <span class="live-dot"></span>LIVE
+      </span>
       <span class="stale-tag" id="staleTag">DATA STALE</span>
     </div>
   </header>
@@ -462,18 +482,6 @@ function sparklineSvg(values, color) {
     <polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="1.8"
       stroke-linecap="round" stroke-linejoin="round"/>
   </svg>`;
-}
-
-// ─── DATA LOADING ─────────────────────────────────────────────────────────────
-async function loadData() {
-  const [current, history] = await Promise.all([
-    fetch('data/current.json').then(r => {
-      if (!r.ok) throw new Error(`current.json HTTP ${r.status}`);
-      return r.json();
-    }),
-    fetch('data/history.json').then(r => r.ok ? r.json() : []).catch(() => [])
-  ]);
-  return { current, history };
 }
 
 // ─── RENDER: HEADER ──────────────────────────────────────────────────────────
@@ -866,18 +874,85 @@ function showError(msg) {
   el.style.display = 'block';
 }
 
-// ─── BOOT ─────────────────────────────────────────────────────────────────────
-try {
-  const { current, history } = await loadData();
-  renderHeader(current);
-  renderHero(current, history);
-  renderLayerCards(current, history);
-  renderChart(history);
-  renderTable(current.indicators || []);
-} catch (err) {
-  showError(`Failed to load data: ${err.message}. Check that data/current.json exists.`);
-  console.error(err);
+// ─── LIVE UPDATES ─────────────────────────────────────────────────────────────
+const REFRESH_INTERVAL_MS = 5 * 60 * 1000;   // 5 minutes
+let lastGeneratedAt = null;
+let refreshTimer = null;
+
+function flashUpdate() {
+  const score = document.getElementById('compositeScore');
+  score.classList.remove('flash-update');
+  void score.offsetWidth;   // force reflow to restart animation
+  score.classList.add('flash-update');
 }
+
+function setLiveStatus(active) {
+  const tag = document.getElementById('liveTag');
+  tag.classList.toggle('paused', !active);
+  tag.firstChild.nextSibling.textContent = active ? 'LIVE' : 'PAUSED';
+  tag.title = active
+    ? 'Auto-refreshing every 5 minutes'
+    : 'Paused — tab is in background';
+}
+
+async function refresh({ initial = false } = {}) {
+  try {
+    // Cache-bust so CDN/edge caches don't mask new data
+    const bust = `?t=${Date.now()}`;
+    const [current, history] = await Promise.all([
+      fetch(`data/current.json${bust}`).then(r => {
+        if (!r.ok) throw new Error(`current.json HTTP ${r.status}`);
+        return r.json();
+      }),
+      fetch(`data/history.json${bust}`).then(r => r.ok ? r.json() : []).catch(() => [])
+    ]);
+
+    if (!initial && current.generated_at === lastGeneratedAt) {
+      return;   // unchanged — skip re-render
+    }
+    lastGeneratedAt = current.generated_at;
+
+    renderHeader(current);
+    renderHero(current, history);
+    renderLayerCards(current, history);
+    renderChart(history);
+    renderTable(current.indicators || []);
+
+    if (!initial) flashUpdate();
+    document.getElementById('errorBanner').style.display = 'none';
+  } catch (err) {
+    if (initial) {
+      showError(`Failed to load data: ${err.message}. Check that data/current.json exists.`);
+    }
+    console.error('refresh failed:', err);
+  }
+}
+
+function startPolling() {
+  if (refreshTimer) return;
+  refreshTimer = setInterval(refresh, REFRESH_INTERVAL_MS);
+  setLiveStatus(true);
+}
+
+function stopPolling() {
+  if (!refreshTimer) return;
+  clearInterval(refreshTimer);
+  refreshTimer = null;
+  setLiveStatus(false);
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    stopPolling();
+  } else {
+    refresh();          // catch up immediately on return
+    startPolling();
+  }
+});
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+await refresh({ initial: true });
+startPolling();
 </script>
 </body>
 </html>
