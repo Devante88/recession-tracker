@@ -117,6 +117,14 @@ export function alertState(score) {
 }
 
 /**
+ * Convert a composite score in [0, 100] to a 1–10 recession risk rating.
+ * 1 = minimal risk, 10 = extreme risk.
+ */
+export function ratingScore(score) {
+  return Math.min(10, Math.max(1, Math.round((score / 100) * 9) + 1));
+}
+
+/**
  * Top-level: take normalized indicators, produce the full snapshot payload.
  */
 export function buildSnapshot(normalizedIndicators, asOfDate) {
@@ -127,7 +135,8 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
     generated_at: new Date().toISOString(),
     composite: {
       score: compositeScore,
-      alert: alertState(compositeScore)
+      alert: alertState(compositeScore),
+      rating: ratingScore(compositeScore)
     },
     layers: Object.fromEntries(
       Object.entries(layerScores).map(([layer, score]) => [

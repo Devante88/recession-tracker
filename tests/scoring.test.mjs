@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   logistic, meanStd, normalizeIndicator,
-  computeLayerScores, computeCompositeScore, alertState, buildSnapshot,
+  computeLayerScores, computeCompositeScore, alertState, ratingScore, buildSnapshot,
   buildHistoryFromSeries
 } from '../src/scoring.mjs';
 
@@ -93,6 +93,32 @@ test('alertState thresholds', () => {
   assert.equal(alertState(59.9), 'YELLOW');
   assert.equal(alertState(60), 'RED');
   assert.equal(alertState(100), 'RED');
+});
+
+test('ratingScore maps 0 → 1 and 100 → 10', () => {
+  assert.equal(ratingScore(0), 1);
+  assert.equal(ratingScore(100), 10);
+});
+
+test('ratingScore maps midpoint ~50 → 5 or 6', () => {
+  const r = ratingScore(50);
+  assert.ok(r >= 5 && r <= 6, `expected 5 or 6, got ${r}`);
+});
+
+test('ratingScore is bounded [1, 10] for out-of-range inputs', () => {
+  assert.equal(ratingScore(-99), 1);
+  assert.equal(ratingScore(200), 10);
+});
+
+test('buildSnapshot composite includes rating field', () => {
+  const indicators = [
+    { name: 'X', fred_id: 'X', layer: 'labor', category: 'macro', weight: 1.0,
+      score: 0.0, latest: { date: '2025-01-01', value: 0 },
+      threshold: null, direction: 'inverse', frequency: 'monthly' }
+  ];
+  const snap = buildSnapshot(indicators, '2025-05-18');
+  assert.ok(typeof snap.composite.rating === 'number', 'composite.rating should be a number');
+  assert.ok(snap.composite.rating >= 1 && snap.composite.rating <= 10, 'rating should be in [1, 10]');
 });
 
 test('buildHistoryFromSeries produces N monthly entries', () => {
