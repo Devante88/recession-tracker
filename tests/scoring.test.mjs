@@ -2,7 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   logistic, meanStd, normalizeIndicator,
-  computeLayerScores, computeCompositeScore, alertState, ratingScore, buildSnapshot,
+  computeLayerScores, computeCompositeScore, alertState, ratingScore,
+  normalCdf, recessionProbability, thresholdDwell, buildSnapshot,
   buildHistoryFromSeries
 } from '../src/scoring.mjs';
 
@@ -145,6 +146,97 @@ test('buildSnapshot confidence reflects partial data coverage', () => {
   ];
   const snap = buildSnapshot(indicators, '2025-05-18');
   assert.equal(snap.composite.confidence, 0.5);
+});
+
+test('normalCdf basic values', () => {
+  assert.ok(Math.abs(normalCdf(0) - 0.5) < 1e-6);
+  assert.ok(Math.abs(normalCdf(1.96) - 0.975) < 0.001);
+  assert.ok(Math.abs(normalCdf(-1.96) - 0.025) < 0.001);
+});
+
+test('recessionProbability: inverted curve → high probability', () => {
+  const pInverted = recessionProbability(-1);
+  const pFlat     = recessionProbability(0);
+  const pSteep    = recessionProbability(1);
+  assert.ok(pInverted > pFlat, `expected ${pInverted} > ${pFlat}`);
+  assert.ok(pFlat > pSteep, `expected ${pFlat} > ${pSteep}`);
+  // Flat curve should be roughly 30% per Estrella-Mishkin
+  assert.ok(pFlat > 0.25 && pFlat < 0.40, `expected 0.25-0.40, got ${pFlat}`);
+});
+
+test('recessionProbability: returns null for invalid input', () => {
+  assert.equal(recessionProbability(null), null);
+  assert.equal(recessionProbability(undefined), null);
+  assert.equal(recessionProbability(NaN), null);
+});
+
+test('thresholdDwell counts trailing inversion days', () => {
+  const series = [
+    { date: '2025-01-01', value:  0.5 },
+    { date: '2025-01-02', value: -0.1 },
+    { date: '2025-01-03', value: -0.2 },
+    { date: '2025-01-04', value: -0.3 }
+  ];
+  assert.equal(thresholdDwell(series, 0), 3);
+});
+
+test('thresholdDwell returns 0 when latest is uninverted', () => {
+  const series = [
+    { date: '2025-01-01', value: -0.5 },
+    { date: '2025-01-02', value:  0.2 }
+  ];
+  assert.equal(thresholdDwell(series, 0), 0);
+});
+
+test('normalizeIndicator: momentum lifts score when risk is rising fast', () => {
+  // Monotone rising risk → both level and momentum are high
+  const indicator = { threshold: null, direction: 'inverse' };
+  const rising = Array.from({ length: 12 }, (_, i) => ({
+    date: `2025-${String(i + 1).padStart(2, '0')}-01`, value: i
+  }));
+  const falling = Array.from({ length: 12 }, (_, i) => ({
+    date: `2025-${String(i + 1).padStart(2, '0')}-01`, value: 11 - i
+  }));
+  const r = normalizeIndicator(rising, indicator);
+  const f = normalizeIndicator(falling, indicator);
+  assert.ok(r.score > f.score, `rising momentum (${r.score}) should beat falling (${f.score})`);
+  assert.ok(r.momentumScore > 0.5);
+  assert.ok(f.momentumScore < 0.5);
+});
+
+test('buildSnapshot exposes recession probability and inversion days', () => {
+  const indicators = [
+    { name: 'YC', fred_id: 'T10Y3M', layer: 'financial_lead', category: 'macro', weight: 1.0,
+      score: 0.7, latest: { date: '2025-01-04', value: -0.3 },
+      series: [
+        { date: '2025-01-01', value:  0.2, score: 0.4 },
+        { date: '2025-01-02', value: -0.1, score: 0.6 },
+        { date: '2025-01-03', value: -0.2, score: 0.65 },
+        { date: '2025-01-04', value: -0.3, score: 0.7 }
+      ],
+      threshold: 0, direction: 'direct', frequency: 'daily' }
+  ];
+  const snap = buildSnapshot(indicators, '2025-01-04');
+  assert.ok(snap.composite.recession_probability_12mo > 0.4,
+    `expected high probability for -0.3 spread, got ${snap.composite.recession_probability_12mo}`);
+  assert.equal(snap.composite.yield_curve_inversion_days, 3);
+  assert.equal(snap.composite.yield_curve_spread, -0.3);
+});
+
+test('buildSnapshot embeds compact per-indicator history', () => {
+  const series = Array.from({ length: 30 }, (_, i) => ({
+    date: `2024-${String((i % 12) + 1).padStart(2, '0')}-15`,
+    value: i, score: 0.5
+  }));
+  const indicators = [{
+    name: 'X', fred_id: 'X', layer: 'labor', category: 'macro', weight: 1.0,
+    score: 0.5, latest: series[series.length - 1], series,
+    threshold: null, direction: 'inverse', frequency: 'monthly'
+  }];
+  const snap = buildSnapshot(indicators, '2025-05-18');
+  assert.ok(Array.isArray(snap.indicators[0].history));
+  assert.ok(snap.indicators[0].history.length <= 24);
+  assert.ok(snap.indicators[0].history.length > 0);
 });
 
 test('buildHistoryFromSeries produces N monthly entries', () => {
