@@ -80,6 +80,34 @@
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
     .tab-content[hidden] { display: none !important; }
 
+    /* ── MARKETS TAB ─────────────────────────────────────────────────────────── */
+    .markets-ticker { margin-bottom: 20px; border-radius: 12px; overflow: hidden; background: var(--panel); }
+    .markets-grid   { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .markets-grid .span2 { grid-column: 1 / -1; }
+    .tv-wrap { border-radius: 10px; overflow: hidden; background: transparent; }
+    .tv-wrap iframe { display: block; }
+    .mkt-context { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+                   gap: 12px; margin-bottom: 20px; }
+    .mkt-ctx-card { background: var(--panel-2); border: 1px solid var(--border);
+                    border-radius: 12px; padding: 16px; }
+    .mkt-ctx-card h4 { font-size: 12px; font-weight: 700; color: var(--accent);
+                       text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+    .mkt-ctx-card p  { font-size: 12px; color: var(--muted); line-height: 1.65; }
+    .mkt-ctx-card .signal { display: inline-block; font-size: 10px; font-weight: 700;
+                            padding: 2px 8px; border-radius: 999px; margin-top: 8px;
+                            background: rgba(45,220,140,0.12); color: var(--green); }
+    .mkt-ctx-card .signal.warn { background: rgba(241,200,74,0.12); color: var(--yellow); }
+    .mkt-ctx-card .signal.risk { background: rgba(255,122,122,0.12); color: var(--red); }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .compare-table th { color: var(--muted); text-align: left; font-size: 10px;
+                        text-transform: uppercase; letter-spacing: 0.08em;
+                        padding: 6px 12px; border-bottom: 1px solid var(--border); }
+    .compare-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table .chk  { color: var(--green); font-weight: 700; }
+    .compare-table .dash { color: var(--muted); }
+    @media (max-width: 900px) { .markets-grid { grid-template-columns: 1fr; } .markets-grid .span2 { grid-column: 1; } }
+
     /* ── BACKTEST STATS GRID ─────────────────────────────────────────────────── */
     .bt-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
                 gap:14px; margin-bottom:20px; }
@@ -300,6 +328,7 @@
   <nav class="tabs">
     <button class="tab-btn active" data-tab="live">Live Dashboard</button>
     <button class="tab-btn"        data-tab="backtest">30-Year Backtest</button>
+    <button class="tab-btn"        data-tab="markets">Markets</button>
     <button class="tab-btn"        data-tab="methodology">Methodology</button>
     <a class="tab-btn" href="feed.xml" target="_blank" rel="noopener">RSS Feed ↗</a>
     <a class="tab-btn" href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub ↗</a>
@@ -447,6 +476,131 @@
       </p>
     </section>
   </div>
+
+  <!-- MARKETS TAB -->
+  <div class="tab-content" id="tab-markets" hidden>
+
+    <!-- Live Ticker Tape -->
+    <div class="markets-ticker tradingview-widget-container" id="tv-ticker"></div>
+
+    <!-- Markets grid -->
+    <div class="markets-grid">
+
+      <!-- US Indices + Futures overview (left) -->
+      <section class="panel">
+        <div class="panel-header"><h2>Indices &amp; Futures</h2></div>
+        <div class="tv-wrap tradingview-widget-container" id="tv-indices" style="height:460px"></div>
+      </section>
+
+      <!-- Bonds &amp; Rates (right) -->
+      <section class="panel">
+        <div class="panel-header"><h2>Bonds &amp; Interest Rates</h2></div>
+        <div class="tv-wrap tradingview-widget-container" id="tv-bonds" style="height:460px"></div>
+      </section>
+
+      <!-- S&P 500 chart (full width) -->
+      <section class="panel span2">
+        <div class="panel-header"><h2>S&amp;P 500 — 12-Month Chart</h2></div>
+        <p class="panel-sub">Equity market performance alongside macro risk signals.</p>
+        <div class="tv-wrap tradingview-widget-container" id="tv-spx" style="height:380px"></div>
+      </section>
+
+      <!-- Commodities (left) -->
+      <section class="panel">
+        <div class="panel-header"><h2>Commodities</h2></div>
+        <div class="tv-wrap tradingview-widget-container" id="tv-commodities" style="height:400px"></div>
+      </section>
+
+      <!-- Options market (right) -->
+      <section class="panel">
+        <div class="panel-header"><h2>Volatility &amp; Options Market</h2></div>
+        <div class="tv-wrap tradingview-widget-container" id="tv-vix" style="height:400px"></div>
+      </section>
+
+    </div><!-- /markets-grid -->
+
+    <!-- Economic Calendar (full width) -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Economic Calendar</h2></div>
+      <p class="panel-sub">Upcoming high-impact macro events that can shift recession risk signals.</p>
+      <div class="tv-wrap tradingview-widget-container" id="tv-calendar" style="height:500px"></div>
+    </section>
+
+    <!-- How markets connect to recession risk -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Markets in Recession Context</h2></div>
+      <div class="mkt-context">
+        <div class="mkt-ctx-card">
+          <h4>Yield Curve &amp; Bonds</h4>
+          <p>The 10Y−3M and 10Y−2Y spreads are the strongest forward indicators. An inverted curve (negative spread) precedes recessions by 6–18 months. Rising long yields with falling short yields signals normalization — a positive sign.</p>
+          <span class="signal" id="mkt-yc-signal">Loading…</span>
+        </div>
+        <div class="mkt-ctx-card">
+          <h4>Equity Markets</h4>
+          <p>The S&amp;P 500 is a leading indicator — markets typically peak 6–12 months before a recession starts and trough 3–6 months before it ends. Bear markets (&gt;20% drawdown) coincide with but don't define recessions.</p>
+          <span class="signal warn">Coincident signal</span>
+        </div>
+        <div class="mkt-ctx-card">
+          <h4>VIX &amp; Credit Spreads</h4>
+          <p>VIX above 25 signals market stress; above 35 signals systemic fear. High-yield credit spreads above 5% indicate funding stress. Both are tracked as live recession indicators in the main dashboard.</p>
+          <span class="signal" id="mkt-vix-signal">Loading…</span>
+        </div>
+        <div class="mkt-ctx-card">
+          <h4>Commodities &amp; Oil</h4>
+          <p>Oil price collapses often precede or accompany recessions (demand destruction). Copper, sensitive to global growth, acts as an early warning. Gold rising with equities falling signals flight to safety.</p>
+          <span class="signal warn">Coincident/leading</span>
+        </div>
+        <div class="mkt-ctx-card">
+          <h4>Futures Markets</h4>
+          <p>S&amp;P 500 and Treasury futures reflect overnight global sentiment and expected Fed moves. Inverted Fed Funds futures (near &gt; far) signal expected rate cuts — often a late-cycle signal.</p>
+          <span class="signal warn">Market expectation</span>
+        </div>
+        <div class="mkt-ctx-card">
+          <h4>Dollar Index (DXY)</h4>
+          <p>A surging DXY tightens global financial conditions and can amplify recession risk. A falling DXY tends to ease conditions. Often moves inversely with commodities and emerging market assets.</p>
+          <span class="signal warn">Financial conditions</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bloomberg / Fidelity comparison -->
+    <section class="panel">
+      <div class="panel-header"><h2>Platform Comparison</h2></div>
+      <p class="panel-sub" style="margin-bottom:16px">What this tracker covers vs. Bloomberg Terminal and Fidelity Active Trader Pro.</p>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>This Tracker</th>
+            <th>Bloomberg</th>
+            <th>Fidelity ATP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Recession composite score (macro model)</td><td class="chk">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+          <tr><td>26-indicator FRED economic layer model</td><td class="chk">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+          <tr><td>Recession probability (Estrella-Mishkin)</td><td class="chk">✓</td><td class="chk">✓</td><td class="dash">—</td></tr>
+          <tr><td>30-year NBER backtest with recession bands</td><td class="chk">✓</td><td class="chk">✓</td><td class="dash">—</td></tr>
+          <tr><td>Yield curve inversion tracker</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Live equity index prices &amp; charts</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Futures market (S&amp;P, Nasdaq, Oil, Bonds)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Treasury yield curve (2Y–30Y live)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>VIX &amp; high-yield spread tracking</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Commodity prices (Oil, Gold, Copper)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Economic calendar</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>RSS feed for alert state changes</td><td class="chk">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+          <tr><td>Real-time Level 2 quotes / order book</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Options chains &amp; Greeks</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Portfolio integration &amp; P&amp;L tracking</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>News &amp; earnings calendar</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Sector heat maps</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>FX &amp; international markets</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Open source &amp; free</td><td class="chk">✓</td><td class="dash">$24K+/yr</td><td class="dash">Account req'd</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div><!-- /tab-markets -->
 
   <!-- METHODOLOGY TAB -->
   <div class="tab-content" id="tab-methodology" hidden>
@@ -1252,11 +1406,13 @@ async function refresh({ initial = false } = {}) {
     }
     lastGeneratedAt = current.generated_at;
 
+    window._snapshotCache = current;
     renderHeader(current);
     renderHero(current, history);
     renderLayerCards(current, history);
     renderChart(history);
     renderTable(current.indicators || []);
+    if (marketsRendered) updateMarketSignals();
 
     if (!initial) flashUpdate();
     document.getElementById('errorBanner').style.display = 'none';
@@ -1298,10 +1454,11 @@ const NBER_RECESSIONS = [
   { start: '2020-02-01', end: '2020-04-30' }
 ];
 let backtestRendered = false;
+let marketsRendered  = false;
 let activeTab = 'live';
 
 function setTab(name) {
-  if (!['live','backtest','methodology'].includes(name)) name = 'live';
+  if (!['live','backtest','markets','methodology'].includes(name)) name = 'live';
   activeTab = name;
   document.querySelectorAll('.tab-btn[data-tab]').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
@@ -1313,6 +1470,241 @@ function setTab(name) {
   if (name === 'backtest' && !backtestRendered) {
     renderBacktest();
     backtestRendered = true;
+  }
+  if (name === 'markets' && !marketsRendered) {
+    renderMarkets();
+    marketsRendered = true;
+  }
+}
+
+// ─── MARKETS TAB ──────────────────────────────────────────────────────────────
+function renderMarkets() {
+  function tv(containerId, src, config) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const widget = document.createElement('div');
+    widget.className = 'tradingview-widget-container__widget';
+    widget.style.height = '100%';
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = `https://s3.tradingview.com/external-embedding/${src}.js`;
+    script.async = true;
+    script.textContent = JSON.stringify(config);
+    el.appendChild(widget);
+    el.appendChild(script);
+  }
+
+  // ── Ticker tape ────────────────────────────────────────────────────────────
+  tv('tv-ticker', 'embed-widget-ticker-tape', {
+    symbols: [
+      { proName: 'FOREXCOM:SPXUSD',  title: 'S&P 500'      },
+      { proName: 'FOREXCOM:NSXUSD',  title: 'Nasdaq 100'   },
+      { proName: 'INDEX:DJI',        title: 'Dow Jones'     },
+      { proName: 'CME_MINI:ES1!',    title: 'S&P Futures'  },
+      { proName: 'CME:NQ1!',         title: 'NQ Futures'   },
+      { proName: 'TVC:US10Y',        title: '10Y Yield'     },
+      { proName: 'TVC:US02Y',        title: '2Y Yield'      },
+      { proName: 'NYMEX:CL1!',       title: 'WTI Oil'       },
+      { proName: 'TVC:GOLD',         title: 'Gold'          },
+      { proName: 'TVC:DXY',          title: 'Dollar Index'  },
+      { proName: 'CBOE:VIX',         title: 'VIX'           },
+      { proName: 'TVC:COPPER',       title: 'Copper'        }
+    ],
+    showSymbolLogo: true,
+    isTransparent: true,
+    displayMode: 'adaptive',
+    colorTheme: 'dark',
+    locale: 'en'
+  });
+
+  // ── Indices & Futures ──────────────────────────────────────────────────────
+  tv('tv-indices', 'embed-widget-market-overview', {
+    colorTheme: 'dark',
+    dateRange: '12M',
+    showChart: true,
+    locale: 'en',
+    width: '100%',
+    height: 460,
+    isTransparent: true,
+    showSymbolLogo: false,
+    tabs: [
+      {
+        title: 'US Indices',
+        symbols: [
+          { s: 'FOREXCOM:SPXUSD', d: 'S&P 500'    },
+          { s: 'FOREXCOM:NSXUSD', d: 'Nasdaq 100' },
+          { s: 'INDEX:DJI',       d: 'Dow Jones'  },
+          { s: 'INDEX:RUT',       d: 'Russell 2000'}
+        ]
+      },
+      {
+        title: 'Futures',
+        symbols: [
+          { s: 'CME_MINI:ES1!', d: 'S&P 500 Futures'  },
+          { s: 'CME:NQ1!',      d: 'Nasdaq Futures'   },
+          { s: 'CBOT:ZN1!',     d: '10Y T-Note Fut'  },
+          { s: 'NYMEX:CL1!',    d: 'WTI Crude Fut'   },
+          { s: 'COMEX:GC1!',    d: 'Gold Futures'     }
+        ]
+      }
+    ]
+  });
+
+  // ── Treasury yields ────────────────────────────────────────────────────────
+  tv('tv-bonds', 'embed-widget-market-overview', {
+    colorTheme: 'dark',
+    dateRange: '12M',
+    showChart: true,
+    locale: 'en',
+    width: '100%',
+    height: 460,
+    isTransparent: true,
+    showSymbolLogo: false,
+    tabs: [
+      {
+        title: 'Treasury Yields',
+        symbols: [
+          { s: 'TVC:US02Y',  d: '2Y Treasury'   },
+          { s: 'TVC:US05Y',  d: '5Y Treasury'   },
+          { s: 'TVC:US10Y',  d: '10Y Treasury'  },
+          { s: 'TVC:US30Y',  d: '30Y Treasury'  }
+        ]
+      },
+      {
+        title: 'Bonds & Credit',
+        symbols: [
+          { s: 'CBOT:ZN1!',        d: '10Y T-Note Fut'        },
+          { s: 'CBOT:ZB1!',        d: '30Y T-Bond Fut'        },
+          { s: 'INDEX:BAMLH0A0HYM2EY', d: 'HY OAS Spread (ICE)' }
+        ]
+      }
+    ]
+  });
+
+  // ── S&P 500 chart ──────────────────────────────────────────────────────────
+  tv('tv-spx', 'embed-widget-symbol-overview', {
+    symbols: [
+      ['S&P 500', 'FOREXCOM:SPXUSD|12M'],
+      ['Nasdaq 100', 'FOREXCOM:NSXUSD|12M'],
+      ['Dow Jones', 'INDEX:DJI|12M']
+    ],
+    chartOnly: false,
+    width: '100%',
+    height: 380,
+    locale: 'en',
+    colorTheme: 'dark',
+    isTransparent: true,
+    showFloatingTooltip: false,
+    scalePosition: 'right',
+    scaleMode: 'Normal',
+    fontFamily: '-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif',
+    fontSize: '10',
+    noTimeScale: false,
+    chartType: 'area',
+    lineWidth: 2,
+    lineType: 0,
+    lineColor: '#66b3ff',
+    topColor: 'rgba(102,179,255,0.2)',
+    bottomColor: 'rgba(102,179,255,0)',
+    dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M']
+  });
+
+  // ── Commodities ────────────────────────────────────────────────────────────
+  tv('tv-commodities', 'embed-widget-market-overview', {
+    colorTheme: 'dark',
+    dateRange: '12M',
+    showChart: true,
+    locale: 'en',
+    width: '100%',
+    height: 400,
+    isTransparent: true,
+    showSymbolLogo: false,
+    tabs: [
+      {
+        title: 'Commodities',
+        symbols: [
+          { s: 'TVC:GOLD',   d: 'Gold'          },
+          { s: 'NYMEX:CL1!', d: 'WTI Crude Oil' },
+          { s: 'TVC:COPPER', d: 'Copper'         },
+          { s: 'TVC:NATURALGAS', d: 'Natural Gas'},
+          { s: 'TVC:DXY',    d: 'Dollar Index'  }
+        ]
+      }
+    ]
+  });
+
+  // ── VIX & volatility ───────────────────────────────────────────────────────
+  tv('tv-vix', 'embed-widget-symbol-overview', {
+    symbols: [
+      ['VIX (Fear Index)', 'CBOE:VIX|12M'],
+      ['HY Spread ETF', 'AMEX:HYG|12M'],
+      ['Inv. Yield ETF', 'NASDAQ:PFIX|12M']
+    ],
+    chartOnly: false,
+    width: '100%',
+    height: 400,
+    locale: 'en',
+    colorTheme: 'dark',
+    isTransparent: true,
+    showFloatingTooltip: false,
+    scalePosition: 'right',
+    scaleMode: 'Normal',
+    chartType: 'area',
+    lineWidth: 2,
+    lineColor: '#ff7a7a',
+    topColor: 'rgba(255,122,122,0.2)',
+    bottomColor: 'rgba(255,122,122,0)',
+    dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W']
+  });
+
+  // ── Economic calendar ──────────────────────────────────────────────────────
+  tv('tv-calendar', 'embed-widget-events', {
+    colorTheme: 'dark',
+    isTransparent: true,
+    width: '100%',
+    height: 500,
+    locale: 'en',
+    importanceFilter: '0,1',
+    countryFilter: 'us'
+  });
+
+  // Update market-driven context signals using live snapshot data
+  updateMarketSignals();
+}
+
+function updateMarketSignals() {
+  // Pull current snapshot to populate the context cards with live signal data
+  const ycEl  = document.getElementById('mkt-yc-signal');
+  const vixEl = document.getElementById('mkt-vix-signal');
+  if (!window._snapshotCache) return;
+  const snap = window._snapshotCache;
+  const t10y3m = snap.indicators?.find(i => i.fred_id === 'T10Y3M');
+  const vix    = snap.indicators?.find(i => i.fred_id === 'VIXCLS');
+  if (ycEl && t10y3m) {
+    const spread = t10y3m.latest_value;
+    if (spread !== null && spread < 0) {
+      ycEl.textContent = `Inverted: ${spread.toFixed(2)}%`;
+      ycEl.className = 'signal risk';
+    } else if (spread !== null && spread < 0.5) {
+      ycEl.textContent = `Flat: ${spread?.toFixed(2)}%`;
+      ycEl.className = 'signal warn';
+    } else {
+      ycEl.textContent = `Normal: +${spread?.toFixed(2)}%`;
+      ycEl.className = 'signal';
+    }
+  }
+  if (vixEl && vix) {
+    const v = vix.latest_value;
+    if (v !== null && v >= 25) {
+      vixEl.textContent = `Elevated: VIX ${v?.toFixed(1)}`;
+      vixEl.className = 'signal risk';
+    } else if (v !== null && v >= 18) {
+      vixEl.textContent = `Moderate: VIX ${v?.toFixed(1)}`;
+      vixEl.className = 'signal warn';
+    } else {
+      vixEl.textContent = `Low: VIX ${v?.toFixed(1)}`;
+      vixEl.className = 'signal';
+    }
   }
 }
 
