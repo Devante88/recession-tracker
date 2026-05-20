@@ -68,6 +68,16 @@ const SEED = {
   NFIBOPTMI:     { latest:     97.3, mean:  99.5, std: 4.8   },
   // FRED reports in thousands; threshold=5500 (= 5.5M openings)
   JTSJOL:        { latest:   7580,   mean:  8350, std: 960   },
+
+  // ── Global / International ──────────────────────────────────────────────────
+  // OECD CLI: below 100 = below trend; threshold=100
+  OECDLOLITOAASTSAM: { latest:  99.6,  mean: 100.1, std: 0.7  },
+  // EU yield curve spread (10Y - 3M, derived); threshold=0
+  EURYLDCRV:         { latest:   0.72, mean:  0.15, std: 1.05 },
+  // Euro area harmonized unemployment; z-score
+  LRHUTTTTEZM156S:   { latest:   6.5,  mean:  7.1,  std: 0.8  },
+  // Euro area real GDP index; z-score
+  NAEXKP01EZQ661S:   { latest: 127.4,  mean: 124.8, std: 2.4  },
 };
 
 /**

@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-05-31",
+    "alert": "GREEN",
+    "score": 21.8,
+    "change": "Composite fell from 53.5 (YELLOW) to 21.8 (GREEN)."
+  },
+  {
+    "date": "2024-06-30",
+    "alert": "YELLOW",
+    "score": 48.6,
+    "change": "Initial reading: YELLOW at 48.6."
+  }
+]

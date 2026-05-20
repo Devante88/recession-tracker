@@ -46,15 +46,23 @@ export const REGISTRY = [
   { name: "Bank Lending Standards (C&I)", fred_id: "DRTSCILM", layer: "micro", frequency: "quarterly", direction: "inverse", weight: 0.20, threshold: 20.0, category: "micro", description: "Net % of banks tightening C&I loan standards. Survey." },
   { name: "Consumer Credit Delinquency", fred_id: "DRCCLACBS", layer: "micro", frequency: "quarterly", direction: "inverse", weight: 0.20, threshold: 3.0, category: "micro", description: "Credit card delinquency rate. Household stress." },
   { name: "Small Business Optimism", fred_id: "NFIBOPTMI", layer: "micro", frequency: "monthly", direction: "direct", weight: 0.20, threshold: 95.0, category: "micro", description: "NFIB Small Business Optimism Index." },
-  { name: "JOLTS Job Openings", fred_id: "JTSJOL", layer: "micro", frequency: "monthly", direction: "direct", weight: 0.20, threshold: 5500, category: "micro", description: "Employer demand. FRED reports in thousands; 5500 = 5.5M openings, recessionary trough range." }
+  { name: "JOLTS Job Openings", fred_id: "JTSJOL", layer: "micro", frequency: "monthly", direction: "direct", weight: 0.20, threshold: 5500, category: "micro", description: "Employer demand. FRED reports in thousands; 5500 = 5.5M openings, recessionary trough range." },
+
+  // ─── Global / International ─────────────────────────────────────────────────
+  { name: "OECD Leading Indicator", fred_id: "OECDLOLITOAASTSAM", layer: "global", frequency: "monthly", direction: "direct", weight: 0.30, threshold: 100.0, category: "macro", description: "OECD Composite Leading Indicator, total OECD area. Below 100 signals below-trend global growth." },
+  { name: "Euro Area Yield Curve",  fred_id: "EURYLDCRV",         layer: "global", frequency: "monthly", direction: "direct", weight: 0.25, threshold: 0.0,   category: "macro", description: "Derived: Euro area 10Y govt yield minus 3M rate. Inversion = EU recession signal." },
+  { name: "Euro Area Unemployment", fred_id: "LRHUTTTTEZM156S",   layer: "global", frequency: "monthly", direction: "inverse", weight: 0.25, threshold: null,  category: "macro", description: "Euro area harmonized unemployment rate. Z-score normalized." },
+  { name: "Euro Area Real GDP",     fred_id: "NAEXKP01EZQ661S",   layer: "global", frequency: "quarterly", direction: "direct", weight: 0.20, threshold: null, category: "macro", description: "Euro area real GDP index. Z-score normalized." }
 ];
 
+// Global layer weight = 0.10; existing 5 layers scaled to 0.90 proportionally.
 export const LAYER_WEIGHTS = {
-  financial_lead: 0.30,
-  labor: 0.25,
-  inflation: 0.15,
-  real_economy: 0.20,
-  micro: 0.10
+  financial_lead: 0.27,
+  labor:          0.22,
+  inflation:      0.14,
+  real_economy:   0.18,
+  micro:          0.09,
+  global:         0.10
 };
 
 export function getFredIds() {
