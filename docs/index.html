@@ -31,6 +31,14 @@
     a:hover { text-decoration: underline; }
     .wrap { max-width: 1440px; margin: 0 auto; padding: 32px 24px; }
 
+    /* ── MOBILE BASE ─────────────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .wrap { padding: 16px 14px; }
+      .header-left h1 { font-size: 20px; }
+      .tabs { gap: 0; }
+      .tab-btn { padding: 8px 11px; font-size: 12px; }
+    }
+
     /* ── HEADER ─────────────────────────────────────────────────────────────── */
     header { display: flex; justify-content: space-between; align-items: flex-start;
              margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
@@ -279,6 +287,25 @@
     .meth-disclaimer { font-size: 12px; color: var(--muted); line-height: 1.7;
                         background: var(--panel-2); border-radius: 10px; padding: 14px 16px; }
 
+    /* ── AI NARRATIVE ────────────────────────────────────────────────────────── */
+    .narrative-card { background: linear-gradient(135deg, var(--panel), var(--panel-2));
+                      border: 1px solid var(--border); border-radius: 16px;
+                      padding: 22px 26px; margin-bottom: 20px; position: relative; }
+    .narrative-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .narrative-header h2 { font-size: 13px; font-weight: 700; color: var(--muted);
+                           text-transform: uppercase; letter-spacing: 0.1em; }
+    .ai-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+                background: rgba(102,179,255,0.12); color: var(--accent);
+                letter-spacing: 0.06em; border: 1px solid rgba(102,179,255,0.2); }
+    .narrative-text { font-size: 14px; line-height: 1.75; color: var(--text); }
+    .narrative-text p { margin-bottom: 10px; }
+    .narrative-text p:last-child { margin-bottom: 0; }
+    .narrative-ts { font-size: 11px; color: var(--muted); margin-top: 12px; }
+    .narrative-skeleton { display: flex; flex-direction: column; gap: 10px; }
+    .skel-line { height: 14px; border-radius: 4px; background: var(--panel-3);
+                 animation: skel-pulse 1.4s ease-in-out infinite; }
+    @keyframes skel-pulse { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+
     /* ── FOOTER ──────────────────────────────────────────────────────────────── */
     footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
              text-align: center; font-size: 12px; color: var(--muted); }
@@ -288,18 +315,27 @@
       .layers { grid-template-columns: repeat(3,1fr); }
     }
     @media (max-width: 860px) {
-      .hero { grid-template-columns: 1fr; gap: 24px; }
+      .hero { grid-template-columns: 1fr; gap: 24px; padding: 24px 20px; }
       .hero-left { display: flex; align-items: center; gap: 20px; justify-content: center; }
       .hero-score { font-size: 72px; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
       .layers { grid-template-columns: repeat(2,1fr); }
       .hero-score { font-size: 56px; }
       .meth-weights { grid-template-columns: repeat(3,1fr); }
-      .wrap { padding: 20px 16px; }
+      .stats-row { grid-template-columns: 1fr; }
+      .modal-stats { grid-template-columns: 1fr 1fr; }
+      .bt-stats { grid-template-columns: 1fr 1fr; }
+      .narrative-card { padding: 16px; }
+      .narrative-text { font-size: 13px; }
     }
-    @media (max-width: 400px) {
+    @media (max-width: 420px) {
       .layers { grid-template-columns: 1fr 1fr; }
+      .hero { padding: 18px 14px; }
+      .hero-score { font-size: 48px; }
+      .hero-badge-row { flex-wrap: wrap; }
+      .panel { padding: 16px; }
     }
   </style>
 </head>
@@ -384,6 +420,22 @@
       <div class="stat-value" id="confidenceValue">—</div>
       <div class="stat-sub" id="confidenceSub">fraction of indicators reporting live data</div>
     </div>
+  </section>
+
+  <!-- AI NARRATIVE BRIEFING -->
+  <section class="narrative-card" id="narrativeCard">
+    <div class="narrative-header">
+      <h2>Daily Briefing</h2>
+      <span class="ai-badge">AI · Claude</span>
+    </div>
+    <div class="narrative-text" id="narrativeText">
+      <div class="narrative-skeleton">
+        <div class="skel-line" style="width:95%"></div>
+        <div class="skel-line" style="width:88%"></div>
+        <div class="skel-line" style="width:72%"></div>
+      </div>
+    </div>
+    <div class="narrative-ts" id="narrativeTs"></div>
   </section>
 
   <!-- LAYER CARDS -->
@@ -518,6 +570,20 @@
       </section>
 
     </div><!-- /markets-grid -->
+
+    <!-- Sector Heatmap + News (2-col) -->
+    <div class="markets-grid" style="margin-bottom:14px">
+      <section class="panel">
+        <div class="panel-header"><h2>Sector Heatmap</h2></div>
+        <p class="panel-sub">S&amp;P 500 sector performance — identifies where capital is rotating.</p>
+        <div class="tv-wrap tradingview-widget-container" id="tv-heatmap" style="height:420px"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-header"><h2>Market News</h2></div>
+        <p class="panel-sub">Latest macro and market headlines.</p>
+        <div class="tv-wrap tradingview-widget-container" id="tv-news" style="height:420px"></div>
+      </section>
+    </div>
 
     <!-- Economic Calendar (full width) -->
     <section class="panel" style="margin-bottom:20px">
@@ -1413,6 +1479,7 @@ async function refresh({ initial = false } = {}) {
     renderChart(history);
     renderTable(current.indicators || []);
     if (marketsRendered) updateMarketSignals();
+    loadNarrative(bust);
 
     if (!initial) flashUpdate();
     document.getElementById('errorBanner').style.display = 'none';
@@ -1668,6 +1735,37 @@ function renderMarkets() {
     countryFilter: 'us'
   });
 
+  // ── Sector heatmap ─────────────────────────────────────────────────────────
+  tv('tv-heatmap', 'embed-widget-stock-heatmap', {
+    exchanges: [],
+    dataSource: 'SPX500',
+    grouping: 'sector',
+    blockSize: 'market_cap_basic',
+    blockColor: 'change',
+    locale: 'en',
+    symbolUrl: '',
+    colorTheme: 'dark',
+    hasTopBar: false,
+    isDataSetEnabled: false,
+    isZoomEnabled: true,
+    hasSymbolTooltip: true,
+    isMonoSize: false,
+    width: '100%',
+    height: 420
+  });
+
+  // ── Market news ────────────────────────────────────────────────────────────
+  tv('tv-news', 'embed-widget-timeline', {
+    feedMode: 'market',
+    market: 'stock',
+    isTransparent: true,
+    displayMode: 'regular',
+    width: '100%',
+    height: 420,
+    colorTheme: 'dark',
+    locale: 'en'
+  });
+
   // Update market-driven context signals using live snapshot data
   updateMarketSignals();
 }
@@ -1818,6 +1916,29 @@ async function renderBacktest() {
     },
     plugins: [nberPlugin]
   });
+}
+
+// ─── AI NARRATIVE ─────────────────────────────────────────────────────────────
+let lastNarrativeAt = null;
+
+async function loadNarrative(bust = '') {
+  try {
+    const data = await fetch(`data/narrative.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null);
+    const el   = document.getElementById('narrativeText');
+    const tsEl = document.getElementById('narrativeTs');
+    if (!el) return;
+    if (!data || !data.text) {
+      el.innerHTML = '<p style="color:var(--muted);font-size:13px">AI briefing will appear here after the first daily data refresh with an <code>ANTHROPIC_API_KEY</code> secret configured.</p>';
+      return;
+    }
+    if (data.generated_at === lastNarrativeAt) return;
+    lastNarrativeAt = data.generated_at;
+    el.innerHTML = data.text.split('\n\n').map(p => `<p>${p.trim()}</p>`).join('');
+    if (tsEl) {
+      const d = new Date(data.generated_at);
+      tsEl.textContent = `Generated ${d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })} · Score ${data.score} · ${data.alert}`;
+    }
+  } catch {}
 }
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
