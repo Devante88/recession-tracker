@@ -836,6 +836,48 @@
 
     </div><!-- /markets-grid -->
 
+    <!-- Oil & Energy Panel -->
+<section class="panel" style="margin-bottom:20px">
+  <div class="panel-header"><h2>Oil &amp; Energy Markets</h2></div>
+  <p class="panel-sub">Crude oil demand collapse is one of the most reliable recession coincident signals. WTI &lt;$50 has historically coincided with demand destruction. Watch the Brent-WTI spread for geopolitical premium.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="oilCards">
+    <div class="stat-card">
+      <div class="stat-label">WTI Crude (FRED)</div>
+      <div class="stat-value" id="oilWtiVal">—</div>
+      <div class="stat-sub" id="oilWtiSub">Loading from FRED…</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Risk Signal</div>
+      <div class="stat-value" id="oilSignalVal">—</div>
+      <div class="stat-sub">Based on composite FRED scoring</div>
+    </div>
+  </div>
+  <div class="tv-wrap tradingview-widget-container" id="tv-oil" style="height:420px"></div>
+</section>
+
+<!-- Full Futures Terminal -->
+<section class="panel" style="margin-bottom:20px">
+  <div class="panel-header"><h2>Futures Terminal</h2></div>
+  <p class="panel-sub">All major futures contracts across equity, rates, energy, and metals. Overnight futures signal global sentiment before US open.</p>
+  <div class="tv-wrap tradingview-widget-container" id="tv-futures-full" style="height:500px"></div>
+</section>
+
+<!-- Yield Curve Shape Panel -->
+<section class="panel" style="margin-bottom:20px">
+  <div class="panel-header"><h2>Yield Curve Shape</h2></div>
+  <p class="panel-sub">Approximate term structure derived from FRED spread data (T10Y3M, T10Y2Y, FEDFUNDS). An inverted or flat curve historically precedes recessions by 6–18 months.</p>
+  <div id="yieldCurveWrap" style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+    <div style="flex:1;min-width:280px">
+      <canvas id="yieldCurveChart" height="220"></canvas>
+    </div>
+    <div style="min-width:180px">
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--muted);margin-bottom:10px">DERIVED YIELDS</div>
+      <div id="yieldCurveTable" style="font-size:13px;line-height:2"></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:12px">Derived: 3M≈FEDFUNDS, 2Y=10Y−T10Y2Y, 10Y=3M+T10Y3M. 5Y and 30Y estimated.</div>
+    </div>
+  </div>
+</section>
+
     <!-- Sector Heatmap + News (2-col) -->
     <div class="markets-grid" style="margin-bottom:14px">
       <section class="panel">
@@ -2696,6 +2738,81 @@ function setTab(name) {
   }
 }
 
+// ─── YIELD CURVE SHAPE ───────────────────────────────────────────────────────
+// Derives approximate absolute yields from FRED spread data and FEDFUNDS.
+// 3M  ≈ FEDFUNDS
+// 10Y = 3M + T10Y3M spread
+// 2Y  = 10Y − T10Y2Y spread
+// 5Y  = midpoint(2Y, 10Y) — rough estimate
+// 30Y = 10Y + 0.35 — historical avg premium (rough)
+function renderYieldCurve(snap) {
+  const canvas = document.getElementById('yieldCurveChart');
+  const tableEl = document.getElementById('yieldCurveTable');
+  if (!canvas || !tableEl) return;
+
+  const inds = snap?.indicators || [];
+  const ff  = inds.find(x => x.fred_id === 'FEDFUNDS')?.latest_value;
+  const s3m = inds.find(x => x.fred_id === 'T10Y3M')?.latest_value;
+  const s2y = inds.find(x => x.fred_id === 'T10Y2Y')?.latest_value;
+  if (ff == null || s3m == null || s2y == null) return;
+
+  const y3m  = ff;
+  const y10y = ff + s3m;
+  const y2y  = y10y - s2y;
+  const y5y  = (y2y + y10y) / 2;
+  const y30y = y10y + 0.35;
+
+  const points = [
+    { label: '3M',  y: y3m,  est: false },
+    { label: '2Y',  y: y2y,  est: false },
+    { label: '5Y',  y: y5y,  est: true  },
+    { label: '10Y', y: y10y, est: false },
+    { label: '30Y', y: y30y, est: true  }
+  ];
+
+  const inverted = y2y > y10y || y3m > y10y;
+  const curveColor = inverted ? '#ff7a7a' : '#66b3ff';
+
+  // Render table
+  tableEl.innerHTML = points.map(p =>
+    `<div style="display:flex;justify-content:space-between;gap:20px">
+       <span style="color:var(--muted)">${p.label}${p.est ? '<sup style="font-size:9px">est</sup>' : ''}</span>
+       <strong style="color:${p.est ? 'var(--muted)' : curveColor}">${p.y.toFixed(2)}%</strong>
+     </div>`
+  ).join('') + `<div style="margin-top:8px;font-size:12px;color:${inverted?'var(--red)':'var(--green);'}">${inverted ? '⚠ Curve inverted' : '✓ Positive slope'}</div>`;
+
+  // Chart.js line chart
+  if (canvas._yieldChart) canvas._yieldChart.destroy();
+  canvas._yieldChart = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: points.map(p => p.label),
+      datasets: [{
+        data: points.map(p => p.y),
+        borderColor: curveColor,
+        backgroundColor: inverted ? 'rgba(255,122,122,0.08)' : 'rgba(102,179,255,0.08)',
+        borderWidth: 2.5,
+        pointRadius: 5,
+        pointBackgroundColor: points.map(p => p.est ? 'var(--muted)' : curveColor),
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: {
+        callbacks: { label: i => ` ${i.parsed.y.toFixed(2)}%${points[i.dataIndex].est?' (est)':''}` }
+      }},
+      scales: {
+        x: { ticks: { color: '#7a84a8', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.03)' } },
+        y: { ticks: { color: '#7a84a8', font: { size: 11 }, callback: v => v.toFixed(1)+'%' },
+             grid: { color: 'rgba(255,255,255,0.03)' } }
+      }
+    }
+  });
+}
+
 // ─── MARKETS TAB ──────────────────────────────────────────────────────────────
 function renderMarkets() {
   function tv(containerId, src, config) {
@@ -2727,7 +2844,13 @@ function renderMarkets() {
       { proName: 'TVC:GOLD',         title: 'Gold'          },
       { proName: 'TVC:DXY',          title: 'Dollar Index'  },
       { proName: 'CBOE:VIX',         title: 'VIX'           },
-      { proName: 'TVC:COPPER',       title: 'Copper'        }
+      { proName: 'TVC:COPPER',       title: 'Copper'        },
+      { proName: 'NYMEX:RB1!',    title: 'Gasoline Fut'  },
+      { proName: 'COMEX:SI1!',    title: 'Silver'         },
+      { proName: 'COMEX:HG1!',    title: 'Copper Fut'     },
+      { proName: 'TVC:SILVER',    title: 'Silver Spot'    },
+      { proName: 'FOREXCOM:EURUSD', title: 'EUR/USD'      },
+      { proName: 'TVC:USOIL',     title: 'Brent'          }
     ],
     showSymbolLogo: true,
     isTransparent: true,
@@ -2759,11 +2882,18 @@ function renderMarkets() {
       {
         title: 'Futures',
         symbols: [
-          { s: 'CME_MINI:ES1!', d: 'S&P 500 Futures'  },
-          { s: 'CME:NQ1!',      d: 'Nasdaq Futures'   },
-          { s: 'CBOT:ZN1!',     d: '10Y T-Note Fut'  },
-          { s: 'NYMEX:CL1!',    d: 'WTI Crude Fut'   },
-          { s: 'COMEX:GC1!',    d: 'Gold Futures'     }
+          { s: 'CME_MINI:ES1!',  d: 'S&P 500 Futures'   },
+          { s: 'CME:NQ1!',       d: 'Nasdaq Futures'     },
+          { s: 'CBOT:YM1!',      d: 'Dow Futures'        },
+          { s: 'CME:RTY1!',      d: 'Russell 2000 Fut'   },
+          { s: 'CBOT:ZN1!',      d: '10Y T-Note Fut'     },
+          { s: 'CBOT:ZB1!',      d: '30Y T-Bond Fut'     },
+          { s: 'CBOT:ZF1!',      d: '5Y T-Note Fut'      },
+          { s: 'NYMEX:CL1!',     d: 'WTI Crude Fut'      },
+          { s: 'NYMEX:NG1!',     d: 'Natural Gas Fut'    },
+          { s: 'COMEX:GC1!',     d: 'Gold Futures'       },
+          { s: 'COMEX:SI1!',     d: 'Silver Futures'     },
+          { s: 'COMEX:HG1!',     d: 'Copper Futures'     }
         ]
       }
     ]
@@ -2840,13 +2970,33 @@ function renderMarkets() {
     showSymbolLogo: false,
     tabs: [
       {
-        title: 'Commodities',
+        title: 'Energy',
         symbols: [
-          { s: 'TVC:GOLD',   d: 'Gold'          },
-          { s: 'NYMEX:CL1!', d: 'WTI Crude Oil' },
-          { s: 'TVC:COPPER', d: 'Copper'         },
-          { s: 'TVC:NATURALGAS', d: 'Natural Gas'},
-          { s: 'TVC:DXY',    d: 'Dollar Index'  }
+          { s: 'NYMEX:CL1!',     d: 'WTI Crude Oil'   },
+          { s: 'TVC:USOIL',      d: 'Brent Crude'      },
+          { s: 'NYMEX:NG1!',     d: 'Natural Gas'      },
+          { s: 'NYMEX:RB1!',     d: 'RBOB Gasoline'    },
+          { s: 'AMEX:XLE',       d: 'Energy Sector ETF'}
+        ]
+      },
+      {
+        title: 'Metals',
+        symbols: [
+          { s: 'TVC:GOLD',       d: 'Gold'             },
+          { s: 'TVC:SILVER',     d: 'Silver'           },
+          { s: 'TVC:COPPER',     d: 'Copper'           },
+          { s: 'COMEX:PL1!',     d: 'Platinum'         },
+          { s: 'TVC:DXY',        d: 'Dollar Index'     }
+        ]
+      },
+      {
+        title: 'Agriculture',
+        symbols: [
+          { s: 'CBOT:ZW1!',      d: 'Wheat'            },
+          { s: 'CBOT:ZC1!',      d: 'Corn'             },
+          { s: 'CBOT:ZS1!',      d: 'Soybeans'         },
+          { s: 'NYMEX:OJ1!',     d: 'Orange Juice'     },
+          { s: 'ICEUS:SB1!',     d: 'Sugar'            }
         ]
       }
     ]
@@ -2918,8 +3068,112 @@ function renderMarkets() {
     locale: 'en'
   });
 
+  // ── Oil & Energy ──────────────────────────────────────────────────────────
+  tv('tv-oil', 'embed-widget-symbol-overview', {
+    symbols: [
+      ['WTI Crude', 'NYMEX:CL1!|12M'],
+      ['Brent Crude', 'TVC:USOIL|12M'],
+      ['Natural Gas', 'NYMEX:NG1!|12M'],
+      ['Energy ETF', 'AMEX:XLE|12M']
+    ],
+    chartOnly: false,
+    width: '100%',
+    height: 420,
+    locale: 'en',
+    colorTheme: 'dark',
+    isTransparent: true,
+    showFloatingTooltip: false,
+    scalePosition: 'right',
+    scaleMode: 'Normal',
+    chartType: 'area',
+    lineWidth: 2,
+    lineColor: '#f1c84a',
+    topColor: 'rgba(241,200,74,0.2)',
+    bottomColor: 'rgba(241,200,74,0)',
+    dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M']
+  });
+
+  // ── Full Futures Terminal ────────────────────────────────────────────────
+  tv('tv-futures-full', 'embed-widget-market-overview', {
+    colorTheme: 'dark',
+    dateRange: '12M',
+    showChart: true,
+    locale: 'en',
+    width: '100%',
+    height: 500,
+    isTransparent: true,
+    showSymbolLogo: false,
+    tabs: [
+      {
+        title: 'Equity Futures',
+        symbols: [
+          { s: 'CME_MINI:ES1!',  d: 'S&P 500 E-mini'     },
+          { s: 'CME:NQ1!',       d: 'Nasdaq 100 E-mini'  },
+          { s: 'CBOT:YM1!',      d: 'Dow Jones E-mini'   },
+          { s: 'CME:RTY1!',      d: 'Russell 2000 E-mini'},
+          { s: 'CME:VIX1!',      d: 'VIX Futures'        }
+        ]
+      },
+      {
+        title: 'Rates Futures',
+        symbols: [
+          { s: 'CBOT:ZN1!',  d: '10Y T-Note'   },
+          { s: 'CBOT:ZB1!',  d: '30Y T-Bond'   },
+          { s: 'CBOT:ZF1!',  d: '5Y T-Note'    },
+          { s: 'CBOT:ZT1!',  d: '2Y T-Note'    },
+          { s: 'CME:FF1!',   d: 'Fed Funds Fut' }
+        ]
+      },
+      {
+        title: 'Energy Futures',
+        symbols: [
+          { s: 'NYMEX:CL1!',  d: 'WTI Crude'     },
+          { s: 'NYMEX:NG1!',  d: 'Natural Gas'    },
+          { s: 'NYMEX:RB1!',  d: 'RBOB Gasoline'  },
+          { s: 'NYMEX:HO1!',  d: 'Heating Oil'    }
+        ]
+      },
+      {
+        title: 'Metals Futures',
+        symbols: [
+          { s: 'COMEX:GC1!',  d: 'Gold'      },
+          { s: 'COMEX:SI1!',  d: 'Silver'    },
+          { s: 'COMEX:HG1!',  d: 'Copper'    },
+          { s: 'COMEX:PL1!',  d: 'Platinum'  }
+        ]
+      }
+    ]
+  });
+
   // Update market-driven context signals using live snapshot data
   updateMarketSignals();
+
+  // Yield curve + oil cards use live FRED data from the snapshot
+  const snap = window._snapshotCache;
+  if (snap) {
+    renderYieldCurve(snap);
+    // Oil market signal card from FRED scoring
+    const oilInd = (snap.indicators || []).find(x => x.fred_id === 'DCOILWTICO' || x.name?.toLowerCase().includes('oil') || x.fred_id === 'NFCI');
+    const wtiEl = document.getElementById('oilWtiVal');
+    const wtiSub = document.getElementById('oilWtiSub');
+    const oilSig = document.getElementById('oilSignalVal');
+    // Try to find any energy/oil related indicator score from the composite
+    const energyInds = (snap.indicators || []).filter(x =>
+      ['DCOILWTICO','BAMLH0A0HYM2','NFCI','BAA10YM','VIXCLS'].includes(x.fred_id)
+    );
+    if (wtiEl) {
+      wtiEl.textContent = '—';
+      wtiEl.style.color = 'var(--muted)';
+      wtiSub.textContent = 'WTI not in FRED registry — see TradingView chart below';
+    }
+    if (oilSig && energyInds.length) {
+      const avgScore = energyInds.reduce((s, x) => s + (x.score || 0), 0) / energyInds.length;
+      oilSig.textContent = avgScore.toFixed(1);
+      oilSig.style.color = avgScore >= 60 ? 'var(--red)' : avgScore >= 30 ? 'var(--yellow)' : 'var(--green)';
+      document.querySelector('#oilCards .stat-card:last-child .stat-sub').textContent =
+        'Avg score: VIX + credit spreads + fin. conditions';
+    }
+  }
 }
 
 function updateMarketSignals() {
