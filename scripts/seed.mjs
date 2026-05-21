@@ -68,6 +68,34 @@ const SEED = {
   NFIBOPTMI:     { latest:     97.3, mean:  99.5, std: 4.8   },
   // FRED reports in thousands; threshold=5500 (= 5.5M openings)
   JTSJOL:        { latest:   7580,   mean:  8350, std: 960   },
+
+  // ── Real economy (WEI added) ─────────────────────────────────────────────────
+  WEI:           { latest:  2.1,     mean:  1.8,  std: 1.4  },
+
+  // ── New Tier 1 indicators ────────────────────────────────────────────────────
+  NAPM:      { latest: 49.2,    mean: 52.1,   std: 3.8   },  // ISM Mfg PMI, slightly below 50
+  T10YIE:    { latest:  2.35,   mean:  2.15,  std: 0.45  },  // TIPS breakeven
+  WALCL:     { latest: 6850000, mean: 7200000, std: 680000 }, // Fed balance sheet ($M)
+  UMCSENT:   { latest: 67.4,    mean: 74.2,   std: 8.5   },  // UMich sentiment, depressed
+  PSAVERT:   { latest:  4.8,    mean:  5.9,   std: 1.8   },  // saving rate low
+  CSUSHPISA: { latest: 318.5,   mean: 285.0,  std: 28.0  },  // Case-Shiller elevated
+  NMFCI:     { latest: 51.4,    mean: 54.2,   std: 3.5   },  // ISM Services, above 50
+  PPIACO:    { latest: 272.4,   mean: 258.0,  std: 18.5  },  // PPI elevated
+
+  // ── New Part A indicators ────────────────────────────────────────────────────
+  M2SL:    { latest: 21800, mean: 20500, std: 1200 },
+  CIVPART: { latest: 62.7,  mean: 62.2,  std: 0.6  },
+  TCU:     { latest: 77.8,  mean: 78.5,  std: 1.4  },
+
+  // ── Global / International ──────────────────────────────────────────────────
+  // OECD CLI: below 100 = below trend; threshold=100
+  OECDLOLITOAASTSAM: { latest:  99.6,  mean: 100.1, std: 0.7  },
+  // EU yield curve spread (10Y - 3M, derived); threshold=0
+  EURYLDCRV:         { latest:   0.72, mean:  0.15, std: 1.05 },
+  // Euro area harmonized unemployment; z-score
+  LRHUTTTTEZM156S:   { latest:   6.5,  mean:  7.1,  std: 0.8  },
+  // Euro area real GDP index; z-score
+  NAEXKP01EZQ661S:   { latest: 127.4,  mean: 124.8, std: 2.4  },
 };
 
 /**

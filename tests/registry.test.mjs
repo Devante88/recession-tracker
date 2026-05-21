@@ -4,7 +4,7 @@ import { REGISTRY, LAYER_WEIGHTS, validateLayerWeights, validateCompositeWeights
 
 test('registry has expected layers', () => {
   const layers = new Set(REGISTRY.map(x => x.layer));
-  assert.deepEqual([...layers].sort(), ['financial_lead', 'inflation', 'labor', 'micro', 'real_economy']);
+  assert.deepEqual([...layers].sort(), ['financial_lead', 'global', 'inflation', 'labor', 'micro', 'real_economy']);
 });
 
 test('every indicator has required fields', () => {
