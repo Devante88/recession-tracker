@@ -9,7 +9,7 @@
       "inflation": 78,
       "real_economy": 65.6,
       "micro": 34.2,
-      "global": 25.9
+      "global": 26.1
     }
   },
   {
@@ -22,7 +22,7 @@
       "inflation": 57.4,
       "real_economy": 59,
       "micro": 33.3,
-      "global": 58.6
+      "global": 58.5
     }
   },
   {
@@ -35,7 +35,7 @@
       "inflation": 59.8,
       "real_economy": 41.6,
       "micro": 38.6,
-      "global": 17.3
+      "global": 17.4
     }
   },
   {
@@ -48,7 +48,7 @@
       "inflation": 43.2,
       "real_economy": 35.5,
       "micro": 42,
-      "global": 82.9
+      "global": 82.8
     }
   },
   {
@@ -79,7 +79,7 @@
   },
   {
     "date": "2024-12-31",
-    "composite": 42.1,
+    "composite": 42,
     "alert": "YELLOW",
     "layers": {
       "financial_lead": 54.1,
@@ -87,7 +87,7 @@
       "inflation": 39,
       "real_economy": 51.7,
       "micro": 30.9,
-      "global": 30.6
+      "global": 30.5
     }
   },
   {
@@ -100,7 +100,7 @@
       "inflation": 60.1,
       "real_economy": 70.7,
       "micro": 36.9,
-      "global": 56.4
+      "global": 56.5
     }
   },
   {
@@ -113,7 +113,7 @@
       "inflation": 32.2,
       "real_economy": 33.6,
       "micro": 45.9,
-      "global": 59.1
+      "global": 59
     }
   },
   {
@@ -126,7 +126,7 @@
       "inflation": 71.3,
       "real_economy": 49.4,
       "micro": 41.1,
-      "global": 52.6
+      "global": 52.7
     }
   },
   {
@@ -139,7 +139,7 @@
       "inflation": 37.5,
       "real_economy": 28.6,
       "micro": 46.2,
-      "global": 60.7
+      "global": 60.5
     }
   },
   {
@@ -152,7 +152,7 @@
       "inflation": 80.7,
       "real_economy": 66.2,
       "micro": 37.5,
-      "global": 38.7
+      "global": 38.9
     }
   },
   {
@@ -165,7 +165,7 @@
       "inflation": 40.6,
       "real_economy": 57.5,
       "micro": 33.6,
-      "global": 55.8
+      "global": 55.6
     }
   },
   {
@@ -178,7 +178,7 @@
       "inflation": 72.3,
       "real_economy": 53.9,
       "micro": 32.9,
-      "global": 18.9
+      "global": 19.1
     }
   },
   {
@@ -191,7 +191,7 @@
       "inflation": 33.9,
       "real_economy": 38.6,
       "micro": 42.9,
-      "global": 74.9
+      "global": 74.8
     }
   },
   {
@@ -204,7 +204,7 @@
       "inflation": 41.8,
       "real_economy": 32,
       "micro": 40.5,
-      "global": 37.9
+      "global": 38
     }
   },
   {
@@ -269,7 +269,7 @@
       "inflation": 62.4,
       "real_economy": 48.1,
       "micro": 43.3,
-      "global": 65.1
+      "global": 65.2
     }
   },
   {
@@ -282,7 +282,7 @@
       "inflation": 39.7,
       "real_economy": 23,
       "micro": 46.3,
-      "global": 47.4
+      "global": 47.2
     }
   },
   {
@@ -295,7 +295,7 @@
       "inflation": 77.9,
       "real_economy": 62.6,
       "micro": 38.3,
-      "global": 41
+      "global": 41.2
     }
   },
   {
@@ -308,7 +308,7 @@
       "inflation": 22.6,
       "real_economy": 25.9,
       "micro": 38.5,
-      "global": 19.5
+      "global": 19.4
     }
   }
 ]

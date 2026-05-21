@@ -86,8 +86,8 @@ const SEED = {
   TCU:     { latest: 77.8,  mean: 78.5,  std: 1.4  },
 
   // ── Global / International ──────────────────────────────────────────────────
-  // OECD CLI: below 100 = below trend; threshold=100
-  OECDLOLITOAASTSAM: { latest:  99.6,  mean: 100.1, std: 0.7  },
+  // G7 CLI: below 100 = below trend; threshold=100 (replaces OECDLOLITOAASTSAM, discontinued Nov 2022)
+  G7LOLITOAASTSAM:   { latest:  99.7,  mean: 100.1, std: 0.7  },
   // EU yield curve spread (10Y - 3M, derived); threshold=0
   EURYLDCRV:         { latest:   0.72, mean:  0.15, std: 1.05 },
   // Euro area harmonized unemployment; z-score

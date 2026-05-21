@@ -1,6 +1,6 @@
 {
   "as_of": "2026-04-19",
-  "generated_at": "2026-05-21T20:15:54.217Z",
+  "generated_at": "2026-05-21T20:31:54.709Z",
   "composite": {
     "score": 47.9,
     "alert": "YELLOW",
@@ -110,7 +110,7 @@
       "weight": 0.09
     },
     "global": {
-      "score": 41,
+      "score": 41.1,
       "alert": "YELLOW",
       "weight": 0.1
     }
@@ -4401,18 +4401,18 @@
       ]
     },
     {
-      "name": "OECD Leading Indicator",
-      "fred_id": "OECDLOLITOAASTSAM",
+      "name": "G7 Leading Indicator",
+      "fred_id": "G7LOLITOAASTSAM",
       "layer": "global",
       "category": "macro",
-      "description": "OECD Composite Leading Indicator, total OECD area. Below 100 signals below-trend global growth.",
+      "description": "OECD Composite Leading Indicator for the G7. Below 100 signals below-trend global growth. (OECDLOLITOAASTSAM discontinued Nov 2022.)",
       "weight": 0.3,
-      "latest_value": 100.5708,
+      "latest_value": 100.0562,
       "latest_date": "2026-04-01",
-      "score": 49.5,
-      "level_score": 49.4,
-      "momentum_score": 49.6,
-      "percentile_rank": 30,
+      "score": 50.1,
+      "level_score": 49.9,
+      "momentum_score": 50.4,
+      "percentile_rank": 60,
       "anomaly": false,
       "alert": "YELLOW",
       "threshold": 100,
@@ -4423,99 +4423,99 @@
       "history": [
         {
           "date": "2024-05-01",
-          "value": 99.9177
+          "value": 100.4219
         },
         {
           "date": "2024-06-01",
-          "value": 101.2824
+          "value": 100.8446
         },
         {
           "date": "2024-07-01",
-          "value": 99.359
+          "value": 99.7143
         },
         {
           "date": "2024-08-01",
-          "value": 100.4381
+          "value": 100.2186
         },
         {
           "date": "2024-09-01",
-          "value": 98.7958
+          "value": 98.926
         },
         {
           "date": "2024-10-01",
-          "value": 100.8634
+          "value": 100.8902
         },
         {
           "date": "2024-11-01",
-          "value": 99.9223
+          "value": 99.7743
         },
         {
           "date": "2024-12-01",
-          "value": 101.0236
+          "value": 101.2941
         },
         {
           "date": "2025-01-01",
-          "value": 99.6111
+          "value": 99.2477
         },
         {
           "date": "2025-02-01",
-          "value": 99.7164
+          "value": 100.1934
         },
         {
           "date": "2025-03-01",
-          "value": 99.7456
+          "value": 99.2458
         },
         {
           "date": "2025-04-01",
-          "value": 100.0505
+          "value": 100.5986
         },
         {
           "date": "2025-05-01",
-          "value": 101.0317
+          "value": 100.4925
         },
         {
           "date": "2025-06-01",
-          "value": 99.8082
+          "value": 100.3146
         },
         {
           "date": "2025-07-01",
-          "value": 100.4957
+          "value": 100.0718
         },
         {
           "date": "2025-08-01",
-          "value": 98.7558
+          "value": 99.1225
         },
         {
           "date": "2025-09-01",
-          "value": 100.677
+          "value": 100.4528
         },
         {
           "date": "2025-10-01",
-          "value": 99.6159
+          "value": 99.7316
         },
         {
           "date": "2025-11-01",
-          "value": 101.3688
+          "value": 101.3859
         },
         {
           "date": "2025-12-01",
-          "value": 99.5598
+          "value": 99.4189
         },
         {
           "date": "2026-01-01",
-          "value": 100.1907
+          "value": 100.4759
         },
         {
           "date": "2026-02-01",
-          "value": 99.2163
+          "value": 98.8604
         },
         {
           "date": "2026-03-01",
-          "value": 100.193
+          "value": 100.6611
         },
         {
           "date": "2026-04-01",
-          "value": 100.5708
+          "value": 100.0562
         }
       ]
     },
