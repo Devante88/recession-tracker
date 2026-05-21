@@ -513,6 +513,20 @@
     </div>
   </section>
 
+  <!-- WHAT CHANGED PANEL -->
+  <section class="panel" id="changePanel" style="display:none">
+    <div class="panel-header"><h2>What Changed Since Last Update</h2></div>
+    <p class="panel-sub" id="changeSub"></p>
+    <div id="changeContent" style="margin-top:12px"></div>
+  </section>
+
+  <!-- RECESSION PROBABILITY GAUGE -->
+  <section class="panel" id="probGaugePanel">
+    <div class="panel-header"><h2>12-Month Recession Probability</h2></div>
+    <p class="panel-sub">Estrella-Mishkin probit on the 10Y-3M Treasury spread. Above ~30% has historically preceded NBER recessions.</p>
+    <div id="probGauge" style="display:flex;justify-content:center;margin-top:8px"></div>
+  </section>
+
   <!-- DIFFUSION INDEX PANEL -->
   <section class="panel" id="diffusionPanel">
     <div class="panel-header"><h2>Signal Breadth</h2></div>
@@ -1086,6 +1100,39 @@
         chronology. Alert thresholds are calibrated by intuition. Series have different release lags
         (daily ≈ 1 day stale, monthly ≈ 1–2 months, quarterly ≈ 3–4 months). The composite blends
         these without stale-adjusting. See the Backtest tab for a 30-year NBER-overlaid replay.
+      </div>
+    </div>
+  </section>
+
+  <!-- PUBLIC API + EMBED -->
+  <section class="panel">
+    <div class="panel-header"><h2>Public API &amp; Embed</h2></div>
+    <p class="panel-sub">All data is published as static JSON and refreshed daily. Free to use; no key required.</p>
+    <div class="meth-grid" style="margin-top:8px">
+      <div class="meth-card">
+        <h4>JSON endpoints</h4>
+        <p style="margin-bottom:8px">Served from this site's <code>data/</code> path:</p>
+        <ul style="font-size:13px;line-height:1.9;list-style:none;padding:0">
+          <li><a href="data/current.json" target="_blank" rel="noopener"><code>data/current.json</code></a> — latest composite, layers &amp; all indicators</li>
+          <li><a href="data/history.json" target="_blank" rel="noopener"><code>data/history.json</code></a> — 24 monthly snapshots</li>
+          <li><a href="data/previous.json" target="_blank" rel="noopener"><code>data/previous.json</code></a> — prior snapshot (for diffs)</li>
+          <li><a href="data/backtest.json" target="_blank" rel="noopener"><code>data/backtest.json</code></a> — 30-year replay</li>
+        </ul>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px">The composite score lives at
+          <code>current.json → composite.score</code> (0–100) with <code>composite.alert</code>
+          (GREEN / YELLOW / RED) and <code>composite.rating</code> (1–10).</p>
+      </div>
+      <div class="meth-card">
+        <h4>Embeddable badge</h4>
+        <p style="margin-bottom:8px">Drop the live risk badge into any page with an iframe:</p>
+        <pre style="background:var(--panel-3);border-radius:8px;padding:12px;overflow-x:auto;font-size:12px;line-height:1.6"><code>&lt;iframe
+  src="https://devante88.github.io/recession-tracker/embed.html"
+  width="340" height="84" frameborder="0"
+  title="Recession Tracker"&gt;&lt;/iframe&gt;</code></pre>
+        <p style="font-size:12px;color:var(--muted);margin-top:8px">
+          The badge auto-refreshes from <code>current.json</code> and links back to this dashboard.
+          <a href="embed.html" target="_blank" rel="noopener">Preview the badge ↗</a>
+        </p>
       </div>
     </div>
   </section>
@@ -2018,6 +2065,123 @@ function renderMovers(snap) {
   });
 }
 
+// ─── RECESSION PROBABILITY GAUGE ─────────────────────────────────────────────
+// Semicircular dial (0–100%) with a needle at the 12-month probit probability
+// and a marker at the ~30% historical warning threshold.
+function renderProbGauge(snap) {
+  const el = document.getElementById('probGauge');
+  if (!el) return;
+  const p = snap?.composite?.recession_probability_12mo;
+  if (p === null || p === undefined) {
+    el.innerHTML = '<div style="color:var(--muted);padding:20px">No yield-curve data available.</div>';
+    return;
+  }
+
+  const pct = Math.max(0, Math.min(1, p));
+  const W = 280, H = 160, cx = W / 2, cy = H - 18, R = 116;
+  const polar = (frac, r) => {
+    const a = Math.PI * (1 - frac); // 0 → left (180°), 1 → right (0°)
+    return [cx + r * Math.cos(a), cy - r * Math.sin(a)];
+  };
+  const arc = (f0, f1, r, color, width) => {
+    const [x0, y0] = polar(f0, r);
+    const [x1, y1] = polar(f1, r);
+    const large = (f1 - f0) > 0.5 ? 1 : 0;
+    return `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}"
+      fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round"/>`;
+  };
+
+  // Colored zones: green 0–30%, yellow 30–60%, red 60–100%
+  const zones =
+    arc(0,   0.30, R, '#2ddc8c', 16) +
+    arc(0.30, 0.60, R, '#f1c84a', 16) +
+    arc(0.60, 1,    R, '#ff7a7a', 16);
+
+  const [nx, ny] = polar(pct, R - 12);
+  const color = pct >= 0.6 ? '#ff7a7a' : pct >= 0.3 ? '#f1c84a' : '#2ddc8c';
+  const [tx, ty] = polar(0.30, R + 14);
+
+  el.innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img"
+         aria-label="Recession probability ${(pct * 100).toFixed(0)} percent">
+      ${zones}
+      <line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}"
+            stroke="${color}" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="${cx}" cy="${cy}" r="6" fill="${color}"/>
+      <circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="3" fill="var(--muted)"/>
+      <text x="${tx.toFixed(1)}" y="${(ty - 8).toFixed(1)}" text-anchor="middle"
+            fill="var(--muted)" font-size="9">30%</text>
+      <text x="${cx}" y="${cy - 36}" text-anchor="middle" fill="${color}"
+            font-size="40" font-weight="800">${(pct * 100).toFixed(0)}%</text>
+      <text x="14" y="${cy + 4}" fill="var(--muted)" font-size="11">0%</text>
+      <text x="${W - 14}" y="${cy + 4}" text-anchor="end" fill="var(--muted)" font-size="11">100%</text>
+    </svg>`;
+}
+
+// ─── WHAT CHANGED SINCE LAST UPDATE ──────────────────────────────────────────
+// Diffs the current snapshot against the previously archived one (previous.json)
+// and surfaces the composite move plus the indicators whose scores shifted most.
+function renderChangePanel(current, previous) {
+  const panel = document.getElementById('changePanel');
+  const sub = document.getElementById('changeSub');
+  const content = document.getElementById('changeContent');
+  if (!panel || !previous || !previous.composite) return;
+
+  panel.style.display = 'block';
+
+  const curScore = current.composite?.score ?? 0;
+  const prevScore = previous.composite?.score ?? 0;
+  const dComp = curScore - prevScore;
+  const compArrow = Math.abs(dComp) < 0.05 ? '→' : dComp > 0 ? '▲' : '▼';
+  const compColor = Math.abs(dComp) < 0.05 ? 'var(--muted)' : dComp > 0 ? 'var(--red)' : 'var(--green)';
+
+  sub.innerHTML = `Comparing the latest snapshot (${current.as_of || '—'}) with the prior one (${previous.as_of || '—'}).`;
+
+  const prevById = new Map((previous.indicators || []).map(i => [i.fred_id, i]));
+  const moves = (current.indicators || [])
+    .map(i => {
+      const prev = prevById.get(i.fred_id);
+      if (!prev || prev.score === null || prev.score === undefined) return null;
+      const delta = (i.score ?? 0) - (prev.score ?? 0);
+      return { name: i.name, fred_id: i.fred_id, delta, from: prev.score, to: i.score };
+    })
+    .filter(m => m && Math.abs(m.delta) >= 0.1)
+    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta))
+    .slice(0, 6);
+
+  const movesHtml = moves.length
+    ? moves.map(m => {
+        const up = m.delta > 0;
+        const c = up ? 'var(--red)' : 'var(--green)';
+        return `
+          <div class="change-row" data-fred-id="${m.fred_id}"
+               style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer">
+            <span style="font-size:13px">${m.name}</span>
+            <span style="font-size:12px;color:var(--muted)">
+              ${m.from.toFixed(1)} → <strong style="color:${c}">${m.to.toFixed(1)}</strong>
+              <span style="color:${c};margin-left:6px">${up ? '▲ +' : '▼ '}${m.delta.toFixed(1)}</span>
+            </span>
+          </div>`;
+      }).join('')
+    : '<div style="color:var(--muted);font-size:13px">No individual indicator moved by more than 0.1 points.</div>';
+
+  content.innerHTML = `
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:14px">
+      <span style="color:var(--muted);font-size:13px">Composite</span>
+      <span style="font-size:24px;font-weight:800">${prevScore.toFixed(1)} → ${curScore.toFixed(1)}</span>
+      <span style="font-weight:700;color:${compColor}">${compArrow} ${dComp > 0 ? '+' : ''}${dComp.toFixed(1)}</span>
+    </div>
+    <div style="font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--muted);margin-bottom:4px">TOP INDICATOR MOVES</div>
+    ${movesHtml}`;
+
+  content.querySelectorAll('.change-row').forEach(r => {
+    r.addEventListener('click', () => {
+      const ind = (current.indicators || []).find(x => x.fred_id === r.dataset.fredId);
+      if (ind && typeof openModal === 'function') openModal(ind);
+    });
+  });
+}
+
 // ─── WEI NOWCAST ─────────────────────────────────────────────────────────────
 function renderWEI(snap) {
   const el = document.getElementById('weiValue');
@@ -2415,12 +2579,13 @@ async function refresh({ initial = false } = {}) {
   try {
     // Cache-bust so CDN/edge caches don't mask new data
     const bust = `?t=${Date.now()}`;
-    const [current, history] = await Promise.all([
+    const [current, history, previous] = await Promise.all([
       fetch(`data/current.json${bust}`).then(r => {
         if (!r.ok) throw new Error(`current.json HTTP ${r.status}`);
         return r.json();
       }),
-      fetch(`data/history.json${bust}`).then(r => r.ok ? r.json() : []).catch(() => [])
+      fetch(`data/history.json${bust}`).then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch(`data/previous.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null)
     ]);
 
     if (!initial && current.generated_at === lastGeneratedAt) {
@@ -2440,6 +2605,8 @@ async function refresh({ initial = false } = {}) {
     renderFreshness(current);
     renderRegime(history);
     renderMovers(current);
+    renderProbGauge(current);
+    renderChangePanel(current, previous);
     renderWEI(current);
     renderSurprise(current);
     const ff = (current.indicators || []).find(x => x.fred_id === 'FEDFUNDS');

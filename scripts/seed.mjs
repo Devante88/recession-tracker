@@ -161,6 +161,18 @@ async function main() {
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(path.join(DATA_DIR, 'current.json'), JSON.stringify(snapshot, null, 2));
 
+  // Prior snapshot: rebuild with each series' final (latest) observation dropped,
+  // approximating last month's reading. Lets the "What Changed" panel show a real
+  // diff on the seeded demo. In production the workflow archives the prior run.
+  const prevNormalized = REGISTRY.map(indicator => {
+    const full = SEED[indicator.fred_id] ? makeSeries(indicator.fred_id, indicator.frequency) : [];
+    const series = full.slice(0, -1);
+    const result = normalizeIndicator(series, indicator);
+    return { ...indicator, ...result };
+  });
+  const prevSnapshot = buildSnapshot(prevNormalized, '2026-04-19');
+  await fs.writeFile(path.join(DATA_DIR, 'previous.json'), JSON.stringify(prevSnapshot, null, 2));
+
   // Build 24-month computed history from the synthetic series
   const rawData = Object.fromEntries(
     REGISTRY.map(ind => [ind.fred_id, SEED[ind.fred_id] ? makeSeries(ind.fred_id, ind.frequency) : []])
