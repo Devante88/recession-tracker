@@ -72,6 +72,16 @@ const SEED = {
   // ── Real economy (WEI added) ─────────────────────────────────────────────────
   WEI:           { latest:  2.1,     mean:  1.8,  std: 1.4  },
 
+  // ── New Tier 1 indicators ────────────────────────────────────────────────────
+  NAPM:      { latest: 49.2,    mean: 52.1,   std: 3.8   },  // ISM Mfg PMI, slightly below 50
+  T10YIE:    { latest:  2.35,   mean:  2.15,  std: 0.45  },  // TIPS breakeven
+  WALCL:     { latest: 6850000, mean: 7200000, std: 680000 }, // Fed balance sheet ($M)
+  UMCSENT:   { latest: 67.4,    mean: 74.2,   std: 8.5   },  // UMich sentiment, depressed
+  PSAVERT:   { latest:  4.8,    mean:  5.9,   std: 1.8   },  // saving rate low
+  CSUSHPISA: { latest: 318.5,   mean: 285.0,  std: 28.0  },  // Case-Shiller elevated
+  NMFCI:     { latest: 51.4,    mean: 54.2,   std: 3.5   },  // ISM Services, above 50
+  PPIACO:    { latest: 272.4,   mean: 258.0,  std: 18.5  },  // PPI elevated
+
   // ── Global / International ──────────────────────────────────────────────────
   // OECD CLI: below 100 = below trend; threshold=100
   OECDLOLITOAASTSAM: { latest:  99.6,  mean: 100.1, std: 0.7  },
