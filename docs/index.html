@@ -1417,6 +1417,29 @@ function buildChartDatasets(history) {
 }
 
 function renderChart(history) {
+  // Register shaded risk-zone bands once (idempotent)
+  if (!Chart.registry.plugins.get('riskZones')) {
+    Chart.register({
+      id: 'riskZones',
+      beforeDraw(chart) {
+        const { ctx: c, chartArea, scales: { y } } = chart;
+        if (!y || !chartArea) return;
+        const { left, right } = chartArea;
+        c.save();
+        for (const [lo, hi, fill] of [
+          [0,  30,  'rgba(45,220,140,0.04)'],
+          [30, 60,  'rgba(241,200,74,0.05)'],
+          [60, 100, 'rgba(255,122,122,0.06)']
+        ]) {
+          c.fillStyle = fill;
+          c.fillRect(left, y.getPixelForValue(hi), right - left,
+                     y.getPixelForValue(lo) - y.getPixelForValue(hi));
+        }
+        c.restore();
+      }
+    });
+  }
+
   const ctx = document.getElementById('historyChart').getContext('2d');
   if (chartInstance) chartInstance.destroy();
 
@@ -1579,7 +1602,13 @@ function applyFilters() {
         ${descHtml}
       </td>
       <td style="color:var(--muted);font-size:12px;white-space:nowrap">${LAYER_NAMES[ind.layer] || ind.layer}</td>
-      <td style="white-space:nowrap"><strong>${fmtVal(ind.latest_value)}</strong></td>
+      <td style="white-space:nowrap">
+        <strong>${fmtVal(ind.latest_value)}</strong>${
+          ind.norm_mean !== null && ind.norm_mean !== undefined
+            ? `<div style="font-size:10px;color:var(--muted);margin-top:2px">avg ${fmtVal(ind.norm_mean)}</div>`
+            : ''
+        }
+      </td>
       <td>${fmtDate(ind.latest_date)}${staleHtml}</td>
       <td style="color:var(--muted);font-size:12px">${thr}</td>
       <td>${dirHtml}</td>

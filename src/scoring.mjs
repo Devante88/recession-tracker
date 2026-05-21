@@ -75,6 +75,9 @@ export function normalizeIndicator(series, indicator) {
   const { threshold, direction } = indicator;
   let normalized;
 
+  let normMean = null;
+  let normStd  = null;
+
   if (threshold !== null && threshold !== undefined) {
     const denom = Math.abs(threshold) || 1;
     normalized = series.map(p => {
@@ -85,6 +88,8 @@ export function normalizeIndicator(series, indicator) {
     });
   } else {
     const { mean, std } = meanStd(series.map(x => x.value));
+    normMean = Number(mean.toFixed(4));
+    normStd  = Number(std.toFixed(4));
     normalized = series.map(p => {
       const z = (p.value - mean) / std;
       const raw = direction === 'direct' ? -z : z;
@@ -113,7 +118,7 @@ export function normalizeIndicator(series, indicator) {
     anomaly = Math.abs(latestChange - cm) > 1.5 * cs;
   }
 
-  return { latest: last, levelScore, momentumScore: momentum, score: blendedScore, series: normalized, percentileRank, anomaly };
+  return { latest: last, levelScore, momentumScore: momentum, score: blendedScore, series: normalized, percentileRank, anomaly, norm_mean: normMean, norm_std: normStd };
 }
 
 /**
@@ -270,6 +275,8 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       threshold:       x.threshold,
       direction:       x.direction,
       frequency:       x.frequency,
+      norm_mean:       x.norm_mean ?? null,
+      norm_std:        x.norm_std ?? null,
       history:         lastMonthly(x.series || [], 24)
     }))
   };
