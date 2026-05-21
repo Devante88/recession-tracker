@@ -51,6 +51,8 @@ jobs:
       - name: Send webhook alert on state change
         env:
           ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+          SUPABASE_NOTIFY_URL: ${{ secrets.SUPABASE_NOTIFY_URL }}
+          NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
         run: node scripts/alert.mjs
 
       - name: Commit and push if changed
