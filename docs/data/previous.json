@@ -1,8 +1,8 @@
 {
   "as_of": "2026-04-19",
-  "generated_at": "2026-05-21T20:06:35.746Z",
+  "generated_at": "2026-05-21T20:15:54.217Z",
   "composite": {
-    "score": 47.8,
+    "score": 47.9,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
@@ -17,7 +17,7 @@
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
       "score": 9.8,
-      "contrib": -2.203
+      "contrib": -2.535
     },
     {
       "name": "Unemployment Rate",
@@ -85,7 +85,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 35.1,
+      "score": 35.2,
       "alert": "YELLOW",
       "weight": 0.27
     },
@@ -105,7 +105,7 @@
       "weight": 0.18
     },
     "micro": {
-      "score": 37.5,
+      "score": 38.3,
       "alert": "YELLOW",
       "weight": 0.09
     },
@@ -122,7 +122,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession.",
-      "weight": 0.203,
+      "weight": 0.2336,
       "latest_value": 0.4535,
       "latest_date": "2026-04-01",
       "score": 9.8,
@@ -241,7 +241,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
-      "weight": 0.1015,
+      "weight": 0.1169,
       "latest_value": -0.3506,
       "latest_date": "2026-04-01",
       "score": 68.6,
@@ -360,7 +360,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Corporate spread as a credit-stress proxy. Threshold calibrated to widening regimes.",
-      "weight": 0.1354,
+      "weight": 0.1559,
       "latest_value": 2.9863,
       "latest_date": "2026-04-01",
       "score": 59.2,
@@ -479,7 +479,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Broad financial conditions index. Positive = tighter than average.",
-      "weight": 0.1015,
+      "weight": 0.1169,
       "latest_value": 0.335,
       "latest_date": "2026-04-01",
       "score": 36,
@@ -598,7 +598,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
-      "weight": 0.0677,
+      "weight": 0.078,
       "latest_value": 27.2941,
       "latest_date": "2026-04-01",
       "score": 71.2,
@@ -717,7 +717,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
-      "weight": 0.0677,
+      "weight": 0.078,
       "latest_value": 4.1497,
       "latest_date": "2026-04-01",
       "score": 41.9,
@@ -831,131 +831,12 @@
       ]
     },
     {
-      "name": "ISM Manufacturing PMI",
-      "fred_id": "NAPM",
-      "layer": "financial_lead",
-      "category": "macro",
-      "description": "ISM Manufacturing Purchasing Managers Index; threshold=50 separates expansion from contraction",
-      "weight": 0.1316,
-      "latest_value": 57.5818,
-      "latest_date": "2026-04-01",
-      "score": 35.1,
-      "level_score": 35.3,
-      "momentum_score": 34.5,
-      "percentile_rank": 6,
-      "anomaly": false,
-      "alert": "YELLOW",
-      "threshold": 50,
-      "direction": "direct",
-      "frequency": "monthly",
-      "norm_mean": null,
-      "norm_std": null,
-      "history": [
-        {
-          "date": "2024-05-01",
-          "value": 49.6851
-        },
-        {
-          "date": "2024-06-01",
-          "value": 59.3085
-        },
-        {
-          "date": "2024-07-01",
-          "value": 48.0432
-        },
-        {
-          "date": "2024-08-01",
-          "value": 53.1265
-        },
-        {
-          "date": "2024-09-01",
-          "value": 46.3572
-        },
-        {
-          "date": "2024-10-01",
-          "value": 54.1833
-        },
-        {
-          "date": "2024-11-01",
-          "value": 53.7042
-        },
-        {
-          "date": "2024-12-01",
-          "value": 54.2559
-        },
-        {
-          "date": "2025-01-01",
-          "value": 52.4706
-        },
-        {
-          "date": "2025-02-01",
-          "value": 46.8561
-        },
-        {
-          "date": "2025-03-01",
-          "value": 52.9993
-        },
-        {
-          "date": "2025-04-01",
-          "value": 49.2763
-        },
-        {
-          "date": "2025-05-01",
-          "value": 59.2593
-        },
-        {
-          "date": "2025-06-01",
-          "value": 49.0749
-        },
-        {
-          "date": "2025-07-01",
-          "value": 54.943
-        },
-        {
-          "date": "2025-08-01",
-          "value": 44.6915
-        },
-        {
-          "date": "2025-09-01",
-          "value": 54.4556
-        },
-        {
-          "date": "2025-10-01",
-          "value": 50.908
-        },
-        {
-          "date": "2025-11-01",
-          "value": 56.9913
-        },
-        {
-          "date": "2025-12-01",
-          "value": 51.6906
-        },
-        {
-          "date": "2026-01-01",
-          "value": 49.6324
-        },
-        {
-          "date": "2026-02-01",
-          "value": 50.2783
-        },
-        {
-          "date": "2026-03-01",
-          "value": 49.5019
-        },
-        {
-          "date": "2026-04-01",
-          "value": 57.5818
-        }
-      ]
-    },
-    {
       "name": "10Y TIPS Breakeven",
       "fred_id": "T10YIE",
       "layer": "financial_lead",
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears",
-      "weight": 0.0658,
+      "weight": 0.0758,
       "latest_value": 2.3085,
       "latest_date": "2026-04-01",
       "score": 13.7,
@@ -1074,7 +955,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions",
-      "weight": 0.0658,
+      "weight": 0.0758,
       "latest_value": 7579054.1006,
       "latest_date": "2026-04-01",
       "score": 18.8,
@@ -1193,7 +1074,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "M2 money supply growth; sharp deceleration signals tightening liquidity and recession risk",
-      "weight": 0.06,
+      "weight": 0.0691,
       "latest_value": 21630.725,
       "latest_date": "2026-04-01",
       "score": 1.6,
@@ -3811,7 +3692,7 @@
       "layer": "micro",
       "category": "micro",
       "description": "Census new orders ex-defense. Goods-sector proxy (not ISM PMI; that's gated).",
-      "weight": 0.15,
+      "weight": 0.1765,
       "latest_value": 521.242,
       "latest_date": "2026-04-01",
       "score": 0.2,
@@ -3930,7 +3811,7 @@
       "layer": "micro",
       "category": "micro",
       "description": "Net % of banks tightening C&I loan standards. Survey.",
-      "weight": 0.15,
+      "weight": 0.1765,
       "latest_value": 24.7181,
       "latest_date": "2026-04-01",
       "score": 80.4,
@@ -4049,7 +3930,7 @@
       "layer": "micro",
       "category": "micro",
       "description": "Credit card delinquency rate. Household stress.",
-      "weight": 0.15,
+      "weight": 0.1765,
       "latest_value": 3.2532,
       "latest_date": "2026-04-01",
       "score": 68.8,
@@ -4168,7 +4049,7 @@
       "layer": "micro",
       "category": "micro",
       "description": "NFIB Small Business Optimism Index.",
-      "weight": 0.15,
+      "weight": 0.1765,
       "latest_value": 106.4602,
       "latest_date": "2026-04-01",
       "score": 38.4,
@@ -4287,7 +4168,7 @@
       "layer": "micro",
       "category": "micro",
       "description": "Employer demand. FRED reports in thousands; 5500 = 5.5M openings, recessionary trough range.",
-      "weight": 0.15,
+      "weight": 0.1765,
       "latest_value": 7714.8732,
       "latest_date": "2026-04-01",
       "score": 28.3,
@@ -4401,131 +4282,12 @@
       ]
     },
     {
-      "name": "ISM Services PMI",
-      "fred_id": "NMFCI",
-      "layer": "micro",
-      "category": "macro",
-      "description": "ISM Non-Manufacturing (Services) Composite Index; threshold=50; services = 70% of US economy",
-      "weight": 0.15,
-      "latest_value": 59.2752,
-      "latest_date": "2026-04-01",
-      "score": 33.1,
-      "level_score": 32.3,
-      "momentum_score": 35.1,
-      "percentile_rank": 13,
-      "anomaly": false,
-      "alert": "YELLOW",
-      "threshold": 50,
-      "direction": "direct",
-      "frequency": "monthly",
-      "norm_mean": null,
-      "norm_std": null,
-      "history": [
-        {
-          "date": "2024-05-01",
-          "value": 52.5246
-        },
-        {
-          "date": "2024-06-01",
-          "value": 58.5254
-        },
-        {
-          "date": "2024-07-01",
-          "value": 47.8767
-        },
-        {
-          "date": "2024-08-01",
-          "value": 55.0258
-        },
-        {
-          "date": "2024-09-01",
-          "value": 51.4366
-        },
-        {
-          "date": "2024-10-01",
-          "value": 58.4644
-        },
-        {
-          "date": "2024-11-01",
-          "value": 55.2993
-        },
-        {
-          "date": "2024-12-01",
-          "value": 53.4643
-        },
-        {
-          "date": "2025-01-01",
-          "value": 52.4347
-        },
-        {
-          "date": "2025-02-01",
-          "value": 50.1846
-        },
-        {
-          "date": "2025-03-01",
-          "value": 57.822
-        },
-        {
-          "date": "2025-04-01",
-          "value": 53.356
-        },
-        {
-          "date": "2025-05-01",
-          "value": 59.5149
-        },
-        {
-          "date": "2025-06-01",
-          "value": 48.5539
-        },
-        {
-          "date": "2025-07-01",
-          "value": 55.4115
-        },
-        {
-          "date": "2025-08-01",
-          "value": 49.0211
-        },
-        {
-          "date": "2025-09-01",
-          "value": 59.1819
-        },
-        {
-          "date": "2025-10-01",
-          "value": 54.0565
-        },
-        {
-          "date": "2025-11-01",
-          "value": 56.6931
-        },
-        {
-          "date": "2025-12-01",
-          "value": 51.0631
-        },
-        {
-          "date": "2026-01-01",
-          "value": 51.4029
-        },
-        {
-          "date": "2026-02-01",
-          "value": 54.7902
-        },
-        {
-          "date": "2026-03-01",
-          "value": 54.3932
-        },
-        {
-          "date": "2026-04-01",
-          "value": 59.2752
-        }
-      ]
-    },
-    {
       "name": "PPI All Commodities",
       "fred_id": "PPIACO",
       "layer": "micro",
       "category": "macro",
       "description": "Producer Price Index for all commodities; rising PPI compresses margins and signals cost-push stress",
-      "weight": 0.1,
+      "weight": 0.1175,
       "latest_value": 238.8756,
       "latest_date": "2026-04-01",
       "score": 1.1,
