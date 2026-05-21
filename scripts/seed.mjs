@@ -103,7 +103,20 @@ const SEED = {
  * normalized to exactly the target mean and std. This ensures z-score
  * normalization produces predictable scores.
  */
-function makeSeries(fredId) {
+// Days since the snapshot's as_of that a series of the given cadence would
+// realistically have last reported. Keeps the seeded demo's freshness card
+// truthful instead of flagging every series as stale.
+function latestLagDays(frequency) {
+  switch ((frequency || '').toLowerCase()) {
+    case 'daily':     return 1;
+    case 'weekly':    return 4;
+    case 'monthly':   return 0;
+    case 'quarterly': return 0;
+    default:          return 0;
+  }
+}
+
+function makeSeries(fredId, frequency = 'monthly') {
   const { latest, mean, std } = SEED[fredId];
   const MONTHS = 48; // 4 years — enough for 24-month history with 36-month z-score window
   const now = new Date('2026-05-01');
@@ -128,14 +141,17 @@ function makeSeries(fredId) {
     return { date: d.toISOString().slice(0, 7) + '-01', value: Number((mean + n * std).toFixed(4)) };
   });
 
-  // Append the true latest value
-  series.push({ date: '2026-05-01', value: latest });
+  // Append the true latest value, dated by the series' release cadence relative
+  // to the as_of date (2026-05-19) so daily/weekly series look freshly reported.
+  const latestDate = new Date('2026-05-19');
+  latestDate.setDate(latestDate.getDate() - latestLagDays(frequency));
+  series.push({ date: latestDate.toISOString().slice(0, 10), value: latest });
   return series;
 }
 
 async function main() {
   const normalized = REGISTRY.map(indicator => {
-    const series = SEED[indicator.fred_id] ? makeSeries(indicator.fred_id) : [];
+    const series = SEED[indicator.fred_id] ? makeSeries(indicator.fred_id, indicator.frequency) : [];
     const result = normalizeIndicator(series, indicator);
     return { ...indicator, ...result };
   });
@@ -147,7 +163,7 @@ async function main() {
 
   // Build 24-month computed history from the synthetic series
   const rawData = Object.fromEntries(
-    REGISTRY.map(ind => [ind.fred_id, SEED[ind.fred_id] ? makeSeries(ind.fred_id) : []])
+    REGISTRY.map(ind => [ind.fred_id, SEED[ind.fred_id] ? makeSeries(ind.fred_id, ind.frequency) : []])
   );
   const history = buildHistoryFromSeries(rawData, REGISTRY);
 

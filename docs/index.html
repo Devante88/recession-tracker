@@ -506,6 +506,11 @@
       <div class="stat-value" id="surpriseValue">—</div>
       <div class="stat-sub">% of indicators improving vs. 3mo ago</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-label">Data freshness</div>
+      <div class="stat-value" id="freshValue">—</div>
+      <div class="stat-sub" id="freshSub">series updated within SLA window</div>
+    </div>
   </section>
 
   <!-- DIFFUSION INDEX PANEL -->
@@ -514,6 +519,20 @@
     <div id="diffusionCounts" style="display:flex;gap:32px;margin-bottom:16px;align-items:center"></div>
     <div id="diffusionBar" style="height:12px;border-radius:6px;overflow:hidden;display:flex;margin-bottom:12px"></div>
     <div style="font-size:13px;color:var(--muted)">Breadth risk score: <strong id="diffusionScore" style="color:var(--text)">—</strong></div>
+  </section>
+
+  <!-- REGIME TRACKER PANEL -->
+  <section class="panel" id="regimePanel">
+    <div class="panel-header"><h2>Risk Regime</h2></div>
+    <p class="panel-sub">How long the composite has held its current alert state, and when it last changed.</p>
+    <div id="regimeContent" style="margin-top:10px"></div>
+  </section>
+
+  <!-- BIGGEST MOVERS PANEL -->
+  <section class="panel" id="moversPanel">
+    <div class="panel-header"><h2>Biggest Movers (3-Month)</h2></div>
+    <p class="panel-sub">Indicators whose risk score shifted most over the trailing 3 months. ▲ = risk rising, ▼ = risk easing.</p>
+    <div id="moversContent" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:14px"></div>
   </section>
 
   <!-- BUSINESS CYCLE CONTEXT PANEL -->
@@ -1859,6 +1878,146 @@ function renderDiffusion(snap) {
   }
 }
 
+// ─── DATA FRESHNESS SLA ──────────────────────────────────────────────────────
+// Daily indicators should refresh within a few days; monthly within ~45 days.
+// We classify each reporting indicator as fresh/stale by its own cadence and
+// surface a single health ratio so silent FRED outages become visible.
+function freshnessSlaDays(freq) {
+  switch ((freq || '').toLowerCase()) {
+    case 'daily':   return 5;
+    case 'weekly':  return 12;
+    case 'monthly': return 45;
+    case 'quarterly': return 135;
+    default:        return 45;
+  }
+}
+
+function renderFreshness(snap) {
+  const valEl = document.getElementById('freshValue');
+  const subEl = document.getElementById('freshSub');
+  if (!valEl) return;
+
+  const reporting = (snap?.indicators || []).filter(i => i.latest_date);
+  if (!reporting.length) {
+    valEl.textContent = '—';
+    return;
+  }
+
+  let fresh = 0;
+  let worstDays = 0;
+  let worstName = '';
+  reporting.forEach(i => {
+    const days = staleDays(i.latest_date) ?? 0;
+    if (days <= freshnessSlaDays(i.frequency)) fresh++;
+    else if (days > worstDays) { worstDays = days; worstName = i.name; }
+  });
+
+  const total = reporting.length;
+  const pct = Math.round((fresh / total) * 100);
+  valEl.textContent = `${fresh}/${total}`;
+  valEl.style.color = pct === 100 ? 'var(--green)' : pct >= 85 ? 'var(--text)' : 'var(--yellow)';
+  subEl.textContent = fresh === total
+    ? 'all series within SLA window'
+    : `oldest beyond SLA: ${worstName} (${worstDays}d)`;
+}
+
+// ─── RISK REGIME TRACKER ─────────────────────────────────────────────────────
+// Reads the monthly history series and reports how long the composite has held
+// its current alert state plus the date/direction of the last regime change.
+function renderRegime(history) {
+  const el = document.getElementById('regimeContent');
+  if (!el) return;
+
+  const sorted = [...(history || [])]
+    .filter(h => h && h.alert)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  if (sorted.length < 2) {
+    el.innerHTML = '<div style="color:var(--muted)">Not enough history to determine regime.</div>';
+    return;
+  }
+
+  const current = sorted[sorted.length - 1];
+  const state = current.alert;
+
+  // Walk backwards to find the streak of the current state
+  let streak = 1;
+  let flipIdx = -1;
+  for (let i = sorted.length - 2; i >= 0; i--) {
+    if (sorted[i].alert === state) { streak++; }
+    else { flipIdx = i; break; }
+  }
+
+  const colorVar = state === 'RED' ? 'var(--red)' : state === 'YELLOW' ? 'var(--yellow)' : 'var(--green)';
+  const flip = flipIdx >= 0 ? sorted[flipIdx] : null;
+  const next = flipIdx >= 0 ? sorted[flipIdx + 1] : null;
+  const escalated = flip ? (ALERT_ORDER[next.alert] > ALERT_ORDER[flip.alert]) : null;
+
+  const flipHtml = flip
+    ? `Last change: <strong style="color:var(--text)">${flip.alert} → ${next.alert}</strong>
+       ${escalated ? '<span style="color:var(--red)">▲ escalated</span>' : '<span style="color:var(--green)">▼ de-escalated</span>'}
+       on ${fmtDate(next.date)}`
+    : `No regime change in the available ${sorted.length}-reading history.`;
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap">
+      <span class="badge ${alertClass(state)}">${state}</span>
+      <span style="font-size:30px;font-weight:800;color:${colorVar}">${streak}</span>
+      <span style="color:var(--muted);font-size:13px">consecutive ${streak === 1 ? 'reading' : 'readings'} in this state</span>
+    </div>
+    <div style="font-size:13px;color:var(--muted);margin-top:10px">${flipHtml}</div>`;
+}
+
+// ─── BIGGEST MOVERS (3-MONTH) ────────────────────────────────────────────────
+// momentum_score encodes the 3-month change in an indicator's risk score:
+// 50 = flat, >50 = risk rising, <50 = risk easing. Surface the largest moves.
+function renderMovers(snap) {
+  const el = document.getElementById('moversContent');
+  if (!el) return;
+
+  const moves = (snap?.indicators || [])
+    .filter(i => i.momentum_score !== null && i.momentum_score !== undefined && i.latest_value !== null)
+    .map(i => ({ name: i.name, fred_id: i.fred_id, delta: i.momentum_score - 50, score: i.score ?? 0 }))
+    .filter(m => Math.abs(m.delta) >= 1);
+
+  if (!moves.length) {
+    el.innerHTML = '<div style="color:var(--muted);grid-column:1/-1">No notable moves over the trailing 3 months.</div>';
+    return;
+  }
+
+  const risers  = moves.filter(m => m.delta > 0).sort((a, b) => b.delta - a.delta).slice(0, 5);
+  const fallers = moves.filter(m => m.delta < 0).sort((a, b) => a.delta - b.delta).slice(0, 5);
+
+  const row = (m) => {
+    const up = m.delta > 0;
+    const color = up ? 'var(--red)' : 'var(--green)';
+    const arrow = up ? '▲' : '▼';
+    return `
+      <div class="mover-row" data-fred-id="${m.fred_id}"
+           style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer">
+        <span style="font-size:13px">${m.name}</span>
+        <span style="font-weight:700;color:${color};white-space:nowrap">${arrow} ${up ? '+' : ''}${m.delta.toFixed(1)}</span>
+      </div>`;
+  };
+
+  const col = (title, rows, empty) => `
+    <div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--muted);margin-bottom:6px">${title}</div>
+      ${rows.length ? rows.map(row).join('') : `<div style="color:var(--muted);font-size:13px">${empty}</div>`}
+    </div>`;
+
+  el.innerHTML =
+    col('RISK RISING', risers, 'None rising') +
+    col('RISK EASING', fallers, 'None easing');
+
+  el.querySelectorAll('.mover-row').forEach(r => {
+    r.addEventListener('click', () => {
+      const ind = (snap.indicators || []).find(x => x.fred_id === r.dataset.fredId);
+      if (ind && typeof openModal === 'function') openModal(ind);
+    });
+  });
+}
+
 // ─── WEI NOWCAST ─────────────────────────────────────────────────────────────
 function renderWEI(snap) {
   const el = document.getElementById('weiValue');
@@ -2278,6 +2437,9 @@ async function refresh({ initial = false } = {}) {
     renderEnsemble(current);
     renderFactorChart(current);
     renderDiffusion(current);
+    renderFreshness(current);
+    renderRegime(history);
+    renderMovers(current);
     renderWEI(current);
     renderSurprise(current);
     const ff = (current.indicators || []).find(x => x.fred_id === 'FEDFUNDS');
