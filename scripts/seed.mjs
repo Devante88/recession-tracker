@@ -69,6 +69,9 @@ const SEED = {
   // FRED reports in thousands; threshold=5500 (= 5.5M openings)
   JTSJOL:        { latest:   7580,   mean:  8350, std: 960   },
 
+  // ── Real economy (WEI added) ─────────────────────────────────────────────────
+  WEI:           { latest:  2.1,     mean:  1.8,  std: 1.4  },
+
   // ── Global / International ──────────────────────────────────────────────────
   // OECD CLI: below 100 = below trend; threshold=100
   OECDLOLITOAASTSAM: { latest:  99.6,  mean: 100.1, std: 0.7  },

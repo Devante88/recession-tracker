@@ -35,11 +35,12 @@ export const REGISTRY = [
   { name: "Avg Hourly Earnings", fred_id: "CES0500000003", layer: "inflation", frequency: "monthly", direction: "inverse", weight: 0.20, threshold: null, category: "micro", description: "Wage pressure signal. Z-score normalized." },
 
   // ─── Real economy ──────────────────────────────────────────────────────
-  { name: "Real GDP", fred_id: "GDPC1", layer: "real_economy", frequency: "quarterly", direction: "direct", weight: 0.25, threshold: null, category: "macro", description: "Real output. Z-score on QoQ change." },
-  { name: "Industrial Production", fred_id: "INDPRO", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.20, threshold: null, category: "macro", description: "Goods-sector output. Z-score normalized." },
-  { name: "Retail Sales", fred_id: "RSAFS", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.20, threshold: null, category: "macro", description: "Consumer demand. Z-score normalized." },
-  { name: "Real Income ex Transfers", fred_id: "W875RX1", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.20, threshold: null, category: "macro", description: "Earned household income. NBER coincident series." },
-  { name: "Housing Starts", fred_id: "HOUST", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.15, threshold: null, category: "micro", description: "Rate-sensitive leading housing signal." },
+  { name: "Real GDP", fred_id: "GDPC1", layer: "real_economy", frequency: "quarterly", direction: "direct", weight: 0.21, threshold: null, category: "macro", description: "Real output. Z-score on QoQ change." },
+  { name: "Industrial Production", fred_id: "INDPRO", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.17, threshold: null, category: "macro", description: "Goods-sector output. Z-score normalized." },
+  { name: "Retail Sales", fred_id: "RSAFS", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.17, threshold: null, category: "macro", description: "Consumer demand. Z-score normalized." },
+  { name: "Real Income ex Transfers", fred_id: "W875RX1", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.17, threshold: null, category: "macro", description: "Earned household income. NBER coincident series." },
+  { name: "Housing Starts", fred_id: "HOUST", layer: "real_economy", frequency: "monthly", direction: "direct", weight: 0.13, threshold: null, category: "micro", description: "Rate-sensitive leading housing signal." },
+  { name: "Weekly Economic Index", fred_id: "WEI", layer: "real_economy", frequency: "weekly", direction: "direct", weight: 0.15, threshold: 0, category: "macro", description: "NY Fed Weekly Economic Index scaled to match year-over-year GDP growth; 10 daily/weekly indicators" },
 
   // ─── Micro ─────────────────────────────────────────────────────────────
   { name: "Manufacturers New Orders", fred_id: "NEWORDER", layer: "micro", frequency: "monthly", direction: "direct", weight: 0.20, threshold: null, category: "micro", description: "Census new orders ex-defense. Goods-sector proxy (not ISM PMI; that's gated)." },

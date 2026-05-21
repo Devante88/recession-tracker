@@ -1,8 +1,8 @@
 {
   "as_of": "2026-05-19",
-  "generated_at": "2026-05-20T20:37:16.432Z",
+  "generated_at": "2026-05-21T00:20:51.240Z",
   "composite": {
-    "score": 21.9,
+    "score": 22,
     "alert": "GREEN",
     "rating": 3,
     "confidence": 1,
@@ -20,13 +20,6 @@
       "contrib": -3.543
     },
     {
-      "name": "Real GDP",
-      "fred_id": "GDPC1",
-      "layer": "real_economy",
-      "score": 0.2,
-      "contrib": -2.243
-    },
-    {
       "name": "Payroll Employment",
       "fred_id": "PAYEMS",
       "layer": "labor",
@@ -34,11 +27,18 @@
       "contrib": -2.178
     },
     {
+      "name": "Real GDP",
+      "fred_id": "GDPC1",
+      "layer": "real_economy",
+      "score": 0.2,
+      "contrib": -1.884
+    },
+    {
       "name": "Retail Sales",
       "fred_id": "RSAFS",
       "layer": "real_economy",
       "score": 0.5,
-      "contrib": -1.782
+      "contrib": -1.514
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -46,13 +46,6 @@
       "layer": "labor",
       "score": 22.5,
       "contrib": -1.512
-    },
-    {
-      "name": "Real Income ex Transfers",
-      "fred_id": "W875RX1",
-      "layer": "real_economy",
-      "score": 8.5,
-      "contrib": -1.494
     },
     {
       "name": "Chicago Fed NFCI",
@@ -81,6 +74,13 @@
       "layer": "inflation",
       "score": 2,
       "contrib": -1.344
+    },
+    {
+      "name": "Real Income ex Transfers",
+      "fred_id": "W875RX1",
+      "layer": "real_economy",
+      "score": 8.5,
+      "contrib": -1.27
     }
   ],
   "layers": {
@@ -100,7 +100,7 @@
       "weight": 0.14
     },
     "real_economy": {
-      "score": 9.6,
+      "score": 10.5,
       "alert": "GREEN",
       "weight": 0.18
     },
@@ -1994,7 +1994,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Real output. Z-score on QoQ change.",
-      "weight": 0.25,
+      "weight": 0.21,
       "latest_value": 23105,
       "latest_date": "2026-05-01",
       "score": 0.2,
@@ -2111,7 +2111,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Goods-sector output. Z-score normalized.",
-      "weight": 0.2,
+      "weight": 0.17,
       "latest_value": 103.4,
       "latest_date": "2026-05-01",
       "score": 14.1,
@@ -2228,7 +2228,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Consumer demand. Z-score normalized.",
-      "weight": 0.2,
+      "weight": 0.17,
       "latest_value": 722000,
       "latest_date": "2026-05-01",
       "score": 0.5,
@@ -2345,7 +2345,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Earned household income. NBER coincident series.",
-      "weight": 0.2,
+      "weight": 0.17,
       "latest_value": 15870,
       "latest_date": "2026-05-01",
       "score": 8.5,
@@ -2462,7 +2462,7 @@
       "layer": "real_economy",
       "category": "micro",
       "description": "Rate-sensitive leading housing signal.",
-      "weight": 0.15,
+      "weight": 0.13,
       "latest_value": 1388,
       "latest_date": "2026-05-01",
       "score": 33.2,
@@ -2570,6 +2570,123 @@
         {
           "date": "2026-05-01",
           "value": 1388
+        }
+      ]
+    },
+    {
+      "name": "Weekly Economic Index",
+      "fred_id": "WEI",
+      "layer": "real_economy",
+      "category": "macro",
+      "description": "NY Fed Weekly Economic Index scaled to match year-over-year GDP growth; 10 daily/weekly indicators",
+      "weight": 0.15,
+      "latest_value": 2.1,
+      "latest_date": "2026-05-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 79,
+      "anomaly": false,
+      "alert": "GREEN",
+      "threshold": 0,
+      "direction": "direct",
+      "frequency": "weekly",
+      "history": [
+        {
+          "date": "2024-06-01",
+          "value": 3.5333
+        },
+        {
+          "date": "2024-07-01",
+          "value": -0.7387
+        },
+        {
+          "date": "2024-08-01",
+          "value": 2.1463
+        },
+        {
+          "date": "2024-09-01",
+          "value": 0.6739
+        },
+        {
+          "date": "2024-10-01",
+          "value": 3.5303
+        },
+        {
+          "date": "2024-11-01",
+          "value": 2.2124
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1.5339
+        },
+        {
+          "date": "2025-01-01",
+          "value": 1.0669
+        },
+        {
+          "date": "2025-02-01",
+          "value": 0.2191
+        },
+        {
+          "date": "2025-03-01",
+          "value": 3.2276
+        },
+        {
+          "date": "2025-04-01",
+          "value": 1.4784
+        },
+        {
+          "date": "2025-05-01",
+          "value": 3.9156
+        },
+        {
+          "date": "2025-06-01",
+          "value": -0.4546
+        },
+        {
+          "date": "2025-07-01",
+          "value": 2.288
+        },
+        {
+          "date": "2025-08-01",
+          "value": -0.281
+        },
+        {
+          "date": "2025-09-01",
+          "value": 3.8083
+        },
+        {
+          "date": "2025-10-01",
+          "value": 1.7216
+        },
+        {
+          "date": "2025-11-01",
+          "value": 2.8219
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.5184
+        },
+        {
+          "date": "2026-01-01",
+          "value": 0.7095
+        },
+        {
+          "date": "2026-02-01",
+          "value": 2.0089
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1.9021
+        },
+        {
+          "date": "2026-04-01",
+          "value": 3.8087
+        },
+        {
+          "date": "2026-05-01",
+          "value": 2.1
         }
       ]
     },
