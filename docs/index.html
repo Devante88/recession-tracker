@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recession Tracker</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a2340">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -20,9 +24,19 @@
       --red:     #ff7a7a;
       --layer-fin:   #66b3ff;
       --layer-lab:   #ff9f7a;
+      --layer-global:#a8d8a8;
       --layer-inf:   #c97af1;
       --layer-real:  #4dd9c0;
       --layer-micro: #f0e442;
+    }
+    html[data-theme="light"] {
+      --bg:      #f0f4fa;
+      --panel:   #ffffff;
+      --panel-2: #edf0f7;
+      --panel-3: #e2e6f0;
+      --border:  rgba(0,0,0,0.09);
+      --text:    #1a2035;
+      --muted:   #5a6480;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
@@ -121,7 +135,7 @@
                 gap:14px; margin-bottom:20px; }
 
     /* ── EXTRA STATS ROW ─────────────────────────────────────────────────────── */
-    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px;
                  margin-bottom: 20px; }
     .stat-card { background: var(--panel); border: 1px solid var(--border);
                  border-radius: 14px; padding: 16px 18px; }
@@ -238,6 +252,7 @@
     .ltbtn.active.l-inf        { color: var(--layer-inf); }
     .ltbtn.active.l-real       { color: var(--layer-real); }
     .ltbtn.active.l-micro      { color: var(--layer-micro); }
+    .ltbtn.active.l-global     { color: var(--layer-global); }
 
     /* ── FILTERS ─────────────────────────────────────────────────────────────── */
     .filter-row { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
@@ -286,6 +301,56 @@
     .meth-weight .lbl { font-size: 11px; color: var(--muted); margin-top: 2px; }
     .meth-disclaimer { font-size: 12px; color: var(--muted); line-height: 1.7;
                         background: var(--panel-2); border-radius: 10px; padding: 14px 16px; }
+
+    /* ── THEME TOGGLE ────────────────────────────────────────────────────────── */
+    .theme-btn { background: var(--panel-2); border: 1px solid var(--border);
+                 border-radius: 8px; padding: 4px 10px; font-size: 16px;
+                 cursor: pointer; color: var(--text); line-height: 1.4; }
+    .theme-btn:hover { border-color: var(--accent); }
+
+    /* ── FACTOR CONTRIBUTION CHART ───────────────────────────────────────────── */
+    .factor-chart-wrap { height: 320px; position: relative; }
+
+    /* ── PERCENTILE BAR ──────────────────────────────────────────────────────── */
+    .pctile-wrap { display: flex; align-items: center; gap: 5px; }
+    .pctile-bar-bg { width: 48px; height: 5px; border-radius: 3px; background: var(--panel-3); flex-shrink: 0; }
+    .pctile-bar-fill { height: 100%; border-radius: 3px; }
+    .pctile-val { font-size: 10px; color: var(--muted); }
+    .anomaly-badge { font-size: 11px; margin-left: 4px; cursor: default; }
+
+    /* ── ALERT HISTORY LOG ───────────────────────────────────────────────────── */
+    .alert-log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .alert-log-table th { color: var(--muted); text-align: left; font-size: 10px;
+                          text-transform: uppercase; letter-spacing: 0.08em;
+                          padding: 6px 12px; border-bottom: 1px solid var(--border); }
+    .alert-log-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+    .alert-log-table tr:last-child td { border-bottom: none; }
+
+    /* ── EXPERT SIGNALS TAB ──────────────────────────────────────────────────── */
+    .signals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+    .economist-card { background: var(--panel); border: 1px solid var(--border);
+                      border-radius: 16px; overflow: hidden; }
+    .economist-header { padding: 14px 18px; border-bottom: 1px solid var(--border); }
+    .economist-name  { font-size: 15px; font-weight: 700; }
+    .economist-title { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .economist-known { font-size: 11px; color: var(--accent); margin-top: 5px; font-style: italic; }
+    .economist-embed { min-height: 500px; }
+    @media (max-width: 900px) { .signals-grid { grid-template-columns: 1fr; } }
+
+    /* ── PRINT ───────────────────────────────────────────────────────────────── */
+    @media print {
+      .tabs, .export-row, .layer-toggles, .live-tag, .stale-tag,
+      .header-right, .theme-btn, .permalink-btn, .print-btn,
+      #narrativeCard, #factorSection, #alertLogSection { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .wrap { max-width: 100%; padding: 0; }
+      .panel, .hero, .stat-card { break-inside: avoid; border-color: #ddd !important;
+        background: white !important; color: black !important; }
+      .hero-score, .stat-value { color: black !important; }
+      .badge.GREEN { background: #d4f5e9 !important; color: #0a5c38 !important; }
+      .badge.YELLOW { background: #fef9e7 !important; color: #7d6608 !important; }
+      .badge.RED { background: #fdecea !important; color: #7b1f1a !important; }
+    }
 
     /* ── AI NARRATIVE ────────────────────────────────────────────────────────── */
     .narrative-card { background: linear-gradient(135deg, var(--panel), var(--panel-2));
@@ -345,9 +410,14 @@
   <header>
     <div class="header-left">
       <h1>Recession Tracker</h1>
-      <p>26 macro + market + micro indicators · FRED data · Updated daily</p>
+      <p>30 macro + market + micro + global indicators · FRED data · Updated daily</p>
     </div>
     <div class="header-right">
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="theme-btn" id="themeToggle" title="Toggle dark/light mode">🌙</button>
+        <button class="export-btn print-btn" onclick="window.print()" title="Print / Save PDF">🖨 Print</button>
+        <button class="export-btn permalink-btn" id="permalinkBtn" title="Copy shareable link">🔗 Share</button>
+      </div>
       <div class="as-of">As of <span id="asOf">—</span></div>
       <div class="as-of">Updated <span id="generatedAt">—</span></div>
       <span class="live-tag" id="liveTag" title="Auto-refreshing every 5 minutes">
@@ -365,6 +435,7 @@
     <button class="tab-btn active" data-tab="live">Live Dashboard</button>
     <button class="tab-btn"        data-tab="backtest">30-Year Backtest</button>
     <button class="tab-btn"        data-tab="markets">Markets</button>
+    <button class="tab-btn"        data-tab="signals">Expert Signals</button>
     <button class="tab-btn"        data-tab="methodology">Methodology</button>
     <a class="tab-btn" href="feed.xml" target="_blank" rel="noopener">RSS Feed ↗</a>
     <a class="tab-btn" href="https://github.com/Devante88/recession-tracker" target="_blank" rel="noopener">GitHub ↗</a>
@@ -420,6 +491,42 @@
       <div class="stat-value" id="confidenceValue">—</div>
       <div class="stat-sub" id="confidenceSub">fraction of indicators reporting live data</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-label">Ensemble score</div>
+      <div class="stat-value" id="ensembleValue">—</div>
+      <div class="stat-sub">Composite + probit + Sahm blend</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">WEI Nowcast</div>
+      <div class="stat-value" id="weiValue">—</div>
+      <div class="stat-sub">NY Fed Weekly Economic Index (GDP-scaled)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Economic Surprise</div>
+      <div class="stat-value" id="surpriseValue">—</div>
+      <div class="stat-sub">% of indicators improving vs. 3mo ago</div>
+    </div>
+  </section>
+
+  <!-- DIFFUSION INDEX PANEL -->
+  <section class="panel" id="diffusionPanel">
+    <div class="panel-header"><h2>Signal Breadth</h2></div>
+    <div id="diffusionCounts" style="display:flex;gap:32px;margin-bottom:16px;align-items:center"></div>
+    <div id="diffusionBar" style="height:12px;border-radius:6px;overflow:hidden;display:flex;margin-bottom:12px"></div>
+    <div style="font-size:13px;color:var(--muted)">Breadth risk score: <strong id="diffusionScore" style="color:var(--text)">—</strong></div>
+  </section>
+
+  <!-- BUSINESS CYCLE CONTEXT PANEL -->
+  <section class="panel" id="cyclePanel">
+    <div class="panel-header"><h2>Business Cycle Context</h2></div>
+    <div id="cycleContent"></div>
+  </section>
+
+  <!-- NBER BIG FOUR PANEL -->
+  <section class="panel" id="bigFourPanel" style="display:none">
+    <div class="panel-header"><h2>NBER Big Four — % Off Cycle Highs</h2></div>
+    <p class="panel-sub">NBER uses these 4 to date recessions. When all four are declining simultaneously from their peaks, a recession is underway.</p>
+    <div id="bigFourGrid" style="display:grid;gap:14px;margin-top:8px"></div>
   </section>
 
   <!-- AI NARRATIVE BRIEFING -->
@@ -468,6 +575,7 @@
         <option value="inflation">Inflation</option>
         <option value="real_economy">Real Economy</option>
         <option value="micro">Micro</option>
+        <option value="global">Global</option>
       </select>
       <select id="categoryFilter">
         <option value="">Macro + Micro</option>
@@ -495,6 +603,91 @@
         </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- FACTOR CONTRIBUTION CHART -->
+  <section class="panel" id="factorChartSection" style="display:none">
+    <div class="panel-header">
+      <h2>Factor Contribution</h2>
+    </div>
+    <p class="panel-sub">Top 10 indicators by absolute contribution to composite score. Positive = pushing risk up, negative = pulling risk down.</p>
+    <div class="factor-chart-wrap"><canvas id="factorChart"></canvas></div>
+  </section>
+
+  <!-- WEIGHT EDITOR -->
+  <details class="panel" id="weightEditorDetails" style="padding:0">
+    <summary style="padding:18px 22px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center">
+      <h2 style="margin:0;font-size:16px">Interactive Weight Editor</h2>
+      <span style="font-size:12px;color:var(--muted)">Exploratory · canonical score unchanged</span>
+    </summary>
+    <div style="padding:0 22px 22px">
+      <p class="panel-sub" style="margin-bottom:16px">Adjust layer weights to see how they affect the composite score. The canonical dashboard score is unaffected.</p>
+      <div id="weightSliders" style="display:grid;gap:14px"></div>
+      <div style="margin-top:18px;display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="font-size:15px;color:var(--text)">Adjusted composite: <strong id="weightedComposite" style="color:var(--accent)">—</strong></div>
+        <button id="weightReset" style="background:var(--panel-3);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px">Reset to defaults</button>
+      </div>
+      <p style="margin-top:10px;font-size:12px;color:var(--muted)">This is exploratory — the canonical score is unchanged</p>
+    </div>
+  </details>
+
+  <!-- ALERT HISTORY LOG -->
+  <section class="panel" id="alertLogSection" style="display:none">
+    <div class="panel-header">
+      <h2>Alert State History</h2>
+    </div>
+    <p class="panel-sub">Recorded each time the composite alert level transitions between GREEN, YELLOW, and RED.</p>
+    <div class="table-wrap">
+      <table class="alert-log-table">
+        <thead><tr>
+          <th>Date</th>
+          <th>Alert</th>
+          <th>Score</th>
+          <th>Description</th>
+        </tr></thead>
+        <tbody id="alertLogBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STAY INFORMED -->
+  <section class="panel" id="stayInformedPanel">
+    <div class="panel-header"><h2>Stay Informed</h2></div>
+    <p class="panel-sub">Get notified when the recession alert changes between GREEN, YELLOW, and RED.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+      <!-- Email subscription form -->
+      <div style="background:var(--panel-2);border-radius:8px;padding:20px">
+        <h3 style="font-size:14px;margin-bottom:4px">Email Alerts</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Free. One email per alert state change.</p>
+        <form id="subscribeForm" style="display:flex;flex-direction:column;gap:10px">
+          <input type="email" id="subEmail" placeholder="your@email.com" required
+            style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;outline:none">
+          <input type="tel" id="subPhone" placeholder="Phone (optional, for SMS)"
+            style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:var(--text);font-size:13px;outline:none">
+          <button type="submit" id="subBtn"
+            style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:10px;font-size:13px;font-weight:600;cursor:pointer">
+            Subscribe →
+          </button>
+          <div id="subStatus" style="font-size:12px;color:var(--muted);min-height:18px"></div>
+        </form>
+      </div>
+      <!-- RSS option -->
+      <div style="background:var(--panel-2);border-radius:8px;padding:20px">
+        <h3 style="font-size:14px;margin-bottom:4px">RSS Feed</h3>
+        <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Works with any RSS reader or IFTTT/Zapier for email/SMS.</p>
+        <a href="feed.xml" target="_blank" rel="noopener"
+          style="display:block;text-align:center;padding:10px 20px;background:var(--panel);border:1px solid var(--border);border-radius:6px;color:var(--accent);font-size:13px;font-weight:600;text-decoration:none;margin-bottom:10px">
+          🔔 Subscribe via RSS →
+        </a>
+        <p style="font-size:11px;color:var(--muted)">
+          IFTTT: <em>RSS Feed → Email/SMS</em> (free tier). Zapier also works.
+        </p>
+        <a href="mailto:?subject=Recession+Tracker+Alerts&body=Subscribe+to+alerts+via+RSS%3A+https%3A%2F%2Fdevante88.github.io%2Frecession-tracker%2Ffeed.xml"
+          style="display:block;text-align:center;margin-top:8px;font-size:12px;color:var(--accent)">
+          Share RSS link →
+        </a>
+      </div>
     </div>
   </section>
 
@@ -527,10 +720,49 @@
         NBER chronology, so this is a sanity check rather than a hold-out evaluation.
       </p>
     </section>
+
+    <!-- CORRELATION HEATMAP -->
+    <section class="panel" id="correlationSection">
+      <div class="panel-header"><h2>Layer Score Correlations</h2></div>
+      <p class="panel-sub">Pearson correlation of layer scores across the historical backtest period. Red = positive correlation, blue = negative.</p>
+      <div id="correlationHeatmap" style="overflow-x:auto"></div>
+    </section>
+
+    <!-- RECESSION PLAYBOOK -->
+    <section class="panel" id="playbookSection">
+      <div class="panel-header"><h2>Recession Playbook</h2></div>
+      <p class="panel-sub">How the composite score evolved around each NBER-dated recession, from 12 months before through the recession end.</p>
+      <div id="playbookCards"></div>
+    </section>
+
   </div>
 
   <!-- MARKETS TAB -->
   <div class="tab-content" id="tab-markets" hidden>
+
+    <!-- Prediction Market Recession Odds -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Prediction Market Recession Odds</h2></div>
+      <p class="panel-sub">Real-money market-implied probability of a 2026 US recession — traders putting capital behind their forecasts.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="stat-card">
+          <div class="stat-label">Kalshi 2026 Recession</div>
+          <div class="stat-value" id="kalshiOdds">~28%</div>
+          <div class="stat-sub"><a href="https://kalshi.com/markets/kxrecssnber/recession/kxrecssnber-26" target="_blank" rel="noopener" style="color:var(--accent)">Live on Kalshi →</a></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">NY Fed Model (Estrella-Mishkin)</div>
+          <div class="stat-value" id="nyfedProb">—</div>
+          <div class="stat-sub">Probit on 10Y-3M spread · official methodology</div>
+        </div>
+      </div>
+      <iframe
+        src="https://kalshi.com/external-widgets/events/KXRECSSNBER-26/markets/KXRECSSNBER-26"
+        style="width:100%;height:340px;border:none;border-radius:8px;background:var(--panel-2)"
+        title="Kalshi 2026 Recession Market"
+        loading="lazy"
+      ></iframe>
+    </section>
 
     <!-- Live Ticker Tape -->
     <div class="markets-ticker tradingview-widget-container" id="tv-ticker"></div>
@@ -666,7 +898,112 @@
       </table>
     </section>
 
+    <section class="panel">
+      <div class="panel-header"><h2>Fed Rate Probabilities</h2></div>
+      <p class="panel-sub">CME FedWatch implied probabilities for the next FOMC meeting — the market's best real-time read on monetary policy direction.</p>
+      <div style="background:var(--panel-2);border-radius:8px;padding:24px;text-align:center">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px">
+          Embedded FedWatch requires a direct visit. Click below to view live probabilities.
+        </div>
+        <a href="https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html"
+           target="_blank" rel="noopener"
+           style="display:inline-block;padding:10px 24px;background:var(--accent);color:#fff;border-radius:6px;font-size:14px;font-weight:600;text-decoration:none">
+          Open CME FedWatch →
+        </a>
+        <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center" id="fedwatchCards">
+          <div class="stat-card"><div class="stat-label">Current Rate</div><div class="stat-value" id="ffRate">—</div><div class="stat-sub">Fed Funds target</div></div>
+          <div class="stat-card"><div class="stat-label">Next Meeting</div><div class="stat-value" id="ffNext">FOMC</div><div class="stat-sub">Rate decision pending</div></div>
+          <div class="stat-card"><div class="stat-label">Market Implied</div><div class="stat-value" id="ffImplied">—</div><div class="stat-sub">From FEDFUNDS indicator</div></div>
+        </div>
+      </div>
+    </section>
+
   </div><!-- /tab-markets -->
+
+  <!-- EXPERT SIGNALS TAB -->
+  <div class="tab-content" id="tab-signals" hidden>
+    <section class="panel">
+      <div class="panel-header"><h2>Expert Economist Signals</h2></div>
+      <p class="panel-sub">Live feeds from economists whose research directly informs recession detection methodology.</p>
+      <div class="signals-grid" id="signalsGrid">
+        <div class="economist-card">
+          <div class="economist-header">
+            <div class="economist-name">Claudia Sahm</div>
+            <div class="economist-title">Economist · Creator of the Sahm Rule</div>
+            <div class="economist-known">The Sahm Rule triggers when 3-month avg unemployment rises 0.5pp above its 12-month low</div>
+          </div>
+          <div class="economist-embed" id="embed-sahm">
+            <div style="padding:24px;color:var(--muted);font-size:13px">
+              Twitter/X embeds require a direct visit to
+              <a href="https://twitter.com/claudiasahm" target="_blank" rel="noopener" style="color:var(--accent)">@claudiasahm</a>
+              — embedded widgets are blocked by X's current policy.
+            </div>
+          </div>
+        </div>
+        <div class="economist-card">
+          <div class="economist-header">
+            <div class="economist-name">Mohamed El-Erian</div>
+            <div class="economist-title">Chief Economic Advisor · Allianz</div>
+            <div class="economist-known">Macro strategist, former PIMCO CEO; vocal on yield curve signals and Fed policy</div>
+          </div>
+          <div class="economist-embed" id="embed-elerian">
+            <div style="padding:24px;color:var(--muted);font-size:13px">
+              Follow on X:
+              <a href="https://twitter.com/elerianm" target="_blank" rel="noopener" style="color:var(--accent)">@elerianm</a>
+            </div>
+          </div>
+        </div>
+        <div class="economist-card">
+          <div class="economist-header">
+            <div class="economist-name">Nouriel Roubini</div>
+            <div class="economist-title">Professor Emeritus · NYU Stern · "Dr. Doom"</div>
+            <div class="economist-known">Predicted 2008 financial crisis; tracks global macro imbalances and systemic risks</div>
+          </div>
+          <div class="economist-embed" id="embed-roubini">
+            <div style="padding:24px;color:var(--muted);font-size:13px">
+              Follow on X:
+              <a href="https://twitter.com/nouriel" target="_blank" rel="noopener" style="color:var(--accent)">@nouriel</a>
+            </div>
+          </div>
+        </div>
+        <div class="economist-card">
+          <div class="economist-header">
+            <div class="economist-name">Nick Timiraos</div>
+            <div class="economist-title">WSJ · Chief Economics Correspondent</div>
+            <div class="economist-known">The Fed's de-facto press liaison; first to report FOMC deliberations and rate guidance</div>
+          </div>
+          <div class="economist-embed" id="embed-timiraos">
+            <div style="padding:24px;color:var(--muted);font-size:13px">
+              Follow on X:
+              <a href="https://twitter.com/NickTimiraos" target="_blank" rel="noopener" style="color:var(--accent)">@NickTimiraos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header"><h2>Key Economist Frameworks</h2></div>
+      <div class="meth-grid">
+        <div class="meth-card">
+          <h4>Sahm Rule</h4>
+          <p>Recession begins when the 3-month moving average of national unemployment rate rises by 0.5 percentage points or more relative to its low during the previous 12 months. Currently tracked as SAHMREALTIME in FRED.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Estrella-Mishkin Probit</h4>
+          <p>Academic model (1996) using the 10Y-3M Treasury yield spread to estimate 12-month recession probability. Formula: <code style="font-size:11px">Φ(−0.307 − 0.667 × spread)</code>. This dashboard includes it in the ensemble score.</p>
+        </div>
+        <div class="meth-card">
+          <h4>El-Erian's "New Normal"</h4>
+          <p>Post-GFC thesis that growth, rates, and inflation would remain structurally suppressed. The 2022–2024 inflation shock and rate cycle tested this framework; his current focus is on AI productivity offsets vs. deglobalization drag.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Roubini's Systemic Risk</h4>
+          <p>Tracks "megathreats" — geopolitical fragmentation, debt overhangs, demographic decline. His signal set overlaps with this dashboard's global layer: OECD CLI, EU yield curve, and credit spread monitors.</p>
+        </div>
+      </div>
+    </section>
+  </div><!-- /tab-signals -->
 
   <!-- METHODOLOGY TAB -->
   <div class="tab-content" id="tab-methodology" hidden>
@@ -677,7 +1014,7 @@
     </button>
     <div class="methodology-body open" id="methBody">
       <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">
-        The composite score blends 24 FRED indicators across 5 economic layers.
+        The composite score blends 30 FRED indicators across 6 economic layers.
         Each indicator is normalized to a 0–100 risk scale, then weighted and
         aggregated into layer scores, then into a single composite.
         No machine learning. No backtested thresholds. Pure signal monitoring.
@@ -685,11 +1022,12 @@
 
       <h3 style="font-size:14px;margin-bottom:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Layer weights</h3>
       <div class="meth-weights">
-        <div class="meth-weight"><div class="pct" style="color:var(--layer-fin)">30%</div><div class="lbl">Financial<br>Leading</div></div>
-        <div class="meth-weight"><div class="pct" style="color:var(--layer-lab)">25%</div><div class="lbl">Labor</div></div>
-        <div class="meth-weight"><div class="pct" style="color:var(--layer-real)">20%</div><div class="lbl">Real<br>Economy</div></div>
-        <div class="meth-weight"><div class="pct" style="color:var(--layer-inf)">15%</div><div class="lbl">Inflation</div></div>
-        <div class="meth-weight"><div class="pct" style="color:var(--layer-micro)">10%</div><div class="lbl">Micro</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-fin)">27%</div><div class="lbl">Financial<br>Leading</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-lab)">22%</div><div class="lbl">Labor</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-real)">18%</div><div class="lbl">Real<br>Economy</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-inf)">14%</div><div class="lbl">Inflation</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-micro)">9%</div><div class="lbl">Micro</div></div>
+        <div class="meth-weight"><div class="pct" style="color:var(--layer-global)">10%</div><div class="lbl">Global</div></div>
       </div>
 
       <h3 style="font-size:14px;margin-bottom:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Scoring approach</h3>
@@ -764,6 +1102,10 @@
   </div>
 </div>
 
+<!-- Set window.SUPABASE_SUBSCRIBE_URL to your Supabase subscribe Edge Function URL -->
+<!-- e.g. window.SUPABASE_SUBSCRIBE_URL = 'https://xxx.supabase.co/functions/v1/subscribe'; -->
+<script>window.SUPABASE_SUBSCRIBE_URL = '';</script>
+
 <script type="module">
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const LAYER_NAMES = {
@@ -771,22 +1113,25 @@ const LAYER_NAMES = {
   labor:          'Labor',
   inflation:      'Inflation',
   real_economy:   'Real Economy',
-  micro:          'Micro'
+  micro:          'Micro',
+  global:         'Global'
 };
-const LAYER_ORDER  = ['financial_lead','labor','inflation','real_economy','micro'];
+const LAYER_ORDER  = ['financial_lead','labor','inflation','real_economy','micro','global'];
 const LAYER_COLORS = {
   financial_lead: '#66b3ff',
   labor:          '#ff9f7a',
   inflation:      '#c97af1',
   real_economy:   '#4dd9c0',
-  micro:          '#f0e442'
+  micro:          '#f0e442',
+  global:         '#a8d8a8'
 };
 const LAYER_BTN_CLASS = {
   financial_lead: 'l-fin',
   labor:          'l-lab',
   inflation:      'l-inf',
   real_economy:   'l-real',
-  micro:          'l-micro'
+  micro:          'l-micro',
+  global:         'l-global'
 };
 
 // ─── UTILITIES ───────────────────────────────────────────────────────────────
@@ -1215,12 +1560,22 @@ function applyFilters() {
     const descHtml = ind.description
       ? `<div class="ind-desc">${ind.description}</div>` : '';
 
+    const anomalyHtml = ind.anomaly
+      ? '<span class="anomaly-badge" title="Anomalous move: latest change > 1.5σ of historical changes">⚡ Anomaly</span>' : '';
+    const pct = (ind.percentile_rank !== null && ind.percentile_rank !== undefined)
+      ? ind.percentile_rank : null;
+    const pctileHtml = pct !== null ? `
+      <div class="pctile-wrap" title="Percentile rank: ${pct}th — where current score sits in 24-month history">
+        <div class="pctile-bar-bg"><div class="pctile-bar-fill" style="width:${pct}%;background:${scoreColor(s)}"></div></div>
+        <span style="font-size:10px;color:var(--muted)">${pct}th pct</span>
+      </div>` : '';
+
     const tr = document.createElement('tr');
     tr.dataset.fredId = ind.fred_id;
     tr.style.cursor = 'pointer';
     tr.innerHTML = `
       <td>
-        <div class="ind-name">${ind.name}</div>
+        <div class="ind-name">${ind.name}${anomalyHtml}</div>
         ${descHtml}
       </td>
       <td style="color:var(--muted);font-size:12px;white-space:nowrap">${LAYER_NAMES[ind.layer] || ind.layer}</td>
@@ -1233,6 +1588,7 @@ function applyFilters() {
           <div class="score-bar" style="width:${Math.max(s,2)}px;max-width:80px;background:${scoreColor(s)}"></div>
           <span style="font-weight:600;color:${scoreColor(s)}">${s}</span>
         </div>
+        ${pctileHtml}
       </td>
       <td><span class="badge ${a}">${ind.alert}</span></td>
     `;
@@ -1434,6 +1790,418 @@ function showError(msg) {
   el.style.display = 'block';
 }
 
+// ─── DIFFUSION INDEX ─────────────────────────────────────────────────────────
+function renderDiffusion(snap) {
+  const inds = snap?.indicators || [];
+  let green = 0, yellow = 0, red = 0;
+  inds.forEach(i => {
+    if (i.alert === 'RED') red++;
+    else if (i.alert === 'YELLOW') yellow++;
+    else green++;
+  });
+  const total = inds.length || 1;
+  const breadth = ((red * 2 + yellow * 1) / (total * 2) * 100).toFixed(1);
+
+  const counts = document.getElementById('diffusionCounts');
+  if (counts) counts.innerHTML = `
+    <div style="text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--green)">${green}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">GREEN</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--yellow)">${yellow}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">YELLOW</div>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:36px;font-weight:800;color:var(--red)">${red}</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">RED</div>
+    </div>`;
+
+  const bar = document.getElementById('diffusionBar');
+  if (bar) bar.innerHTML = `
+    <div style="flex:${green};background:var(--green)"></div>
+    <div style="flex:${yellow};background:var(--yellow)"></div>
+    <div style="flex:${red};background:var(--red)"></div>`;
+
+  const scoreEl = document.getElementById('diffusionScore');
+  if (scoreEl) {
+    scoreEl.textContent = `${breadth}%`;
+    scoreEl.style.color = breadth >= 60 ? 'var(--red)' : breadth >= 30 ? 'var(--yellow)' : 'var(--green)';
+  }
+}
+
+// ─── WEI NOWCAST ─────────────────────────────────────────────────────────────
+function renderWEI(snap) {
+  const el = document.getElementById('weiValue');
+  if (!el) return;
+  const wei = snap?.indicators?.find(x => x.fred_id === 'WEI');
+  const v = wei?.latest_value;
+  if (v === null || v === undefined) { el.textContent = '—'; return; }
+  el.textContent = Number(v).toFixed(2);
+  el.style.color = v < 0 ? 'var(--red)' : v < 1 ? 'var(--yellow)' : 'var(--green)';
+}
+
+// ─── ECONOMIC SURPRISE SCORE ─────────────────────────────────────────────────
+function renderSurprise(snap) {
+  const el = document.getElementById('surpriseValue');
+  if (!el) return;
+  const inds = (snap.indicators || []).filter(x => x.latest_value !== null && x.history && x.history.length >= 3);
+  if (!inds.length) { el.textContent = '—'; return; }
+  const improving = inds.filter(ind => {
+    const hist = ind.history;
+    const recent = hist[hist.length - 1]?.value;
+    const prior  = hist[hist.length - 4]?.value;  // ~3 months ago
+    if (recent == null || prior == null) return false;
+    return ind.direction === 'direct' ? recent > prior : recent < prior;
+  });
+  const pct = Math.round((improving.length / inds.length) * 100);
+  el.textContent = `${pct}%`;
+  el.style.color = pct >= 60 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--red)';
+}
+
+// ─── INTERACTIVE WEIGHT EDITOR ────────────────────────────────────────────────
+const CANONICAL_WEIGHTS = {
+  financial_lead: 0.27,
+  labor:          0.22,
+  inflation:      0.14,
+  real_economy:   0.18,
+  micro:          0.09,
+  global:         0.10
+};
+let customWeights = { ...CANONICAL_WEIGHTS };
+let weightEditorInited = false;
+
+function updateWeightedComposite() {
+  const el = document.getElementById('weightedComposite');
+  if (!el || !allIndicators.length) return;
+  // Group indicators by layer, compute layer scores, then blend
+  const layerScores = {};
+  const layerCounts = {};
+  allIndicators.forEach(ind => {
+    if (!layerScores[ind.layer]) { layerScores[ind.layer] = 0; layerCounts[ind.layer] = 0; }
+    layerScores[ind.layer] += (ind.score || 0) * (ind.weight || 0);
+    layerCounts[ind.layer] += (ind.weight || 0);
+  });
+  let composite = 0;
+  Object.keys(customWeights).forEach(layer => {
+    const ls = layerCounts[layer] > 0 ? layerScores[layer] / layerCounts[layer] : 0;
+    composite += ls * customWeights[layer];
+  });
+  el.textContent = composite.toFixed(1);
+  el.style.color = scoreColor(composite);
+}
+
+function initWeightEditor(snap) {
+  const container = document.getElementById('weightSliders');
+  if (!container) return;
+  container.innerHTML = '';
+  LAYER_ORDER.forEach(layer => {
+    const pct = Math.round(customWeights[layer] * 100);
+    const color = LAYER_COLORS[layer] || 'var(--accent)';
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+        <span style="color:${color}">${LAYER_NAMES[layer]}</span>
+        <span id="wlabel-${layer}" style="color:var(--muted)">${pct}%</span>
+      </div>
+      <input type="range" id="wslider-${layer}" min="0" max="50" step="1" value="${pct}"
+        style="width:100%;accent-color:${color}">`;
+    container.appendChild(div);
+  });
+
+  LAYER_ORDER.forEach(layer => {
+    const slider = document.getElementById(`wslider-${layer}`);
+    if (!slider) return;
+    slider.addEventListener('input', () => {
+      const newVal = slider.value / 100;
+      const delta = newVal - customWeights[layer];
+      // Re-normalize others proportionally
+      const others = LAYER_ORDER.filter(l => l !== layer);
+      const othersSum = others.reduce((s, l) => s + customWeights[l], 0);
+      customWeights[layer] = newVal;
+      if (othersSum > 0) {
+        others.forEach(l => {
+          customWeights[l] = Math.max(0, customWeights[l] - delta * (customWeights[l] / othersSum));
+        });
+      }
+      // Normalize total to 1.0
+      const total = Object.values(customWeights).reduce((a, b) => a + b, 0);
+      if (total > 0) LAYER_ORDER.forEach(l => { customWeights[l] /= total; });
+      // Update labels and other sliders
+      LAYER_ORDER.forEach(l => {
+        const lbl = document.getElementById(`wlabel-${l}`);
+        const sld = document.getElementById(`wslider-${l}`);
+        if (lbl) lbl.textContent = `${Math.round(customWeights[l] * 100)}%`;
+        if (sld && l !== layer) sld.value = Math.round(customWeights[l] * 100);
+      });
+      updateWeightedComposite();
+    });
+  });
+
+  document.getElementById('weightReset')?.addEventListener('click', () => {
+    customWeights = { ...CANONICAL_WEIGHTS };
+    LAYER_ORDER.forEach(l => {
+      const lbl = document.getElementById(`wlabel-${l}`);
+      const sld = document.getElementById(`wslider-${l}`);
+      if (lbl) lbl.textContent = `${Math.round(customWeights[l] * 100)}%`;
+      if (sld) sld.value = Math.round(customWeights[l] * 100);
+    });
+    updateWeightedComposite();
+  });
+
+  updateWeightedComposite();
+}
+
+// ─── BUSINESS CYCLE CONTEXT ───────────────────────────────────────────────────
+function renderCycleContext() {
+  const el = document.getElementById('cycleContent');
+  if (!el) return;
+
+  // Find latest recession end date
+  const lastRec = NBER_RECESSIONS[NBER_RECESSIONS.length - 1];
+  const endDate = new Date(lastRec.end);
+  const now = new Date('2026-05-01');
+  const monthsSince = Math.round((now - endDate) / (1000 * 60 * 60 * 24 * 30.44));
+  const yearsFmt = (monthsSince / 12).toFixed(1);
+
+  // Historical expansion durations (US expansions since 1945)
+  const expansions = [12, 92, 120, 39, 73, 128, 128, 6, 128, 24, 10, 22, 8];
+  const sorted = [...expansions].sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)];
+  const maxExp = Math.max(...expansions);
+  const rank = sorted.filter(x => x < monthsSince).length;
+  const pct = Math.round(rank / sorted.length * 100);
+
+  // Gauge: map current and median to a 0-100 range (max = maxExp)
+  const gaugeWidth = 100;
+  const currentPos = Math.min(100, Math.round(monthsSince / maxExp * gaugeWidth));
+  const medianPos  = Math.min(100, Math.round(median / maxExp * gaugeWidth));
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:20px">
+      <div style="background:var(--panel-2);border-radius:8px;padding:14px">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Since last recession ended</div>
+        <div style="font-size:28px;font-weight:800;color:var(--accent)">${monthsSince}</div>
+        <div style="font-size:12px;color:var(--muted)">months</div>
+      </div>
+      <div style="background:var(--panel-2);border-radius:8px;padding:14px">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Current expansion age</div>
+        <div style="font-size:28px;font-weight:800;color:var(--accent)">${monthsSince}</div>
+        <div style="font-size:12px;color:var(--muted)">months (${yearsFmt} years)</div>
+      </div>
+      <div style="background:var(--panel-2);border-radius:8px;padding:14px">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Historical rank</div>
+        <div style="font-size:28px;font-weight:800;color:var(--yellow)">Top ${100-pct}%</div>
+        <div style="font-size:12px;color:var(--muted)">of expansions since 1945</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Expansion duration gauge (median = ${median}mo, max = ${maxExp}mo)</div>
+    <div style="position:relative;height:24px;background:var(--panel-3);border-radius:6px;margin-bottom:4px">
+      <div style="position:absolute;left:0;top:0;height:100%;width:${currentPos}%;background:linear-gradient(to right,var(--green),var(--yellow));border-radius:6px;opacity:0.8"></div>
+      <div style="position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--yellow);border-radius:2px;left:${medianPos}%" title="Median: ${median} months"></div>
+      <div style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:10px;color:var(--muted)">max ${maxExp}mo</div>
+    </div>
+    <div style="display:flex;gap:20px;font-size:11px;color:var(--muted)">
+      <span><span style="display:inline-block;width:10px;height:10px;background:var(--yellow);border-radius:1px;margin-right:4px;vertical-align:middle"></span>Median ${median}mo</span>
+      <span><span style="display:inline-block;width:10px;height:4px;background:linear-gradient(to right,var(--green),var(--yellow));border-radius:1px;margin-right:4px;vertical-align:middle"></span>Current ${monthsSince}mo</span>
+    </div>`;
+}
+
+// ─── NBER BIG FOUR ───────────────────────────────────────────────────────────
+function renderBigFour(snap) {
+  const section = document.getElementById('bigFourPanel');
+  const grid = document.getElementById('bigFourGrid');
+  if (!section || !grid) return;
+
+  const BIG_FOUR = [
+    { fred_id: 'PAYEMS',  label: 'Nonfarm Payrolls' },
+    { fred_id: 'INDPRO',  label: 'Industrial Production' },
+    { fred_id: 'RSAFS',   label: 'Real Retail Sales' },
+    { fred_id: 'W875RX1', label: 'Real Income ex Transfers' }
+  ];
+
+  const rows = BIG_FOUR.map(({ fred_id, label }) => {
+    const ind = (snap.indicators || []).find(x => x.fred_id === fred_id);
+    if (!ind || !ind.history || !ind.history.length) return '';
+
+    // Find cycle high in history
+    const hist = ind.history;
+    let peakVal = -Infinity, peakDate = '';
+    hist.forEach(p => { if (p.value > peakVal) { peakVal = p.value; peakDate = p.date; } });
+    if (ind.latest_value > peakVal) { peakVal = ind.latest_value; peakDate = ind.latest_date || ''; }
+
+    const current = ind.latest_value ?? 0;
+    const pctOff = peakVal > 0 ? ((current - peakVal) / peakVal * 100) : 0;
+    const isDown = pctOff < -0.1;
+    const barW = Math.min(100, Math.abs(pctOff) * 10); // scale for visibility
+    const color = isDown ? 'var(--red)' : 'var(--green)';
+
+    return `<div style="background:var(--panel-2);border-radius:8px;padding:14px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-weight:600;font-size:13px">${label}</span>
+        <span style="font-size:13px;font-weight:700;color:${color}">${pctOff >= 0 ? 'At high' : pctOff.toFixed(2) + '% off high'}</span>
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:6px;margin-bottom:6px">
+        <div style="width:${barW}%;height:100%;background:${color};border-radius:4px;transition:width .4s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted)">
+        <span>Current: ${fmtVal(current)}</span>
+        <span>Peak: ${fmtVal(peakVal)} (${fmtDate(peakDate)})</span>
+      </div>
+    </div>`;
+  });
+
+  const filled = rows.filter(Boolean);
+  if (!filled.length) { section.style.display = 'none'; return; }
+  section.style.display = '';
+  grid.innerHTML = filled.join('');
+}
+
+// ─── CORRELATION HEATMAP ──────────────────────────────────────────────────────
+function renderCorrelationHeatmap(sorted) {
+  const el = document.getElementById('correlationHeatmap');
+  if (!el || !sorted.length) return;
+
+  const layers = LAYER_ORDER;
+  // Extract layer score series
+  const series = {};
+  layers.forEach(l => { series[l] = sorted.map(d => d.layers?.[l] ?? 0); });
+
+  function pearson(a, b) {
+    const n = a.length;
+    if (n < 2) return 0;
+    const meanA = a.reduce((s, v) => s + v, 0) / n;
+    const meanB = b.reduce((s, v) => s + v, 0) / n;
+    let num = 0, da = 0, db = 0;
+    for (let i = 0; i < n; i++) {
+      const ea = a[i] - meanA, eb = b[i] - meanB;
+      num += ea * eb; da += ea * ea; db += eb * eb;
+    }
+    return (da && db) ? num / Math.sqrt(da * db) : 0;
+  }
+
+  function corrColor(r) {
+    // r: -1 (blue) → 0 (neutral) → +1 (red)
+    const c = Math.max(-1, Math.min(1, r));
+    if (c >= 0) {
+      const t = c;
+      const r0 = Math.round(26 + t * (255 - 26));
+      const g0 = Math.round(35 + t * (122 - 35));
+      const b0 = Math.round(74 + t * (122 - 74));
+      return `rgb(${r0},${g0},${b0})`;
+    } else {
+      const t = -c;
+      const r0 = Math.round(26 + t * (102 - 26));
+      const g0 = Math.round(35 + t * (179 - 35));
+      const b0 = Math.round(74 + t * (255 - 74));
+      return `rgb(${r0},${g0},${b0})`;
+    }
+  }
+
+  const shortNames = { financial_lead: 'Fin.', labor: 'Labor', inflation: 'Infl.', real_economy: 'Real', micro: 'Micro', global: 'Global' };
+  let html = '<table style="border-collapse:collapse;font-size:12px;min-width:340px"><thead><tr><th style="padding:6px 8px;color:var(--muted)"></th>';
+  layers.forEach(l => { html += `<th style="padding:6px 8px;color:${LAYER_COLORS[l]};text-align:center">${shortNames[l]}</th>`; });
+  html += '</tr></thead><tbody>';
+  layers.forEach(la => {
+    html += `<tr><td style="padding:6px 8px;color:${LAYER_COLORS[la]};font-weight:600;white-space:nowrap">${shortNames[la]}</td>`;
+    layers.forEach(lb => {
+      const r = pearson(series[la], series[lb]);
+      const bg = corrColor(r);
+      const textColor = Math.abs(r) > 0.4 ? '#fff' : 'var(--text)';
+      html += `<td style="padding:6px 10px;background:${bg};color:${textColor};text-align:center;border-radius:4px">${r.toFixed(2)}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+// ─── RECESSION PLAYBOOK ───────────────────────────────────────────────────────
+const playbookCharts = [];
+
+function renderPlaybook(sorted) {
+  const el = document.getElementById('playbookCards');
+  if (!el || !sorted.length) return;
+
+  const recNames = ['1990-91 Recession', '2001 Dot-com Recession', '2007-09 Financial Crisis', '2020 COVID Recession'];
+
+  el.innerHTML = '';
+  NBER_RECESSIONS.forEach((rec, idx) => {
+    const startDate = rec.start.slice(0, 7);
+    const endDate   = rec.end.slice(0, 7);
+    const startObj  = new Date(rec.start);
+    const endObj    = new Date(rec.end);
+    const durationMonths = Math.round((endObj - startObj) / (1000 * 60 * 60 * 24 * 30.44));
+
+    // Window: 12 months before start through end
+    const windowStart = new Date(startObj);
+    windowStart.setMonth(windowStart.getMonth() - 12);
+    const windowStartStr = windowStart.toISOString().slice(0, 7);
+
+    const window = sorted.filter(d => d.date.slice(0, 7) >= windowStartStr && d.date.slice(0, 7) <= endDate);
+
+    // Stats
+    const peak = window.length ? Math.max(...window.map(d => d.composite)).toFixed(1) : '—';
+    const firstYellow = window.find(d => d.composite >= 30);
+    const firstRed    = window.find(d => d.composite >= 60);
+
+    const details = document.createElement('details');
+    details.style.cssText = 'background:var(--panel-2);border-radius:10px;margin-bottom:12px;overflow:hidden';
+    details.innerHTML = `
+      <summary style="padding:14px 18px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div>
+          <strong style="color:var(--text)">${recNames[idx]}</strong>
+          <span style="color:var(--muted);font-size:12px;margin-left:10px">${startDate} → ${endDate} · ${durationMonths} months</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:12px">
+          <span style="color:var(--muted)">Peak: <strong style="color:var(--red)">${peak}</strong></span>
+          <span style="color:var(--muted)">First YELLOW: <strong style="color:var(--yellow)">${firstYellow ? firstYellow.date.slice(0,7) : 'never'}</strong></span>
+          <span style="color:var(--muted)">First RED: <strong style="color:var(--red)">${firstRed ? firstRed.date.slice(0,7) : 'never'}</strong></span>
+        </div>
+      </summary>
+      <div style="padding:0 18px 18px">
+        <div style="height:200px;margin-top:10px"><canvas id="playbook-chart-${idx}"></canvas></div>
+      </div>`;
+
+    el.appendChild(details);
+
+    details.addEventListener('toggle', () => {
+      if (details.open) {
+        // Destroy existing if any
+        if (playbookCharts[idx]) { playbookCharts[idx].destroy(); playbookCharts[idx] = null; }
+        const canvas = document.getElementById(`playbook-chart-${idx}`);
+        if (!canvas || !window.length) return;
+        const labels = window.map(d => d.date.slice(0, 7));
+        const values = window.map(d => d.composite);
+        const recStart = startDate;
+        playbookCharts[idx] = new Chart(canvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              { label: 'Composite', data: values, borderColor: '#66b3ff', backgroundColor: 'rgba(102,179,255,0.08)',
+                borderWidth: 2, pointRadius: 2, fill: true, tension: 0.3 },
+              { label: '60 RED', data: values.map(() => 60), borderColor: 'rgba(255,122,122,0.4)', borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false },
+              { label: '30 YELLOW', data: values.map(() => 30), borderColor: 'rgba(241,200,74,0.4)', borderDash: [4,4], borderWidth: 1, pointRadius: 0, fill: false }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: { backgroundColor: '#1a2340', titleColor: '#eef2ff', bodyColor: '#7a84a8' }
+            },
+            scales: {
+              x: { ticks: { color: '#7a84a8', maxTicksLimit: 8, font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.03)' } },
+              y: { min: 0, max: 100, ticks: { color: '#7a84a8', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.03)' } }
+            }
+          }
+        });
+      }
+    });
+  });
+}
+
 // ─── LIVE UPDATES ─────────────────────────────────────────────────────────────
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;   // 5 minutes
 let lastGeneratedAt = null;
@@ -1478,8 +2246,29 @@ async function refresh({ initial = false } = {}) {
     renderLayerCards(current, history);
     renderChart(history);
     renderTable(current.indicators || []);
+    renderEnsemble(current);
+    renderFactorChart(current);
+    renderDiffusion(current);
+    renderWEI(current);
+    renderSurprise(current);
+    const ff = (current.indicators || []).find(x => x.fred_id === 'FEDFUNDS');
+    const ffEl = document.getElementById('ffRate');
+    const ffImpEl = document.getElementById('ffImplied');
+    if (ff && ffEl) ffEl.textContent = ff.latest_value != null ? `${ff.latest_value.toFixed(2)}%` : '—';
+    if (ff && ffImpEl) ffImpEl.textContent = ff.latest_value != null ? `${(ff.latest_value - 0.25).toFixed(2)}–${ff.latest_value.toFixed(2)}%` : '—';
+    renderCycleContext();
+    renderBigFour(current);
+    loadAlertLog(bust);
     if (marketsRendered) updateMarketSignals();
     loadNarrative(bust);
+    if (!weightEditorInited) { initWeightEditor(current); weightEditorInited = true; }
+    else updateWeightedComposite();
+
+    // NY Fed Model card (Kalshi panel)
+    const nyfedEl = document.getElementById('nyfedProb');
+    if (nyfedEl && current.composite?.recession_probability !== undefined) {
+      nyfedEl.textContent = `${(current.composite.recession_probability * 100).toFixed(1)}%`;
+    }
 
     if (!initial) flashUpdate();
     document.getElementById('errorBanner').style.display = 'none';
@@ -1524,8 +2313,9 @@ let backtestRendered = false;
 let marketsRendered  = false;
 let activeTab = 'live';
 
+let signalsRendered = false;
 function setTab(name) {
-  if (!['live','backtest','markets','methodology'].includes(name)) name = 'live';
+  if (!['live','backtest','markets','signals','methodology'].includes(name)) name = 'live';
   activeTab = name;
   document.querySelectorAll('.tab-btn[data-tab]').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
@@ -1541,6 +2331,10 @@ function setTab(name) {
   if (name === 'markets' && !marketsRendered) {
     renderMarkets();
     marketsRendered = true;
+  }
+  if (name === 'signals' && !signalsRendered) {
+    renderSignals();
+    signalsRendered = true;
   }
 }
 
@@ -1916,7 +2710,142 @@ async function renderBacktest() {
     },
     plugins: [nberPlugin]
   });
+
+  renderCorrelationHeatmap(sorted);
+  renderPlaybook(sorted);
 }
+
+// ─── ENSEMBLE STAT CARD ───────────────────────────────────────────────────────
+function renderEnsemble(snap) {
+  const el = document.getElementById('ensembleValue');
+  if (!el) return;
+  const e = snap?.composite?.ensemble_score;
+  if (e === null || e === undefined) { el.textContent = '—'; return; }
+  el.textContent = e.toFixed(1);
+  el.style.color = scoreColor(e);
+}
+
+// ─── FACTOR CONTRIBUTION CHART ────────────────────────────────────────────────
+let factorChartInst = null;
+function renderFactorChart(snap) {
+  const contribs = snap?.factor_contributions;
+  const section  = document.getElementById('factorChartSection');
+  if (!contribs || !contribs.length) { if (section) section.style.display = 'none'; return; }
+  if (section) section.style.display = '';
+
+  const sorted = [...contribs].sort((a, b) => a.contrib - b.contrib);
+  const labels = sorted.map(x => x.name);
+  const values = sorted.map(x => x.contrib);
+  const colors = sorted.map(x => x.contrib >= 0 ? 'rgba(255,122,122,0.75)' : 'rgba(45,220,140,0.75)');
+
+  const ctx = document.getElementById('factorChart').getContext('2d');
+  if (factorChartInst) factorChartInst.destroy();
+  factorChartInst = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets: [{ data: values, backgroundColor: colors, borderRadius: 4 }] },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2340', titleColor: '#eef2ff', bodyColor: '#7a84a8',
+          callbacks: {
+            label: item => {
+              const c = sorted[item.dataIndex];
+              return ` ${c.contrib > 0 ? '+' : ''}${c.contrib.toFixed(3)}  (score ${c.score}, ${LAYER_NAMES[c.layer] || c.layer})`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#7a84a8', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#c0c8e8', font: { size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ─── ALERT HISTORY LOG ────────────────────────────────────────────────────────
+async function loadAlertLog(bust = '') {
+  try {
+    const log = await fetch(`data/alert-log.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null);
+    const tbody  = document.getElementById('alertLogBody');
+    const section = document.getElementById('alertLogSection');
+    if (!log || !log.length) { if (section) section.style.display = 'none'; return; }
+    if (section) section.style.display = '';
+    tbody.innerHTML = log.map(it => `
+      <tr>
+        <td>${fmtDate(it.date)}</td>
+        <td><span class="badge ${alertClass(it.alert)}">${it.alert}</span></td>
+        <td style="color:${scoreColor(it.score)};font-weight:600">${it.score}</td>
+        <td style="color:var(--muted);font-size:12px">${it.change || '—'}</td>
+      </tr>`).join('');
+  } catch {}
+}
+
+// ─── EXPERT SIGNALS (Twitter fallbacks) ───────────────────────────────────────
+function renderSignals() {
+  // Twitter/X embeds are widely blocked by CSP and X's current policy.
+  // We render informational cards with direct links instead.
+  const economists = [
+    { id: 'sahm',     handle: 'claudiasahm', name: 'Claudia Sahm' },
+    { id: 'elerian',  handle: 'elerianm',    name: 'Mohamed El-Erian' },
+    { id: 'roubini',  handle: 'nouriel',     name: 'Nouriel Roubini' },
+    { id: 'timiraos', handle: 'NickTimiraos', name: 'Nick Timiraos' }
+  ];
+  economists.forEach(({ id, handle, name }) => {
+    const el = document.getElementById(`embed-${id}`);
+    if (!el) return;
+    el.innerHTML = `
+      <div style="padding:28px 24px;text-align:center">
+        <div style="font-size:32px;margin-bottom:12px">𝕏</div>
+        <div style="color:var(--text);font-size:14px;font-weight:600;margin-bottom:6px">${name}</div>
+        <div style="color:var(--muted);font-size:12px;margin-bottom:18px">@${handle}</div>
+        <a href="https://twitter.com/${handle}" target="_blank" rel="noopener"
+           style="display:inline-block;padding:8px 20px;background:var(--accent);color:#fff;border-radius:6px;font-size:13px;text-decoration:none;font-weight:600">
+          View on X / Twitter →
+        </a>
+        <div style="margin-top:16px;color:var(--muted);font-size:11px">
+          Embedded timelines are blocked by X's current policy. Click above to view live.
+        </div>
+      </div>`;
+  });
+}
+
+// ─── THEME TOGGLE ─────────────────────────────────────────────────────────────
+(function initTheme() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
+})();
+
+document.getElementById('themeToggle')?.addEventListener('click', () => {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = next === 'light' ? '🌙' : '☀️';
+});
+
+// ─── PERMALINK COPY ───────────────────────────────────────────────────────────
+document.getElementById('permalinkBtn')?.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(location.href);
+    const btn = document.getElementById('permalinkBtn');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  } catch {
+    prompt('Copy this URL:', location.href);
+  }
+});
+
+// ─── PRINT BUTTON ─────────────────────────────────────────────────────────────
+document.getElementById('printBtn')?.addEventListener('click', () => window.print());
 
 // ─── AI NARRATIVE ─────────────────────────────────────────────────────────────
 let lastNarrativeAt = null;
@@ -1947,6 +2876,56 @@ const initialTab = new URLSearchParams(location.hash.slice(1)).get('tab') || 'li
 setTab(initialTab);
 await refresh({ initial: true });
 startPolling();
+
+// ─── SUBSCRIBE FORM ───────────────────────────────────────────────────────────
+(function initSubscribeForm() {
+  const form = document.getElementById('subscribeForm');
+  if (!form) return;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('subEmail').value.trim();
+    const phone = document.getElementById('subPhone').value.trim();
+    const btn   = document.getElementById('subBtn');
+    const status = document.getElementById('subStatus');
+
+    // Check if Supabase endpoint is configured
+    const endpoint = window.SUPABASE_SUBSCRIBE_URL;
+    if (!endpoint) {
+      status.textContent = 'ℹ Subscribe endpoint not configured — use the RSS feed above.';
+      status.style.color = 'var(--yellow)';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Subscribing…';
+    status.textContent = '';
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, phone: phone || null })
+      });
+      if (res.ok) {
+        status.textContent = '✓ Subscribed! Check your email to confirm.';
+        status.style.color = 'var(--green)';
+        form.reset();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+    } catch (err) {
+      status.textContent = `✗ ${err.message}`;
+      status.style.color = 'var(--red)';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Subscribe →';
+    }
+  });
+})();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>

@@ -1,22 +1,17 @@
 // Generate docs/feed.xml from history.json.
-// Emits one RSS item per monthly history entry, with the alert state and
-// composite score in the title. Only items whose alert differs from the
-// prior month are included — this is a "state change" feed, not a noisy
-// daily stream.
+// Also writes docs/data/alert-log.json with the full state-change history.
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 const FEED_PATH = path.join(process.cwd(), 'docs', 'feed.xml');
-const SITE_URL = 'https://devante88.github.io/recession-tracker';
+const SITE_URL  = 'https://devante88.github.io/recession-tracker';
 
 function escapeXml(s) {
   return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function describeChange(prev, curr) {
@@ -34,9 +29,8 @@ async function main() {
     process.exit(1);
   }
 
-  // Build state-change items
   const sorted = [...history].sort((a, b) => a.date.localeCompare(b.date));
-  const items = [];
+  const items  = [];
   for (let i = 0; i < sorted.length; i++) {
     const curr = sorted[i];
     const prev = i > 0 ? sorted[i - 1] : null;
@@ -45,10 +39,20 @@ async function main() {
     }
   }
 
-  // Newest first, limit to last 30 state changes
   const ordered = items.reverse().slice(0, 30);
 
-  const now = new Date().toUTCString();
+  // Write alert-log.json for the dashboard alert history section
+  const alertLog = ordered.map(it => ({
+    date:   it.date,
+    alert:  it.alert,
+    score:  it.composite,
+    change: it.change
+  }));
+  await fs.writeFile(path.join(DATA_DIR, 'alert-log.json'), JSON.stringify(alertLog, null, 2));
+  console.log(`alert-log.json written with ${alertLog.length} entries`);
+
+  // Write RSS feed
+  const now      = new Date().toUTCString();
   const rssItems = ordered.map(it => `
     <item>
       <title>${escapeXml(`${it.alert} — composite ${it.composite} (as of ${it.date})`)}</title>

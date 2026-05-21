@@ -51,13 +51,15 @@ jobs:
       - name: Send webhook alert on state change
         env:
           ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+          SUPABASE_NOTIFY_URL: ${{ secrets.SUPABASE_NOTIFY_URL }}
+          NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
         run: node scripts/alert.mjs
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/ docs/feed.xml
+          git add docs/data/ docs/feed.xml docs/data/alert-log.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
