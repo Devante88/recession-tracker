@@ -2659,7 +2659,7 @@ async function refresh({ initial = false } = {}) {
     renderCycleContext();
     renderBigFour(current);
     loadAlertLog(bust);
-    if (marketsRendered) updateMarketSignals();
+    if (marketsRendered) { updateMarketSignals(); renderYieldCurve(current); }
     loadNarrative(bust);
     if (!weightEditorInited) { initWeightEditor(current); weightEditorInited = true; }
     else updateWeightedComposite();
