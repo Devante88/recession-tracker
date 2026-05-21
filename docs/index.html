@@ -501,6 +501,11 @@
       <div class="stat-value" id="weiValue">—</div>
       <div class="stat-sub">NY Fed Weekly Economic Index (GDP-scaled)</div>
     </div>
+    <div class="stat-card">
+      <div class="stat-label">Economic Surprise</div>
+      <div class="stat-value" id="surpriseValue">—</div>
+      <div class="stat-sub">% of indicators improving vs. 3mo ago</div>
+    </div>
   </section>
 
   <!-- DIFFUSION INDEX PANEL -->
@@ -837,6 +842,26 @@
           <tr><td>Open source &amp; free</td><td class="chk">✓</td><td class="dash">$24K+/yr</td><td class="dash">Account req'd</td></tr>
         </tbody>
       </table>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header"><h2>Fed Rate Probabilities</h2></div>
+      <p class="panel-sub">CME FedWatch implied probabilities for the next FOMC meeting — the market's best real-time read on monetary policy direction.</p>
+      <div style="background:var(--panel-2);border-radius:8px;padding:24px;text-align:center">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:16px">
+          Embedded FedWatch requires a direct visit. Click below to view live probabilities.
+        </div>
+        <a href="https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html"
+           target="_blank" rel="noopener"
+           style="display:inline-block;padding:10px 24px;background:var(--accent);color:#fff;border-radius:6px;font-size:14px;font-weight:600;text-decoration:none">
+          Open CME FedWatch →
+        </a>
+        <div style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center" id="fedwatchCards">
+          <div class="stat-card"><div class="stat-label">Current Rate</div><div class="stat-value" id="ffRate">—</div><div class="stat-sub">Fed Funds target</div></div>
+          <div class="stat-card"><div class="stat-label">Next Meeting</div><div class="stat-value" id="ffNext">FOMC</div><div class="stat-sub">Rate decision pending</div></div>
+          <div class="stat-card"><div class="stat-label">Market Implied</div><div class="stat-value" id="ffImplied">—</div><div class="stat-sub">From FEDFUNDS indicator</div></div>
+        </div>
+      </div>
     </section>
 
   </div><!-- /tab-markets -->
@@ -1758,6 +1783,24 @@ function renderWEI(snap) {
   el.style.color = v < 0 ? 'var(--red)' : v < 1 ? 'var(--yellow)' : 'var(--green)';
 }
 
+// ─── ECONOMIC SURPRISE SCORE ─────────────────────────────────────────────────
+function renderSurprise(snap) {
+  const el = document.getElementById('surpriseValue');
+  if (!el) return;
+  const inds = (snap.indicators || []).filter(x => x.latest_value !== null && x.history && x.history.length >= 3);
+  if (!inds.length) { el.textContent = '—'; return; }
+  const improving = inds.filter(ind => {
+    const hist = ind.history;
+    const recent = hist[hist.length - 1]?.value;
+    const prior  = hist[hist.length - 4]?.value;  // ~3 months ago
+    if (recent == null || prior == null) return false;
+    return ind.direction === 'direct' ? recent > prior : recent < prior;
+  });
+  const pct = Math.round((improving.length / inds.length) * 100);
+  el.textContent = `${pct}%`;
+  el.style.color = pct >= 60 ? 'var(--green)' : pct >= 40 ? 'var(--yellow)' : 'var(--red)';
+}
+
 // ─── INTERACTIVE WEIGHT EDITOR ────────────────────────────────────────────────
 const CANONICAL_WEIGHTS = {
   financial_lead: 0.27,
@@ -2099,6 +2142,12 @@ async function refresh({ initial = false } = {}) {
     renderFactorChart(current);
     renderDiffusion(current);
     renderWEI(current);
+    renderSurprise(current);
+    const ff = (current.indicators || []).find(x => x.fred_id === 'FEDFUNDS');
+    const ffEl = document.getElementById('ffRate');
+    const ffImpEl = document.getElementById('ffImplied');
+    if (ff && ffEl) ffEl.textContent = ff.latest_value != null ? `${ff.latest_value.toFixed(2)}%` : '—';
+    if (ff && ffImpEl) ffImpEl.textContent = ff.latest_value != null ? `${(ff.latest_value - 0.25).toFixed(2)}–${ff.latest_value.toFixed(2)}%` : '—';
     renderCycleContext();
     loadAlertLog(bust);
     if (marketsRendered) updateMarketSignals();
