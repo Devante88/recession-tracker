@@ -82,6 +82,11 @@ const SEED = {
   NMFCI:     { latest: 51.4,    mean: 54.2,   std: 3.5   },  // ISM Services, above 50
   PPIACO:    { latest: 272.4,   mean: 258.0,  std: 18.5  },  // PPI elevated
 
+  // ── New Part A indicators ────────────────────────────────────────────────────
+  M2SL:    { latest: 21800, mean: 20500, std: 1200 },
+  CIVPART: { latest: 62.7,  mean: 62.2,  std: 0.6  },
+  TCU:     { latest: 77.8,  mean: 78.5,  std: 1.4  },
+
   // ── Global / International ──────────────────────────────────────────────────
   // OECD CLI: below 100 = below trend; threshold=100
   OECDLOLITOAASTSAM: { latest:  99.6,  mean: 100.1, std: 0.7  },
