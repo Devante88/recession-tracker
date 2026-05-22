@@ -7,6 +7,7 @@ import path from 'node:path';
 import { REGISTRY } from '../src/registry.mjs';
 import { fetchAllSeries } from '../src/fred.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
+import { buildFreshnessReport } from '../src/freshness.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -82,6 +83,28 @@ async function main() {
     }
   }
   await fs.writeFile(path.join(DATA_DIR, 'alert-log.json'), JSON.stringify(alertLog.reverse(), null, 2));
+
+  // Freshness guard: detect series that have silently stopped updating (the
+  // discontinued/restructured FRED failure mode). Write a health report and
+  // abort if a meaningful share of series are stale so a degraded composite
+  // never ships unnoticed.
+  const freshness = buildFreshnessReport(REGISTRY, rawData, new Date());
+  freshness.fetch = { succeeded: successCount, failed: failureCount };
+  await fs.writeFile(path.join(DATA_DIR, 'meta.json'), JSON.stringify(freshness, null, 2));
+
+  if (freshness.stale_count || freshness.missing_count) {
+    console.warn(`\n⚠ Freshness: ${freshness.stale_count} stale, ${freshness.missing_count} missing of ${freshness.total}`);
+    for (const s of freshness.stale)   console.warn(`  STALE   ${s.fred_id} — last ${s.latest_date} (${s.days}d > ${s.sla}d SLA)`);
+    for (const id of freshness.missing) console.warn(`  MISSING ${id} — no observations returned`);
+  } else {
+    console.log(`\n✓ Freshness: all ${freshness.total} series within SLA`);
+  }
+
+  const degraded = freshness.stale_count + freshness.missing_count;
+  if (degraded / freshness.total > 0.15) {
+    console.error(`Too many stale/missing series (${degraded}/${freshness.total} > 15%) — aborting before publish.`);
+    process.exit(1);
+  }
 
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert}) — Rating: ${snapshot.composite.rating}/10`);
   console.log(`Ensemble:  ${snapshot.composite.ensemble_score}`);

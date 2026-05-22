@@ -7,6 +7,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { REGISTRY } from '../src/registry.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
+import { buildFreshnessReport } from '../src/freshness.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -204,6 +205,11 @@ async function main() {
     }
   }
   await fs.writeFile(path.join(DATA_DIR, 'alert-log.json'), JSON.stringify(alertLog.reverse(), null, 2));
+
+  // Freshness report (mirrors production fetch.mjs) — dates are seeded by cadence
+  const freshness = buildFreshnessReport(REGISTRY, rawData, new Date('2026-05-19'));
+  freshness.fetch = { succeeded: REGISTRY.length, failed: 0 };
+  await fs.writeFile(path.join(DATA_DIR, 'meta.json'), JSON.stringify(freshness, null, 2));
 
   // Print summary
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert})\n`);
