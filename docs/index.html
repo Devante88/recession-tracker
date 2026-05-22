@@ -3459,6 +3459,27 @@ async function renderOOS() {
         ${row('YELLOW · test (held out)', o.yellow.test)}
       </tbody>
     </table>`;
+
+  // Layer-weight study: does tuning the composite weights beat the doctrinal
+  // weighting on held-out recessions, or would it overfit?
+  let w;
+  try { w = await fetch(`data/weights.json?t=${Date.now()}`).then(r => r.ok ? r.json() : null); } catch { w = null; }
+  if (w && w.valid) {
+    const VERDICT = {
+      'tuning-helps-out-of-sample': ['Tuning generalizes', 'var(--green)'],
+      'tuning-overfits-keep-doctrinal': ['Tuning overfits — doctrinal weights kept', 'var(--yellow)'],
+      'no-material-difference-doctrinal-is-fine': ['No material difference — doctrinal weights are fine', 'var(--muted)'],
+      unknown: ['Inconclusive', 'var(--muted)']
+    };
+    const [label, color] = VERDICT[w.verdict] || VERDICT.unknown;
+    document.getElementById('oosDetail').innerHTML += `
+      <p style="font-size:12px;color:var(--muted);line-height:1.7;margin-top:14px">
+        <strong>Layer-weight check:</strong> optimizing the six composite weights on the train window gives a
+        held-out test AUC of <strong>${w.optimized.test_auc}</strong> vs the doctrinal <strong>${w.doctrinal.test_auc}</strong>
+        (gain ${w.test_auc_gain}). Verdict: <span style="color:${color};font-weight:600">${label}</span>.
+        The published model keeps the doctrinal weights — this is an honesty check, not an auto-tuner.
+      </p>`;
+  }
 }
 
 // ─── MODEL VALIDATION VS NBER ─────────────────────────────────────────────────

@@ -5,11 +5,12 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { REGISTRY } from '../src/registry.mjs';
+import { REGISTRY, LAYER_WEIGHTS } from '../src/registry.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
 import { buildFreshnessReport } from '../src/freshness.mjs';
 import { evaluateBacktest } from '../src/backtest-eval.mjs';
 import { outOfSampleStudy } from '../src/oos-research.mjs';
+import { weightStudy } from '../src/weight-opt.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -213,6 +214,7 @@ async function main() {
   // Out-of-sample study (degenerate on synthetic seed; production replays 30 years).
   const oos = outOfSampleStudy(backtest);
   await fs.writeFile(path.join(DATA_DIR, 'oos.json'), JSON.stringify(oos, null, 2));
+  await fs.writeFile(path.join(DATA_DIR, 'weights.json'), JSON.stringify(weightStudy(backtest, { base: LAYER_WEIGHTS }), null, 2));
 
   // Alert log: state transitions from history, newest first
   const alertLog = [];

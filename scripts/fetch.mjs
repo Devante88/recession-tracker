@@ -10,6 +10,8 @@ import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../sr
 import { buildFreshnessReport } from '../src/freshness.mjs';
 import { evaluateBacktest } from '../src/backtest-eval.mjs';
 import { outOfSampleStudy } from '../src/oos-research.mjs';
+import { weightStudy } from '../src/weight-opt.mjs';
+import { LAYER_WEIGHTS } from '../src/registry.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -102,6 +104,14 @@ async function main() {
     console.log(`OOS AUC: train ${oos.auc.train} → test ${oos.auc.test}  |  RED cutoff ${oos.red.train.cutoff}: J ${oos.red.train.youden_j} → ${oos.red.test.youden_j} (gap ${oos.red.generalization_gap})`);
   } else {
     console.log(`OOS study skipped: ${oos.reason}`);
+  }
+
+  // Out-of-sample layer-weight study: does tuning the composite weights on the
+  // train window beat the doctrinal weights on held-out recessions?
+  const weights = weightStudy(backtest, { base: LAYER_WEIGHTS });
+  await fs.writeFile(path.join(DATA_DIR, 'weights.json'), JSON.stringify(weights, null, 2));
+  if (weights.valid) {
+    console.log(`Weight study: doctrinal test AUC ${weights.doctrinal.test_auc} vs optimized ${weights.optimized.test_auc} (gain ${weights.test_auc_gain}) — ${weights.verdict}`);
   }
 
   // Alert log: state transitions from full history, newest first
