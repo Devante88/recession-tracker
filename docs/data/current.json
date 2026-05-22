@@ -1,6 +1,6 @@
 {
   "as_of": "2026-05-19",
-  "generated_at": "2026-05-22T21:47:49.524Z",
+  "generated_at": "2026-05-22T21:50:56.680Z",
   "composite": {
     "score": 29.3,
     "alert": "GREEN",
@@ -10,6 +10,38 @@
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.58,
     "ensemble_score": 29
+  },
+  "geopolitical": {
+    "score": 7.5,
+    "flag": "CALM",
+    "channels": [
+      {
+        "fred_id": "VIXCLS",
+        "name": "Equity volatility (VIX)",
+        "value": 16.8,
+        "display": "16.8",
+        "sub_score": 0,
+        "firing": false
+      },
+      {
+        "fred_id": "BAMLH0A0HYM2",
+        "name": "Credit risk (HY spread)",
+        "value": 3.45,
+        "display": "3.45%",
+        "sub_score": 0,
+        "firing": false
+      },
+      {
+        "fred_id": "DTWEXBGS",
+        "name": "Safe-haven USD",
+        "value": 117,
+        "display": "117.0",
+        "sub_score": 37.5,
+        "firing": false
+      }
+    ],
+    "firing": [],
+    "note": "Market-transmitted proxy (VIX + credit + safe-haven USD), not the news-based GPR index. Separate from the recession composite."
   },
   "factor_contributions": [
     {

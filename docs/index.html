@@ -527,6 +527,17 @@
     <div id="probGauge" style="display:flex;justify-content:center;margin-top:8px"></div>
   </section>
 
+  <!-- GEOPOLITICAL STRESS FLAGGER -->
+  <section class="panel" id="geoPanel" style="display:none">
+    <div class="panel-header">
+      <h2>Geopolitical Stress Flag</h2>
+      <span id="geoFlag" class="badge">—</span>
+    </div>
+    <p class="panel-sub">Event-risk stress read through the financial channels geopolitical shocks transmit through — equity volatility, credit risk, and safe-haven dollar flows. A market-transmitted proxy, not the news-based GPR index. Deliberately separate from the recession composite.</p>
+    <div id="geoChannels" style="display:flex;flex-direction:column;gap:10px;margin-top:8px"></div>
+    <p id="geoSummary" style="font-size:12px;color:var(--muted);margin-top:12px"></p>
+  </section>
+
   <!-- DIFFUSION INDEX PANEL -->
   <section class="panel" id="diffusionPanel">
     <div class="panel-header"><h2>Signal Breadth</h2></div>
@@ -2135,6 +2146,41 @@ function renderMovers(snap) {
 // ─── RECESSION PROBABILITY GAUGE ─────────────────────────────────────────────
 // Semicircular dial (0–100%) with a needle at the 12-month probit probability
 // and a marker at the ~30% historical warning threshold.
+// ─── GEOPOLITICAL STRESS FLAGGER ──────────────────────────────────────────────
+function renderGeopolitical(snap) {
+  const panel = document.getElementById('geoPanel');
+  if (!panel) return;
+  const g = snap?.geopolitical;
+  if (!g || !g.channels?.length) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+
+  const FLAG_COLOR = { CALM: 'var(--green)', ELEVATED: 'var(--yellow)', ACUTE: 'var(--red)' };
+  const FLAG_CLASS = { CALM: 'badge-green', ELEVATED: 'badge-yellow', ACUTE: 'badge-red' };
+  const color = FLAG_COLOR[g.flag] || 'var(--muted)';
+
+  const flagEl = document.getElementById('geoFlag');
+  flagEl.textContent = `${g.flag} · ${g.score}/100`;
+  flagEl.className = `badge ${FLAG_CLASS[g.flag] || ''}`;
+
+  document.getElementById('geoChannels').innerHTML = g.channels.map(c => {
+    const w = Math.max(2, Math.min(100, c.sub_score));
+    const cColor = c.sub_score >= 50 ? 'var(--red)' : c.sub_score >= 25 ? 'var(--yellow)' : 'var(--green)';
+    return `
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="flex:0 0 180px;font-size:13px;color:var(--text)">${c.name}${c.firing ? ' <span style="color:var(--red)">●</span>' : ''}</div>
+        <div style="flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
+          <div style="width:${w}%;height:100%;background:${cColor}"></div>
+        </div>
+        <div style="flex:0 0 88px;text-align:right;font-size:12px;color:var(--muted)">${c.display} · ${Math.round(c.sub_score)}</div>
+      </div>`;
+  }).join('');
+
+  const summary = g.firing.length
+    ? `Firing now: ${g.firing.join(', ')}. ${g.note}`
+    : `No channels firing — markets are not pricing acute event risk. ${g.note}`;
+  document.getElementById('geoSummary').textContent = summary;
+}
+
 function renderProbGauge(snap) {
   const el = document.getElementById('probGauge');
   if (!el) return;
@@ -2673,6 +2719,7 @@ async function refresh({ initial = false } = {}) {
     renderRegime(history);
     renderMovers(current);
     renderProbGauge(current);
+    renderGeopolitical(current);
     renderChangePanel(current, previous);
     renderWEI(current);
     renderSurprise(current);

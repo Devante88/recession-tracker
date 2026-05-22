@@ -7,6 +7,7 @@
 //   composite → alertState → GREEN | YELLOW | RED
 
 import { LAYER_WEIGHTS } from './registry.mjs';
+import { computeGeopoliticalFlag } from './geopolitical.mjs';
 
 /**
  * Logistic squashing function. Maps real line → [0, 1].
@@ -266,6 +267,7 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       yield_curve_spread:         ycSpread,
       ensemble_score:             ensembleScore
     },
+    geopolitical: computeGeopoliticalFlag(normalizedIndicators),
     factor_contributions: factorContributions,
     layers: Object.fromEntries(
       Object.entries(layerScores).map(([layer, score]) => [
