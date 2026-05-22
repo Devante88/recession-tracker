@@ -71,6 +71,18 @@ async function main() {
   const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 360, windowMonths: 60 });
   await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
 
+  // Alert log: state transitions from full history, newest first
+  const allHistory = [...history].sort((a, b) => a.date.localeCompare(b.date));
+  const alertLog = [];
+  let prevAlert = null;
+  for (const snap of allHistory) {
+    if (snap.alert !== prevAlert) {
+      if (prevAlert !== null) alertLog.push({ date: snap.date, alert: snap.alert, score: snap.composite, change: `${prevAlert} → ${snap.alert}` });
+      prevAlert = snap.alert;
+    }
+  }
+  await fs.writeFile(path.join(DATA_DIR, 'alert-log.json'), JSON.stringify(alertLog.reverse(), null, 2));
+
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert}) — Rating: ${snapshot.composite.rating}/10`);
   console.log(`Ensemble:  ${snapshot.composite.ensemble_score}`);
   console.log(`Layers:`, Object.fromEntries(Object.entries(snapshot.layers).map(([k, v]) => [k, v.score])));

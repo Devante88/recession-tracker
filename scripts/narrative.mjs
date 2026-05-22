@@ -44,13 +44,13 @@ Healthy GREEN:   ${greenNames.join(', ') || 'none'}
 
   const userPrompt = `You are a senior macroeconomist writing the daily recession risk briefing for a live economic dashboard. Write exactly 3 short paragraphs — no headers, no bullet points, no markdown:
 
-Paragraph 1 — Overall posture: Interpret the composite score and alert state in plain English. Is recession risk rising, falling, or stable? Put the number in context.
+Paragraph 1 — Overall posture: Interpret the composite score and alert state in plain English. Is recession risk rising, falling, or stable? Anchor to the score number and the 12-month recession probability.
 
-Paragraph 2 — Key drivers: Name the top 2–3 indicators driving the current reading and explain in plain English what each signals economically.
+Paragraph 2 — Key drivers: Name the top 2–3 indicators from the RED/YELLOW list that are driving the current reading. Explain in plain English what each signals about the economy right now.
 
-Paragraph 3 — What to watch: Identify 1–2 specific data points or events that would change the current assessment (higher OR lower risk). Be concrete.
+Paragraph 3 — What to watch: Identify 2 specific upcoming data releases or market events that would materially shift the assessment higher or lower. Name the exact series and the directional trigger.
 
-Rules: Under 180 words total. Direct, jargon-free, no hedging about being an AI. Present tense.
+Rules: Under 200 words total. Direct, jargon-free, no hedging about being an AI. Present tense. Be specific — name exact indicator levels, not vague trends.
 
 Data:
 ${dataContext}`;
@@ -63,8 +63,8 @@ ${dataContext}`;
       'content-type': 'application/json'
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 400,
+      model: 'claude-sonnet-4-6',
+      max_tokens: 600,
       messages: [{ role: 'user', content: userPrompt }]
     })
   });

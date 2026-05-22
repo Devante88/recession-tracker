@@ -217,8 +217,13 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
   const sahmVal  = sahm?.latest?.value ?? null;
   const sahmProb = sahmVal !== null ? Math.min(1, Math.max(0, sahmVal / 0.5)) : null;
 
-  // 3-model ensemble: composite (0-1) + probit + Sahm proxy
-  const ensembleInputs = [compositeScore / 100, recessionProb, sahmProb].filter(x => x != null);
+  // Credit spread probability proxy: BAA-10Y spread 1.5% → 0%, 4.5% → 100%
+  const baa      = normalizedIndicators.find(x => x.fred_id === 'BAA10YM');
+  const baaVal   = baa?.latest?.value ?? null;
+  const creditProb = baaVal !== null ? Math.min(1, Math.max(0, (baaVal - 1.5) / 3.0)) : null;
+
+  // 4-model ensemble: composite (0-1) + Estrella-Mishkin probit + Sahm proxy + credit spread proxy
+  const ensembleInputs = [compositeScore / 100, recessionProb, sahmProb, creditProb].filter(x => x != null);
   const ensembleScore  = ensembleInputs.length
     ? Number(((ensembleInputs.reduce((a, b) => a + b, 0) / ensembleInputs.length) * 100).toFixed(1))
     : null;

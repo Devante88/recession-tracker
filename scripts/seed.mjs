@@ -85,6 +85,14 @@ const SEED = {
   CIVPART: { latest: 62.7,  mean: 62.2,  std: 0.6  },
   TCU:     { latest: 77.8,  mean: 78.5,  std: 1.4  },
 
+  // ── New indicators (upgrade) ─────────────────────────────────────────────────
+  // St. Louis Financial Stress Index: 0 = average; negative = below-average stress
+  STLFSI3:  { latest: -0.42,  mean:  0.00,  std: 0.85 },
+  // Building permits, SAAR thousands; broad decline leads recessions 2-3 months
+  PERMIT:   { latest:  1443,  mean:  1480,  std: 210  },
+  // Nominal broad trade-weighted dollar index; strong USD = global financial tightening
+  DTWEXBGS: { latest: 117.0,  mean: 110.5,  std: 6.8  },
+
   // ── Global / International ──────────────────────────────────────────────────
   // G7 CLI: below 100 = below trend; threshold=100 (replaces OECDLOLITOAASTSAM, discontinued Nov 2022)
   G7LOLITOAASTSAM:   { latest:  99.7,  mean: 100.1, std: 0.7  },
@@ -92,8 +100,8 @@ const SEED = {
   EURYLDCRV:         { latest:   0.72, mean:  0.15, std: 1.05 },
   // Euro area harmonized unemployment; z-score
   LRHUTTTTEZM156S:   { latest:   6.5,  mean:  7.1,  std: 0.8  },
-  // Euro area real GDP index; z-score
-  CLVMNACSCAB1GQEA:  { latest: 2886191, mean: 2750000, std: 95000 }, // ECB real GDP, chained 2010 EUR millions
+  // Euro area real GDP, chained 2010 EUR millions (ECB/Eurostat, replaces frozen NAEXKP01EZQ661S)
+  CLVMNACSCAB1GQEA:  { latest: 2886191, mean: 2750000, std: 95000 },
 };
 
 /**
@@ -183,6 +191,19 @@ async function main() {
   // In production, fetch.mjs writes 30 years here.
   const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 36, windowMonths: 24 });
   await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
+
+  // Alert log: state transitions from history, newest first
+  const alertLog = [];
+  let prevAlert = null;
+  for (const snap of [...history].sort((a, b) => a.date.localeCompare(b.date))) {
+    if (snap.alert !== prevAlert) {
+      if (prevAlert !== null) {
+        alertLog.push({ date: snap.date, alert: snap.alert, score: snap.composite, change: `${prevAlert} → ${snap.alert}` });
+      }
+      prevAlert = snap.alert;
+    }
+  }
+  await fs.writeFile(path.join(DATA_DIR, 'alert-log.json'), JSON.stringify(alertLog.reverse(), null, 2));
 
   // Print summary
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert})\n`);

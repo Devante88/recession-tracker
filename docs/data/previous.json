@@ -1,15 +1,15 @@
 {
   "as_of": "2026-04-19",
-  "generated_at": "2026-05-22T15:53:30.472Z",
+  "generated_at": "2026-05-22T19:08:06.591Z",
   "composite": {
-    "score": 48.2,
+    "score": 49,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
     "recession_probability_12mo": 0.271,
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.4535,
-    "ensemble_score": 25.3
+    "ensemble_score": 31.6
   },
   "factor_contributions": [
     {
@@ -17,7 +17,7 @@
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
       "score": 9.8,
-      "contrib": -2.535
+      "contrib": -2.357
     },
     {
       "name": "Unemployment Rate",
@@ -48,20 +48,6 @@
       "contrib": 1.302
     },
     {
-      "name": "Euro Area Unemployment",
-      "fred_id": "LRHUTTTTEZM156S",
-      "layer": "global",
-      "score": 99.7,
-      "contrib": 1.244
-    },
-    {
-      "name": "Euro Area Yield Curve",
-      "fred_id": "EURYLDCRV",
-      "layer": "global",
-      "score": 4.3,
-      "contrib": -1.142
-    },
-    {
       "name": "Payroll Employment",
       "fred_id": "PAYEMS",
       "layer": "labor",
@@ -69,23 +55,37 @@
       "contrib": 1.131
     },
     {
+      "name": "Euro Area Unemployment",
+      "fred_id": "LRHUTTTTEZM156S",
+      "layer": "global",
+      "score": 99.7,
+      "contrib": 1.057
+    },
+    {
       "name": "Industrial Production",
       "fred_id": "INDPRO",
       "layer": "real_economy",
       "score": 99.7,
-      "contrib": 1.096
+      "contrib": 0.997
+    },
+    {
+      "name": "UMich Consumer Sentiment",
+      "fred_id": "UMCSENT",
+      "layer": "labor",
+      "score": 8.1,
+      "contrib": -0.996
     },
     {
       "name": "Real Income ex Transfers",
       "fred_id": "W875RX1",
       "layer": "real_economy",
       "score": 0.3,
-      "contrib": -1.094
+      "contrib": -0.996
     }
   ],
   "layers": {
     "financial_lead": {
-      "score": 35.2,
+      "score": 32.7,
       "alert": "YELLOW",
       "weight": 0.27
     },
@@ -100,7 +100,7 @@
       "weight": 0.14
     },
     "real_economy": {
-      "score": 62.6,
+      "score": 65.9,
       "alert": "RED",
       "weight": 0.18
     },
@@ -110,7 +110,7 @@
       "weight": 0.09
     },
     "global": {
-      "score": 44.4,
+      "score": 52.7,
       "alert": "YELLOW",
       "weight": 0.1
     }
@@ -121,8 +121,8 @@
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
       "category": "macro",
-      "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession.",
-      "weight": 0.2336,
+      "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
+      "weight": 0.2172,
       "latest_value": 0.4535,
       "latest_date": "2026-04-01",
       "score": 9.8,
@@ -241,7 +241,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
-      "weight": 0.1169,
+      "weight": 0.1087,
       "latest_value": -0.3506,
       "latest_date": "2026-04-01",
       "score": 68.6,
@@ -360,7 +360,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Corporate spread as a credit-stress proxy. Threshold calibrated to widening regimes.",
-      "weight": 0.1559,
+      "weight": 0.145,
       "latest_value": 2.9863,
       "latest_date": "2026-04-01",
       "score": 59.2,
@@ -479,7 +479,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Broad financial conditions index. Positive = tighter than average.",
-      "weight": 0.1169,
+      "weight": 0.1087,
       "latest_value": 0.335,
       "latest_date": "2026-04-01",
       "score": 36,
@@ -598,7 +598,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
-      "weight": 0.078,
+      "weight": 0.0725,
       "latest_value": 27.2941,
       "latest_date": "2026-04-01",
       "score": 71.2,
@@ -717,7 +717,7 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
-      "weight": 0.078,
+      "weight": 0.0725,
       "latest_value": 4.1497,
       "latest_date": "2026-04-01",
       "score": 41.9,
@@ -835,8 +835,8 @@
       "fred_id": "T10YIE",
       "layer": "financial_lead",
       "category": "macro",
-      "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears",
-      "weight": 0.0758,
+      "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
+      "weight": 0.0705,
       "latest_value": 2.3085,
       "latest_date": "2026-04-01",
       "score": 13.7,
@@ -954,8 +954,8 @@
       "fred_id": "WALCL",
       "layer": "financial_lead",
       "category": "macro",
-      "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions",
-      "weight": 0.0758,
+      "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions.",
+      "weight": 0.0705,
       "latest_value": 7579054.1006,
       "latest_date": "2026-04-01",
       "score": 18.8,
@@ -1073,8 +1073,8 @@
       "fred_id": "M2SL",
       "layer": "financial_lead",
       "category": "macro",
-      "description": "M2 money supply growth; sharp deceleration signals tightening liquidity and recession risk",
-      "weight": 0.0691,
+      "description": "M2 money supply; sharp deceleration signals tightening liquidity and recession risk.",
+      "weight": 0.0643,
       "latest_value": 21630.725,
       "latest_date": "2026-04-01",
       "score": 1.6,
@@ -1184,6 +1184,125 @@
         {
           "date": "2026-04-01",
           "value": 21630.725
+        }
+      ]
+    },
+    {
+      "name": "St. Louis Financial Stress",
+      "fred_id": "STLFSI3",
+      "layer": "financial_lead",
+      "category": "macro",
+      "description": "St. Louis Fed Financial Stress Index. Zero = average; above zero = above-average stress.",
+      "weight": 0.07,
+      "latest_value": -0.9917,
+      "latest_date": "2026-04-01",
+      "score": 0.7,
+      "level_score": 0.9,
+      "momentum_score": 0,
+      "percentile_rank": 15,
+      "anomaly": false,
+      "alert": "GREEN",
+      "threshold": null,
+      "direction": "inverse",
+      "frequency": "weekly",
+      "norm_mean": 0,
+      "norm_std": 0.85,
+      "history": [
+        {
+          "date": "2024-05-01",
+          "value": 0.2609
+        },
+        {
+          "date": "2024-06-01",
+          "value": -1.2313
+        },
+        {
+          "date": "2024-07-01",
+          "value": 1.4394
+        },
+        {
+          "date": "2024-08-01",
+          "value": -0.2775
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1.102
+        },
+        {
+          "date": "2024-10-01",
+          "value": -1.1875
+        },
+        {
+          "date": "2024-11-01",
+          "value": -0.0414
+        },
+        {
+          "date": "2024-12-01",
+          "value": -0.3922
+        },
+        {
+          "date": "2025-01-01",
+          "value": 0.6872
+        },
+        {
+          "date": "2025-02-01",
+          "value": 0.7575
+        },
+        {
+          "date": "2025-03-01",
+          "value": -0.3556
+        },
+        {
+          "date": "2025-04-01",
+          "value": 0.0134
+        },
+        {
+          "date": "2025-05-01",
+          "value": -1.2553
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1.051
+        },
+        {
+          "date": "2025-07-01",
+          "value": -0.3018
+        },
+        {
+          "date": "2025-08-01",
+          "value": 1.4921
+        },
+        {
+          "date": "2025-09-01",
+          "value": -1.1593
+        },
+        {
+          "date": "2025-10-01",
+          "value": 0.2501
+        },
+        {
+          "date": "2025-11-01",
+          "value": -1.0798
+        },
+        {
+          "date": "2025-12-01",
+          "value": 0.91
+        },
+        {
+          "date": "2026-01-01",
+          "value": 0.3611
+        },
+        {
+          "date": "2026-02-01",
+          "value": 0.4215
+        },
+        {
+          "date": "2026-03-01",
+          "value": -0.2392
+        },
+        {
+          "date": "2026-04-01",
+          "value": -0.9917
         }
       ]
     },
@@ -1311,7 +1430,7 @@
       "fred_id": "SAHMREALTIME",
       "layer": "labor",
       "category": "macro",
-      "description": "Confirmatory (not leading): triggers at 0.5 when unemployment 3mo avg rises 0.5pp above its 12mo low.",
+      "description": "Triggers at 0.5 when unemployment 3mo avg rises 0.5pp above its 12mo low. Historically coincident with recession start.",
       "weight": 0.198,
       "latest_value": 0.0028,
       "latest_date": "2026-04-01",
@@ -1787,7 +1906,7 @@
       "fred_id": "UMCSENT",
       "layer": "labor",
       "category": "macro",
-      "description": "University of Michigan Consumer Sentiment Index; forward-looking consumer health",
+      "description": "University of Michigan Consumer Sentiment Index; forward-looking consumer health.",
       "weight": 0.108,
       "latest_value": 78.5286,
       "latest_date": "2026-04-01",
@@ -1906,7 +2025,7 @@
       "fred_id": "CIVPART",
       "layer": "labor",
       "category": "macro",
-      "description": "Civilian labor force participation rate; declining LFPR signals discouraged workers exiting — a recession leading indicator",
+      "description": "Civilian labor force participation rate; declining LFPR signals discouraged workers exiting.",
       "weight": 0.1,
       "latest_value": 62.493,
       "latest_date": "2026-04-01",
@@ -2144,7 +2263,7 @@
       "fred_id": "CPILFESL",
       "layer": "inflation",
       "category": "macro",
-      "description": "Core CPI. Z-score normalized.",
+      "description": "Core CPI (ex food/energy). Z-score normalized.",
       "weight": 0.2,
       "latest_value": 3.9238,
       "latest_date": "2026-04-01",
@@ -2621,7 +2740,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Real output. Z-score on QoQ change.",
-      "weight": 0.1512,
+      "weight": 0.1376,
       "latest_value": 22315.9319,
       "latest_date": "2026-04-01",
       "score": 74.4,
@@ -2740,7 +2859,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Goods-sector output. Z-score normalized.",
-      "weight": 0.1224,
+      "weight": 0.1114,
       "latest_value": 98.3574,
       "latest_date": "2026-04-01",
       "score": 99.7,
@@ -2859,7 +2978,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Consumer demand. Z-score normalized.",
-      "weight": 0.1224,
+      "weight": 0.1114,
       "latest_value": 686672.5227,
       "latest_date": "2026-04-01",
       "score": 87.4,
@@ -2978,7 +3097,7 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Earned household income. NBER coincident series.",
-      "weight": 0.1224,
+      "weight": 0.1114,
       "latest_value": 15875.3295,
       "latest_date": "2026-04-01",
       "score": 0.3,
@@ -3097,7 +3216,7 @@
       "layer": "real_economy",
       "category": "micro",
       "description": "Rate-sensitive leading housing signal.",
-      "weight": 0.0936,
+      "weight": 0.0852,
       "latest_value": 1124.0665,
       "latest_date": "2026-04-01",
       "score": 99.9,
@@ -3215,8 +3334,8 @@
       "fred_id": "WEI",
       "layer": "real_economy",
       "category": "macro",
-      "description": "NY Fed Weekly Economic Index scaled to match year-over-year GDP growth; 10 daily/weekly indicators",
-      "weight": 0.108,
+      "description": "NY Fed Weekly Economic Index; 10 daily/weekly indicators scaled to match YoY GDP growth.",
+      "weight": 0.0983,
       "latest_value": 3.8087,
       "latest_date": "2026-04-01",
       "score": 13.3,
@@ -3334,8 +3453,8 @@
       "fred_id": "PSAVERT",
       "layer": "real_economy",
       "category": "macro",
-      "description": "Personal saving as a % of disposable income; higher = more consumer buffer before spending collapses",
-      "weight": 0.09,
+      "description": "Personal saving as % of disposable income; higher = more consumer buffer.",
+      "weight": 0.0819,
       "latest_value": 3.798,
       "latest_date": "2026-04-01",
       "score": 99.4,
@@ -3453,8 +3572,8 @@
       "fred_id": "CSUSHPISA",
       "layer": "real_economy",
       "category": "macro",
-      "description": "S&P/Case-Shiller national home price index; housing wealth effect leads consumer spending by 6-12 months",
-      "weight": 0.09,
+      "description": "S&P/Case-Shiller national home price index; housing wealth leads consumer spending 6–12 months.",
+      "weight": 0.0819,
       "latest_value": 293.0019,
       "latest_date": "2026-04-01",
       "score": 16.9,
@@ -3572,8 +3691,8 @@
       "fred_id": "TCU",
       "layer": "real_economy",
       "category": "macro",
-      "description": "Total industry capacity utilization; falling below 78% signals slowing investment and industrial contraction",
-      "weight": 0.1,
+      "description": "Total industry capacity utilization; below 78% signals slowing investment and industrial contraction.",
+      "weight": 0.091,
       "latest_value": 78.0652,
       "latest_date": "2026-04-01",
       "score": 71.3,
@@ -3687,11 +3806,130 @@
       ]
     },
     {
+      "name": "Building Permits",
+      "fred_id": "PERMIT",
+      "layer": "real_economy",
+      "category": "micro",
+      "description": "New privately-owned housing units authorized. Leads construction by 1–2 months; sharp declines precede recessions.",
+      "weight": 0.09,
+      "latest_value": 1234.762,
+      "latest_date": "2026-04-01",
+      "score": 99.4,
+      "level_score": 99.1,
+      "momentum_score": 100,
+      "percentile_rank": 89,
+      "anomaly": false,
+      "alert": "RED",
+      "threshold": null,
+      "direction": "direct",
+      "frequency": "monthly",
+      "norm_mean": 1480,
+      "norm_std": 210,
+      "history": [
+        {
+          "date": "2024-05-01",
+          "value": 1388.6287
+        },
+        {
+          "date": "2024-06-01",
+          "value": 1394.4735
+        },
+        {
+          "date": "2024-07-01",
+          "value": 1291.1373
+        },
+        {
+          "date": "2024-08-01",
+          "value": 1750.216
+        },
+        {
+          "date": "2024-09-01",
+          "value": 1433.1095
+        },
+        {
+          "date": "2024-10-01",
+          "value": 1752.9045
+        },
+        {
+          "date": "2024-11-01",
+          "value": 1125.8906
+        },
+        {
+          "date": "2024-12-01",
+          "value": 1567.5061
+        },
+        {
+          "date": "2025-01-01",
+          "value": 1246.1855
+        },
+        {
+          "date": "2025-02-01",
+          "value": 1802.4143
+        },
+        {
+          "date": "2025-03-01",
+          "value": 1473.5081
+        },
+        {
+          "date": "2025-04-01",
+          "value": 1572.1438
+        },
+        {
+          "date": "2025-05-01",
+          "value": 1294.2415
+        },
+        {
+          "date": "2025-06-01",
+          "value": 1342.3864
+        },
+        {
+          "date": "2025-07-01",
+          "value": 1585.6417
+        },
+        {
+          "date": "2025-08-01",
+          "value": 1511.3827
+        },
+        {
+          "date": "2025-09-01",
+          "value": 1758.3361
+        },
+        {
+          "date": "2025-10-01",
+          "value": 1220.657
+        },
+        {
+          "date": "2025-11-01",
+          "value": 1551.7376
+        },
+        {
+          "date": "2025-12-01",
+          "value": 1156.0245
+        },
+        {
+          "date": "2026-01-01",
+          "value": 1795.9752
+        },
+        {
+          "date": "2026-02-01",
+          "value": 1423.2066
+        },
+        {
+          "date": "2026-03-01",
+          "value": 1734.7868
+        },
+        {
+          "date": "2026-04-01",
+          "value": 1234.762
+        }
+      ]
+    },
+    {
       "name": "Manufacturers New Orders",
       "fred_id": "NEWORDER",
       "layer": "micro",
       "category": "micro",
-      "description": "Census new orders ex-defense. Goods-sector proxy (not ISM PMI; that's gated).",
+      "description": "Census new orders for nondefense capital goods ex aircraft. Goods-sector demand proxy.",
       "weight": 0.1765,
       "latest_value": 521.242,
       "latest_date": "2026-04-01",
@@ -3810,7 +4048,7 @@
       "fred_id": "DRTSCILM",
       "layer": "micro",
       "category": "micro",
-      "description": "Net % of banks tightening C&I loan standards. Survey.",
+      "description": "Net % of banks tightening C&I loan standards (Senior Loan Officer Survey).",
       "weight": 0.1765,
       "latest_value": 24.7181,
       "latest_date": "2026-04-01",
@@ -3929,7 +4167,7 @@
       "fred_id": "DRCCLACBS",
       "layer": "micro",
       "category": "micro",
-      "description": "Credit card delinquency rate. Household stress.",
+      "description": "Credit card delinquency rate at all commercial banks. Household stress gauge.",
       "weight": 0.1765,
       "latest_value": 3.2532,
       "latest_date": "2026-04-01",
@@ -4048,7 +4286,7 @@
       "fred_id": "NFIBOPTMI",
       "layer": "micro",
       "category": "micro",
-      "description": "NFIB Small Business Optimism Index.",
+      "description": "NFIB Small Business Optimism Index. Below 95 signals broad small-business contraction.",
       "weight": 0.1765,
       "latest_value": 106.4602,
       "latest_date": "2026-04-01",
@@ -4167,7 +4405,7 @@
       "fred_id": "JTSJOL",
       "layer": "micro",
       "category": "micro",
-      "description": "Employer demand. FRED reports in thousands; 5500 = 5.5M openings, recessionary trough range.",
+      "description": "Employer demand (FRED: thousands). 5,500 = 5.5M openings, near recessionary trough.",
       "weight": 0.1765,
       "latest_value": 7714.8732,
       "latest_date": "2026-04-01",
@@ -4286,7 +4524,7 @@
       "fred_id": "PPIACO",
       "layer": "micro",
       "category": "macro",
-      "description": "Producer Price Index for all commodities; rising PPI compresses margins and signals cost-push stress",
+      "description": "Producer Price Index for all commodities; rising PPI compresses margins and signals cost-push stress.",
       "weight": 0.1175,
       "latest_value": 238.8756,
       "latest_date": "2026-04-01",
@@ -4405,8 +4643,8 @@
       "fred_id": "G7LOLITOAASTSAM",
       "layer": "global",
       "category": "macro",
-      "description": "OECD Composite Leading Indicator for the G7. Below 100 signals below-trend global growth. (OECDLOLITOAASTSAM discontinued Nov 2022.)",
-      "weight": 0.3,
+      "description": "OECD Composite Leading Indicator for the G7. Below 100 signals below-trend global growth.",
+      "weight": 0.255,
       "latest_value": 100.0562,
       "latest_date": "2026-04-01",
       "score": 50.1,
@@ -4525,7 +4763,7 @@
       "layer": "global",
       "category": "macro",
       "description": "Derived: Euro area 10Y govt yield minus 3M rate. Inversion = EU recession signal.",
-      "weight": 0.25,
+      "weight": 0.2125,
       "latest_value": 1.1205,
       "latest_date": "2026-04-01",
       "score": 4.3,
@@ -4644,7 +4882,7 @@
       "layer": "global",
       "category": "macro",
       "description": "Euro area harmonized unemployment rate. Z-score normalized.",
-      "weight": 0.25,
+      "weight": 0.2125,
       "latest_value": 8.2204,
       "latest_date": "2026-04-01",
       "score": 99.7,
@@ -4762,8 +5000,8 @@
       "fred_id": "CLVMNACSCAB1GQEA",
       "layer": "global",
       "category": "macro",
-      "description": "Euro area real GDP, chained 2010 EUR, ECB/Eurostat. Z-score normalized. (NAEXKP01EZQ661S frozen Q1 2023.)",
-      "weight": 0.2,
+      "description": "Euro area real GDP, chained 2010 EUR, ECB/Eurostat. Z-score normalized.",
+      "weight": 0.17,
       "latest_value": 2777149.3611,
       "latest_date": "2026-04-01",
       "score": 16.9,
@@ -4873,6 +5111,125 @@
         {
           "date": "2026-04-01",
           "value": 2777149.3611
+        }
+      ]
+    },
+    {
+      "name": "Trade-Weighted USD",
+      "fred_id": "DTWEXBGS",
+      "layer": "global",
+      "category": "macro",
+      "description": "Nominal broad trade-weighted US dollar index. A stronger dollar tightens global financial conditions and pressures EM economies.",
+      "weight": 0.15,
+      "latest_value": 121.3959,
+      "latest_date": "2026-04-01",
+      "score": 99.9,
+      "level_score": 99.8,
+      "momentum_score": 100,
+      "percentile_rank": 94,
+      "anomaly": false,
+      "alert": "RED",
+      "threshold": null,
+      "direction": "inverse",
+      "frequency": "monthly",
+      "norm_mean": 110.5,
+      "norm_std": 6.8,
+      "history": [
+        {
+          "date": "2024-05-01",
+          "value": 107.4902
+        },
+        {
+          "date": "2024-06-01",
+          "value": 113.9404
+        },
+        {
+          "date": "2024-07-01",
+          "value": 101.2849
+        },
+        {
+          "date": "2024-08-01",
+          "value": 109.0049
+        },
+        {
+          "date": "2024-09-01",
+          "value": 112.7537
+        },
+        {
+          "date": "2024-10-01",
+          "value": 113.6798
+        },
+        {
+          "date": "2024-11-01",
+          "value": 116.4956
+        },
+        {
+          "date": "2024-12-01",
+          "value": 101.7623
+        },
+        {
+          "date": "2025-01-01",
+          "value": 111.6291
+        },
+        {
+          "date": "2025-02-01",
+          "value": 101.0911
+        },
+        {
+          "date": "2025-03-01",
+          "value": 122.0728
+        },
+        {
+          "date": "2025-04-01",
+          "value": 107.3977
+        },
+        {
+          "date": "2025-05-01",
+          "value": 118.6194
+        },
+        {
+          "date": "2025-06-01",
+          "value": 99.333
+        },
+        {
+          "date": "2025-07-01",
+          "value": 110.8179
+        },
+        {
+          "date": "2025-08-01",
+          "value": 106.594
+        },
+        {
+          "date": "2025-09-01",
+          "value": 116.962
+        },
+        {
+          "date": "2025-10-01",
+          "value": 114.6433
+        },
+        {
+          "date": "2025-11-01",
+          "value": 107.4574
+        },
+        {
+          "date": "2025-12-01",
+          "value": 108.9412
+        },
+        {
+          "date": "2026-01-01",
+          "value": 101.1496
+        },
+        {
+          "date": "2026-02-01",
+          "value": 118.6123
+        },
+        {
+          "date": "2026-03-01",
+          "value": 108.0505
+        },
+        {
+          "date": "2026-04-01",
+          "value": 121.3959
         }
       ]
     }

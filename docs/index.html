@@ -1693,6 +1693,11 @@ function applyFilters() {
 
     const anomalyHtml = ind.anomaly
       ? '<span class="anomaly-badge" title="Anomalous move: latest change > 1.5σ of historical changes">⚡ Anomaly</span>' : '';
+
+    const ms = ind.momentum_score ?? 50;
+    const momentumArrow = ms >= 57 ? '↑' : ms <= 43 ? '↓' : '→';
+    const momentumColor = ms >= 57 ? 'var(--red)' : ms <= 43 ? 'var(--green)' : 'var(--muted)';
+    const momentumHtml = `<span style="color:${momentumColor};font-size:13px;margin-left:5px;font-weight:700" title="3-month trend (${ms}/100): ${ms >= 57 ? 'worsening' : ms <= 43 ? 'improving' : 'stable'}">${momentumArrow}</span>`;
     const pct = (ind.percentile_rank !== null && ind.percentile_rank !== undefined)
       ? ind.percentile_rank : null;
     const pctileHtml = pct !== null ? `
@@ -1706,7 +1711,7 @@ function applyFilters() {
     tr.style.cursor = 'pointer';
     tr.innerHTML = `
       <td>
-        <div class="ind-name">${ind.name}${anomalyHtml}</div>
+        <div class="ind-name">${ind.name}${momentumHtml}${anomalyHtml}</div>
         ${descHtml}
       </td>
       <td style="color:var(--muted);font-size:12px;white-space:nowrap">${LAYER_NAMES[ind.layer] || ind.layer}</td>
