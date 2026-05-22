@@ -93,7 +93,7 @@ const SEED = {
   // Euro area harmonized unemployment; z-score
   LRHUTTTTEZM156S:   { latest:   6.5,  mean:  7.1,  std: 0.8  },
   // Euro area real GDP index; z-score
-  NAEXKP01EZQ661S:   { latest: 127.4,  mean: 124.8, std: 2.4  },
+  CLVMNACSCAB1GQEA:  { latest: 2886191, mean: 2750000, std: 95000 }, // ECB real GDP, chained 2010 EUR millions
 };
 
 /**

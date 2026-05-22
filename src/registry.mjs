@@ -68,7 +68,7 @@ export const REGISTRY = [
   { name: "G7 Leading Indicator",   fred_id: "G7LOLITOAASTSAM",   layer: "global", frequency: "monthly", direction: "direct", weight: 0.30, threshold: 100.0, category: "macro", description: "OECD Composite Leading Indicator for the G7. Below 100 signals below-trend global growth. (OECDLOLITOAASTSAM discontinued Nov 2022.)" },
   { name: "Euro Area Yield Curve",  fred_id: "EURYLDCRV",         layer: "global", frequency: "monthly", direction: "direct", weight: 0.25, threshold: 0.0,   category: "macro", description: "Derived: Euro area 10Y govt yield minus 3M rate. Inversion = EU recession signal." },
   { name: "Euro Area Unemployment", fred_id: "LRHUTTTTEZM156S",   layer: "global", frequency: "monthly", direction: "inverse", weight: 0.25, threshold: null,  category: "macro", description: "Euro area harmonized unemployment rate. Z-score normalized." },
-  { name: "Euro Area Real GDP",     fred_id: "NAEXKP01EZQ661S",   layer: "global", frequency: "quarterly", direction: "direct", weight: 0.20, threshold: null, category: "macro", description: "Euro area real GDP index. Z-score normalized." }
+  { name: "Euro Area Real GDP",     fred_id: "CLVMNACSCAB1GQEA",  layer: "global", frequency: "quarterly", direction: "direct", weight: 0.20, threshold: null, category: "macro", description: "Euro area real GDP, chained 2010 EUR, ECB/Eurostat. Z-score normalized. (NAEXKP01EZQ661S frozen Q1 2023.)" }
 ];
 
 // Global layer weight = 0.10; existing 5 layers scaled to 0.90 proportionally.
