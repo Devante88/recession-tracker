@@ -11,6 +11,7 @@ import { buildFreshnessReport } from '../src/freshness.mjs';
 import { evaluateBacktest } from '../src/backtest-eval.mjs';
 import { outOfSampleStudy } from '../src/oos-research.mjs';
 import { weightStudy } from '../src/weight-opt.mjs';
+import { robustnessStudy } from '../src/walk-forward.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -215,6 +216,7 @@ async function main() {
   const oos = outOfSampleStudy(backtest);
   await fs.writeFile(path.join(DATA_DIR, 'oos.json'), JSON.stringify(oos, null, 2));
   await fs.writeFile(path.join(DATA_DIR, 'weights.json'), JSON.stringify(weightStudy(backtest, { base: LAYER_WEIGHTS }), null, 2));
+  await fs.writeFile(path.join(DATA_DIR, 'robustness.json'), JSON.stringify(robustnessStudy(backtest), null, 2));
 
   // Alert log: state transitions from history, newest first
   const alertLog = [];

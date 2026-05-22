@@ -758,6 +758,12 @@
       <section class="bt-stats" id="oosStats"></section>
       <div id="oosDetail" style="margin-top:14px"></div>
     </section>
+    <section class="panel" id="robustnessPanel" style="display:none">
+      <div class="panel-header"><h2>Robustness: walk-forward + bootstrap CI</h2></div>
+      <p class="panel-sub">A single split gives one number with no uncertainty. Walk-forward retrains at rolling origins so every recession is held out in some fold; the moving-block bootstrap puts a 95% confidence interval on ROC AUC, honestly reflecting the small recession sample. Wide intervals = treat the skill estimate with caution.</p>
+      <section class="bt-stats" id="robustnessStats"></section>
+      <div id="robustnessFolds" style="margin-top:14px"></div>
+    </section>
     <section class="panel">
       <div class="panel-header"><h2>Composite score · 30-year backtest</h2></div>
       <p class="panel-sub">Each point = end-of-month replay using only data available at that cutoff (no look-ahead). Shaded bands = NBER-dated US recessions.</p>
@@ -3420,6 +3426,47 @@ async function renderBacktest() {
   renderPlaybook(sorted);
   renderValidation();
   renderOOS();
+  renderRobustness();
+}
+
+// ─── ROBUSTNESS: WALK-FORWARD + BOOTSTRAP CI ──────────────────────────────────
+async function renderRobustness() {
+  const panel = document.getElementById('robustnessPanel');
+  if (!panel) return;
+  let r;
+  try { r = await fetch(`data/robustness.json?t=${Date.now()}`).then(x => x.ok ? x.json() : null); } catch { r = null; }
+  const wf = r?.walk_forward, b = r?.bootstrap_auc;
+  if (!wf || !wf.valid) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+
+  const card = (label, value, sub, color) => `
+    <div class="stat-card"><div class="stat-label">${label}</div>
+      <div class="stat-value"${color ? ` style="color:${color}"` : ''}>${value}</div>
+      <div class="stat-sub">${sub}</div></div>`;
+
+  const ciWidth = b ? (b.ci95[1] - b.ci95[0]) : null;
+  const ciColor = ciWidth == null ? 'var(--muted)' : ciWidth <= 0.12 ? 'var(--green)' : ciWidth <= 0.25 ? 'var(--yellow)' : 'var(--red)';
+
+  document.getElementById('robustnessStats').innerHTML =
+    card('Walk-forward folds', wf.summary.n_folds, 'rolling out-of-sample tests') +
+    card('Mean test AUC', wf.summary.mean_test_auc ?? '—', `range ${wf.summary.min_test_auc}–${wf.summary.max_test_auc}`, 'var(--green)') +
+    (b ? card('Bootstrap AUC', b.point ?? '—', `95% CI ${b.ci95[0]}–${b.ci95[1]}`, ciColor) : '') +
+    (b ? card('CI width', ciWidth != null ? ciWidth.toFixed(3) : '—', 'narrower = more certain', ciColor) : '') +
+    card('Mean Youden J', wf.summary.mean_test_youden_j ?? '—', 'across folds');
+
+  document.getElementById('robustnessFolds').innerHTML = `
+    <table class="alert-log-table">
+      <thead><tr><th>Train through</th><th>Test recession mo</th><th>RED cutoff</th><th>Test AUC</th><th>Hit rate</th><th>FPR</th></tr></thead>
+      <tbody>${wf.folds.map(f => `
+        <tr>
+          <td>${f.origin}</td>
+          <td>${f.test_recession_months}</td>
+          <td>${f.cutoff}</td>
+          <td>${f.test_auc ?? '—'}</td>
+          <td>${f.test_hit_rate != null ? Math.round(f.test_hit_rate * 100) + '%' : '—'}</td>
+          <td>${f.test_fpr != null ? Math.round(f.test_fpr * 100) + '%' : '—'}</td>
+        </tr>`).join('')}</tbody>
+    </table>`;
 }
 
 // ─── OUT-OF-SAMPLE STUDY ──────────────────────────────────────────────────────

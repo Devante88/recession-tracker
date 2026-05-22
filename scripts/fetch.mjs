@@ -11,6 +11,7 @@ import { buildFreshnessReport } from '../src/freshness.mjs';
 import { evaluateBacktest } from '../src/backtest-eval.mjs';
 import { outOfSampleStudy } from '../src/oos-research.mjs';
 import { weightStudy } from '../src/weight-opt.mjs';
+import { robustnessStudy } from '../src/walk-forward.mjs';
 import { LAYER_WEIGHTS } from '../src/registry.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
@@ -112,6 +113,15 @@ async function main() {
   await fs.writeFile(path.join(DATA_DIR, 'weights.json'), JSON.stringify(weights, null, 2));
   if (weights.valid) {
     console.log(`Weight study: doctrinal test AUC ${weights.doctrinal.test_auc} vs optimized ${weights.optimized.test_auc} (gain ${weights.test_auc_gain}) — ${weights.verdict}`);
+  }
+
+  // Robustness: walk-forward folds + block-bootstrap AUC confidence interval.
+  const robustness = robustnessStudy(backtest);
+  await fs.writeFile(path.join(DATA_DIR, 'robustness.json'), JSON.stringify(robustness, null, 2));
+  if (robustness.walk_forward.valid) {
+    const wf = robustness.walk_forward.summary, b = robustness.bootstrap_auc;
+    console.log(`Walk-forward: ${wf.n_folds} folds, mean test AUC ${wf.mean_test_auc} [${wf.min_test_auc}–${wf.max_test_auc}]`);
+    if (b) console.log(`Bootstrap AUC: ${b.point} (95% CI ${b.ci95[0]}–${b.ci95[1]})`);
   }
 
   // Alert log: state transitions from full history, newest first
