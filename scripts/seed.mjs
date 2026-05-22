@@ -9,6 +9,7 @@ import { REGISTRY } from '../src/registry.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
 import { buildFreshnessReport } from '../src/freshness.mjs';
 import { evaluateBacktest } from '../src/backtest-eval.mjs';
+import { outOfSampleStudy } from '../src/oos-research.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -202,6 +203,10 @@ async function main() {
     red:    evaluateBacktest(backtest, { flagAt: 'RED' })
   };
   await fs.writeFile(path.join(DATA_DIR, 'validation.json'), JSON.stringify(validation, null, 2));
+
+  // Out-of-sample study (degenerate on synthetic seed; production replays 30 years).
+  const oos = outOfSampleStudy(backtest);
+  await fs.writeFile(path.join(DATA_DIR, 'oos.json'), JSON.stringify(oos, null, 2));
 
   // Alert log: state transitions from history, newest first
   const alertLog = [];

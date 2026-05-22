@@ -741,6 +741,12 @@
         <strong>Brier</strong> = mean squared error of composite/100 as a probability (lower is better; 0.25 = coin flip).
       </p>
     </section>
+    <section class="panel" id="oosPanel" style="display:none">
+      <div class="panel-header"><h2>Out-of-sample test</h2></div>
+      <p class="panel-sub">The honest test: alert cutoffs are optimized on the older half of history (training: pre-2005 recessions), frozen, then scored on the held-out recent recessions the cutoffs never saw (test: 2007–09 GFC, 2020). A small train→test skill drop means the signal generalizes rather than overfits. ROC AUC is threshold-independent (0.5 = no skill, 1.0 = perfect).</p>
+      <section class="bt-stats" id="oosStats"></section>
+      <div id="oosDetail" style="margin-top:14px"></div>
+    </section>
     <section class="panel">
       <div class="panel-header"><h2>Composite score · 30-year backtest</h2></div>
       <p class="panel-sub">Each point = end-of-month replay using only data available at that cutoff (no look-ahead). Shaded bands = NBER-dated US recessions.</p>
@@ -1151,9 +1157,11 @@
 
       <div class="meth-disclaimer">
         <strong>Limitations:</strong> Layer weights are doctrinal, not empirically optimized against NBER
-        chronology. Alert thresholds are calibrated by intuition. Series have different release lags
-        (daily ≈ 1 day stale, monthly ≈ 1–2 months, quarterly ≈ 3–4 months). The composite blends
-        these without stale-adjusting. See the Backtest tab for a 30-year NBER-overlaid replay.
+        chronology — the composite score itself is not fit to the data. Alert thresholds are calibrated by
+        intuition, but the Backtest tab now reports an <em>out-of-sample test</em>: cutoffs are optimized on
+        pre-2005 recessions, frozen, and scored on the held-out 2007–09 and 2020 recessions, alongside a
+        threshold-independent ROC AUC. Series have different release lags (daily ≈ 1 day stale, monthly ≈ 1–2
+        months, quarterly ≈ 3–4 months) and the composite blends these without stale-adjusting.
       </div>
     </div>
   </section>
@@ -3343,6 +3351,46 @@ async function renderBacktest() {
   renderCorrelationHeatmap(sorted);
   renderPlaybook(sorted);
   renderValidation();
+  renderOOS();
+}
+
+// ─── OUT-OF-SAMPLE STUDY ──────────────────────────────────────────────────────
+async function renderOOS() {
+  const panel = document.getElementById('oosPanel');
+  if (!panel) return;
+  let o;
+  try {
+    o = await fetch(`data/oos.json?t=${Date.now()}`).then(r => r.ok ? r.json() : null);
+  } catch { o = null; }
+  if (!o || !o.valid) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+
+  const pct = x => x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`;
+  const gapColor = g => g === null ? 'var(--muted)' : Math.abs(g) <= 0.10 ? 'var(--green)' : Math.abs(g) <= 0.25 ? 'var(--yellow)' : 'var(--red)';
+  const card = (label, value, sub, color) => `
+    <div class="stat-card"><div class="stat-label">${label}</div>
+      <div class="stat-value"${color ? ` style="color:${color}"` : ''}>${value}</div>
+      <div class="stat-sub">${sub}</div></div>`;
+
+  document.getElementById('oosStats').innerHTML =
+    card('ROC AUC (train)', o.auc.train ?? '—', `${o.train_recession_months} recession mo`) +
+    card('ROC AUC (test)', o.auc.test ?? '—', `${o.test_recession_months} held-out recession mo`, 'var(--green)') +
+    card('RED cutoff (learned)', o.red.train?.cutoff ?? '—', 'frozen from train window') +
+    card('RED skill gap', o.red.generalization_gap ?? '—', 'train J − test J', gapColor(o.red.generalization_gap)) +
+    card('Test hit rate (RED)', pct(o.red.test?.hit_rate), `FPR ${pct(o.red.test?.false_positive_rate)}`, 'var(--green)');
+
+  const row = (name, t) => t ? `
+    <tr><td>${name}</td><td>${pct(t.hit_rate)}</td><td>${pct(t.false_positive_rate)}</td><td>${t.youden_j ?? '—'}</td></tr>` : '';
+  document.getElementById('oosDetail').innerHTML = `
+    <table class="alert-log-table">
+      <thead><tr><th>Window (cutoff learned on train)</th><th>Hit rate</th><th>False-positive rate</th><th>Youden J</th></tr></thead>
+      <tbody>
+        ${row(`RED · train (pre-${o.cutoff})`, o.red.train)}
+        ${row('RED · test (held out)', o.red.test)}
+        ${row(`YELLOW · train (pre-${o.cutoff})`, o.yellow.train)}
+        ${row('YELLOW · test (held out)', o.yellow.test)}
+      </tbody>
+    </table>`;
 }
 
 // ─── MODEL VALIDATION VS NBER ─────────────────────────────────────────────────

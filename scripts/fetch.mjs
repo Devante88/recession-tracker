@@ -9,6 +9,7 @@ import { fetchAllSeries } from '../src/fred.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
 import { buildFreshnessReport } from '../src/freshness.mjs';
 import { evaluateBacktest } from '../src/backtest-eval.mjs';
+import { outOfSampleStudy } from '../src/oos-research.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -82,6 +83,16 @@ async function main() {
   await fs.writeFile(path.join(DATA_DIR, 'validation.json'), JSON.stringify(validation, null, 2));
   const v = validation.yellow;
   console.log(`Validation (≥YELLOW): hit ${v.hit_rate ?? '—'}, FPR ${v.false_positive_rate ?? '—'}, lead ${v.avg_lead_months ?? '—'}mo, Brier ${v.brier ?? '—'}`);
+
+  // Out-of-sample study: optimize alert cutoffs on the older half of history,
+  // freeze them, and measure skill on the held-out recent recessions.
+  const oos = outOfSampleStudy(backtest);
+  await fs.writeFile(path.join(DATA_DIR, 'oos.json'), JSON.stringify(oos, null, 2));
+  if (oos.valid) {
+    console.log(`OOS AUC: train ${oos.auc.train} → test ${oos.auc.test}  |  RED cutoff ${oos.red.train.cutoff}: J ${oos.red.train.youden_j} → ${oos.red.test.youden_j} (gap ${oos.red.generalization_gap})`);
+  } else {
+    console.log(`OOS study skipped: ${oos.reason}`);
+  }
 
   // Alert log: state transitions from full history, newest first
   const allHistory = [...history].sort((a, b) => a.date.localeCompare(b.date));
