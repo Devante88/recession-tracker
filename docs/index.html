@@ -729,6 +729,18 @@
   <!-- BACKTEST TAB -->
   <div class="tab-content" id="tab-backtest" hidden>
     <section class="bt-stats" id="btStats"></section>
+    <section class="panel" id="validationPanel" style="display:none">
+      <div class="panel-header"><h2>Model validation vs NBER recessions</h2></div>
+      <p class="panel-sub">Forecast skill measured by replaying the model month-by-month and scoring its alerts against NBER-dated recessions. These are earned metrics, not asserted — the alert thresholds are doctrinal, so this is how they actually perform.</p>
+      <section class="bt-stats" id="validationStats"></section>
+      <div id="validationEpisodes" style="margin-top:14px"></div>
+      <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:12px">
+        <strong>Hit rate</strong> = share of recession months flagged ≥ the alert level.
+        <strong>False-positive rate</strong> = share of expansion months wrongly flagged.
+        <strong>Lead</strong> = months of continuous warning before each recession began.
+        <strong>Brier</strong> = mean squared error of composite/100 as a probability (lower is better; 0.25 = coin flip).
+      </p>
+    </section>
     <section class="panel">
       <div class="panel-header"><h2>Composite score · 30-year backtest</h2></div>
       <p class="panel-sub">Each point = end-of-month replay using only data available at that cutoff (no look-ahead). Shaded bands = NBER-dated US recessions.</p>
@@ -3330,6 +3342,48 @@ async function renderBacktest() {
 
   renderCorrelationHeatmap(sorted);
   renderPlaybook(sorted);
+  renderValidation();
+}
+
+// ─── MODEL VALIDATION VS NBER ─────────────────────────────────────────────────
+async function renderValidation() {
+  const panel = document.getElementById('validationPanel');
+  if (!panel) return;
+  let data;
+  try {
+    data = await fetch(`data/validation.json?t=${Date.now()}`).then(r => r.ok ? r.json() : null);
+  } catch { data = null; }
+  const v = data?.yellow;
+  // Need recession months in the replay window for the metrics to be meaningful.
+  if (!v || !v.recession_months) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+
+  const pct = x => x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`;
+  const red = data.red || {};
+  const card = (label, value, sub, color) => `
+    <div class="stat-card"><div class="stat-label">${label}</div>
+      <div class="stat-value"${color ? ` style="color:${color}"` : ''}>${value}</div>
+      <div class="stat-sub">${sub}</div></div>`;
+
+  document.getElementById('validationStats').innerHTML =
+    card('Hit rate (≥YELLOW)', pct(v.hit_rate), `${v.recession_months} recession months`, 'var(--green)') +
+    card('False positives (RED)', pct(red.false_positive_rate), `of ${red.expansion_months ?? '—'} expansion months`, 'var(--yellow)') +
+    card('Avg lead time', v.avg_lead_months != null ? `${v.avg_lead_months} mo` : '—', 'warning before onset') +
+    card('Brier score', v.brier ?? '—', 'lower = better (0.25 = coin flip)') +
+    card('Recessions detected', `${(v.episodes || []).filter(e => e.detected).length}/${(v.episodes || []).length}`, 'in replay window');
+
+  const eps = v.episodes || [];
+  document.getElementById('validationEpisodes').innerHTML = eps.length ? `
+    <table class="alert-log-table">
+      <thead><tr><th>NBER recession</th><th>Detected</th><th>Flagged share</th><th>Lead time</th></tr></thead>
+      <tbody>${eps.map(e => `
+        <tr>
+          <td>${e.label}</td>
+          <td>${e.detected ? '<span class="badge badge-green">YES</span>' : '<span class="badge badge-red">MISS</span>'}</td>
+          <td>${Math.round(e.flagged_share * 100)}%</td>
+          <td>${e.lead_months} mo</td>
+        </tr>`).join('')}</tbody>
+    </table>` : '';
 }
 
 // ─── ENSEMBLE STAT CARD ───────────────────────────────────────────────────────

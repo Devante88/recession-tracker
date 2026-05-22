@@ -8,6 +8,7 @@ import path from 'node:path';
 import { REGISTRY } from '../src/registry.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
 import { buildFreshnessReport } from '../src/freshness.mjs';
+import { evaluateBacktest } from '../src/backtest-eval.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -192,6 +193,15 @@ async function main() {
   // In production, fetch.mjs writes 30 years here.
   const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 36, windowMonths: 24 });
   await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
+
+  // Model validation against NBER recessions (degenerate on the 3-year synthetic
+  // seed since no NBER recession falls in range; production replays 30 years).
+  const validation = {
+    generated_at: new Date().toISOString(),
+    yellow: evaluateBacktest(backtest, { flagAt: 'YELLOW' }),
+    red:    evaluateBacktest(backtest, { flagAt: 'RED' })
+  };
+  await fs.writeFile(path.join(DATA_DIR, 'validation.json'), JSON.stringify(validation, null, 2));
 
   // Alert log: state transitions from history, newest first
   const alertLog = [];

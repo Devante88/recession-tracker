@@ -8,6 +8,7 @@ import { REGISTRY } from '../src/registry.mjs';
 import { fetchAllSeries } from '../src/fred.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
 import { buildFreshnessReport } from '../src/freshness.mjs';
+import { evaluateBacktest } from '../src/backtest-eval.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -71,6 +72,16 @@ async function main() {
   console.log('Building 30-year backtest...');
   const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 360, windowMonths: 60 });
   await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
+
+  // Model validation: score the backtest replay against NBER recession dates.
+  const validation = {
+    generated_at: new Date().toISOString(),
+    yellow: evaluateBacktest(backtest, { flagAt: 'YELLOW' }),
+    red:    evaluateBacktest(backtest, { flagAt: 'RED' })
+  };
+  await fs.writeFile(path.join(DATA_DIR, 'validation.json'), JSON.stringify(validation, null, 2));
+  const v = validation.yellow;
+  console.log(`Validation (≥YELLOW): hit ${v.hit_rate ?? '—'}, FPR ${v.false_positive_rate ?? '—'}, lead ${v.avg_lead_months ?? '—'}mo, Brier ${v.brier ?? '—'}`);
 
   // Alert log: state transitions from full history, newest first
   const allHistory = [...history].sort((a, b) => a.date.localeCompare(b.date));

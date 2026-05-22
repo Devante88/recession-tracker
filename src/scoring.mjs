@@ -222,10 +222,22 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
   const baaVal   = baa?.latest?.value ?? null;
   const creditProb = baaVal !== null ? Math.min(1, Math.max(0, (baaVal - 1.5) / 3.0)) : null;
 
-  // 4-model ensemble: composite (0-1) + Estrella-Mishkin probit + Sahm proxy + credit spread proxy
-  const ensembleInputs = [compositeScore / 100, recessionProb, sahmProb, creditProb].filter(x => x != null);
-  const ensembleScore  = ensembleInputs.length
-    ? Number(((ensembleInputs.reduce((a, b) => a + b, 0) / ensembleInputs.length) * 100).toFixed(1))
+  // Weighted ensemble of four signals, each a recession probability in [0,1].
+  // Weights reflect each signal's documented forecasting role rather than an
+  // equal average: the Estrella-Mishkin probit is the only peer-reviewed model
+  // (highest weight); the broad composite is diversified but coincident-leaning;
+  // Sahm is confirmatory (fires at recession onset, low lead); credit spreads
+  // lead but are noisy. Weights renormalize over whichever signals are present.
+  const ENSEMBLE_WEIGHTS = { composite: 0.30, probit: 0.35, sahm: 0.15, credit: 0.20 };
+  const ensembleParts = [
+    { p: compositeScore / 100, w: ENSEMBLE_WEIGHTS.composite },
+    { p: recessionProb,        w: ENSEMBLE_WEIGHTS.probit },
+    { p: sahmProb,             w: ENSEMBLE_WEIGHTS.sahm },
+    { p: creditProb,           w: ENSEMBLE_WEIGHTS.credit }
+  ].filter(x => x.p != null && Number.isFinite(x.p));
+  const ensembleWeightSum = ensembleParts.reduce((a, b) => a + b.w, 0);
+  const ensembleScore = ensembleWeightSum
+    ? Number(((ensembleParts.reduce((a, b) => a + b.p * b.w, 0) / ensembleWeightSum) * 100).toFixed(1))
     : null;
 
   // Factor contributions: each indicator's signed contribution to composite

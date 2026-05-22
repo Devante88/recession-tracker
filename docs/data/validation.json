@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-05-22T21:44:12.248Z",
+  "yellow": {
+    "flag_level": "YELLOW",
+    "months": 36,
+    "span": {
+      "first": "2023-06",
+      "last": "2026-05"
+    },
+    "recession_months": 0,
+    "expansion_months": 36,
+    "hit_rate": null,
+    "false_positive_rate": 0.972,
+    "precision": 0,
+    "avg_lead_months": null,
+    "brier": 0.2019,
+    "confusion": {
+      "tp": 0,
+      "fp": 35,
+      "tn": 1,
+      "fn": 0
+    },
+    "episodes": []
+  },
+  "red": {
+    "flag_level": "RED",
+    "months": 36,
+    "span": {
+      "first": "2023-06",
+      "last": "2026-05"
+    },
+    "recession_months": 0,
+    "expansion_months": 36,
+    "hit_rate": null,
+    "false_positive_rate": 0,
+    "precision": null,
+    "avg_lead_months": null,
+    "brier": 0.2019,
+    "confusion": {
+      "tp": 0,
+      "fp": 0,
+      "tn": 36,
+      "fn": 0
+    },
+    "episodes": []
+  }
+}
