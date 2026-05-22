@@ -60,8 +60,18 @@ async function main() {
     return { ...indicator, ...result };
   });
 
+  // Optional GPR index reading (written by scripts/gpr.mjs when GPR_DATA_URL is
+  // configured). Ignore the committed seed/demo sentinel so it never leaks into
+  // a production snapshot — only a real ingested reading counts.
+  let gpr = null;
+  try {
+    const g = JSON.parse(await fs.readFile(path.join(DATA_DIR, 'gpr.json'), 'utf8'));
+    if (g && !/seed/i.test(g.source || '')) gpr = g;
+    else console.log('GPR file is the seed sentinel — using market proxy headline');
+  } catch {}
+
   const asOf     = new Date().toISOString().slice(0, 10);
-  const snapshot = buildSnapshot(normalized, asOf);
+  const snapshot = buildSnapshot(normalized, asOf, { gpr });
 
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(path.join(DATA_DIR, 'current.json'), JSON.stringify(snapshot, null, 2));

@@ -1,46 +1,34 @@
 // Geopolitical stress flagger. Pure functions, no I/O.
 //
-// IMPORTANT framing: this is NOT the news-based Caldara–Iacoviello Geopolitical
-// Risk (GPR) index — that series is published as CSV from the authors' site, not
-// the FRED API this app runs on. Instead this flags geopolitical/event stress
-// through the financial channels such shocks actually transmit through, all of
-// which are already fetched: equity volatility (VIX), credit risk (high-yield
-// spread), and safe-haven flows (a surging broad dollar). When all three fire at
-// once the market is pricing an acute shock. It is reported as a SEPARATE overlay
-// and is deliberately NOT folded into the recession composite, because
-// geopolitical stress is episodic and does not always lead to recession.
+// Two complementary signals:
+//
+// 1. GPR (authoritative): the Caldara–Iacoviello Geopolitical Risk index — a
+//    news-based count of geopolitical threats/events, long-run average ≈ 100.
+//    It is published as .xls/.dta from the authors' site (not the FRED API), so
+//    scripts/gpr.mjs ingests it from a configurable CSV URL and writes gpr.json.
+//    When a GPR reading is available it is the HEADLINE flag.
+//
+// 2. Market-transmission proxy (always available): geopolitical shocks hit the
+//    economy through equity volatility (VIX), credit risk (HY spread), and
+//    safe-haven dollar flows (broad USD surge). When GPR is unavailable this is
+//    the headline; when GPR is present it serves as CORROBORATION — is the
+//    market actually pricing the geopolitical news, or not?
+//
+// Reported as a SEPARATE overlay, deliberately NOT folded into the recession
+// composite, because geopolitical stress is episodic and does not reliably lead
+// to recession.
 
 function clamp01(x) { return Math.max(0, Math.min(1, x)); }
 
-// Each channel maps a raw level to a stress sub-score in [0,1].
-// Calibration points are documented inline; a sub-score ≥ 0.5 = "firing".
+// ── Market-transmission proxy ────────────────────────────────────────────────
 const CHANNELS = [
-  {
-    fred_id: 'VIXCLS', name: 'Equity volatility (VIX)',
-    // calm ~18, acute ~40
-    sub: v => clamp01((v - 18) / 22),
-    fmt: v => v.toFixed(1)
-  },
-  {
-    fred_id: 'BAMLH0A0HYM2', name: 'Credit risk (HY spread)',
-    // calm ~3.5%, acute ~8%
-    sub: v => clamp01((v - 3.5) / 4.5),
-    fmt: v => v.toFixed(2) + '%'
-  },
-  {
-    fred_id: 'DTWEXBGS', name: 'Safe-haven USD',
-    // z-score of the broad dollar; only a strong-dollar surge counts as stress
-    sub: (v, ind) => {
+  { fred_id: 'VIXCLS',       name: 'Equity volatility (VIX)', sub: v => clamp01((v - 18) / 22), fmt: v => v.toFixed(1) },          // calm ~18, acute ~40
+  { fred_id: 'BAMLH0A0HYM2', name: 'Credit risk (HY spread)', sub: v => clamp01((v - 3.5) / 4.5), fmt: v => v.toFixed(2) + '%' }, // calm ~3.5%, acute ~8%
+  { fred_id: 'DTWEXBGS',     name: 'Safe-haven USD',          sub: (v, ind) => {                                                  // z-score; only strong-dollar surge = stress
       if (ind?.norm_mean == null || !ind?.norm_std) return null;
-      const z = (v - ind.norm_mean) / ind.norm_std;
-      return clamp01(z / 2.5); // z = 2.5σ above mean → full stress
-    },
-    fmt: v => v.toFixed(1)
-  }
+      return clamp01(((v - ind.norm_mean) / ind.norm_std) / 2.5);
+    }, fmt: v => v.toFixed(1) }
 ];
-
-// Relative weights (renormalized over channels with data). Volatility and credit
-// are the primary, fastest transmission channels for geopolitical shocks.
 const WEIGHTS = { VIXCLS: 0.45, BAMLH0A0HYM2: 0.35, DTWEXBGS: 0.20 };
 
 export function flagFor(score) {
@@ -49,17 +37,10 @@ export function flagFor(score) {
   return 'CALM';
 }
 
-/**
- * Compute the geopolitical stress overlay from normalized indicators.
- * @param indicators Array of normalized indicators (need fred_id, latest.value,
- *                   and for DTWEXBGS norm_mean/norm_std).
- * @returns { score, flag, channels: [...], firing: [...], note } or null if no data.
- */
-export function computeGeopoliticalFlag(indicators) {
+export function marketStress(indicators) {
   const byId = new Map((indicators || []).map(i => [i.fred_id, i]));
   const channels = [];
   let weighted = 0, weightSum = 0;
-
   for (const ch of CHANNELS) {
     const ind = byId.get(ch.fred_id);
     const val = ind?.latest?.value;
@@ -67,29 +48,60 @@ export function computeGeopoliticalFlag(indicators) {
     const sub = ch.sub(val, ind);
     if (sub == null) continue;
     const w = WEIGHTS[ch.fred_id] ?? 0;
-    weighted  += sub * w;
-    weightSum += w;
-    channels.push({
-      fred_id: ch.fred_id,
-      name: ch.name,
-      value: val,
-      display: ch.fmt(val),
-      sub_score: Number((sub * 100).toFixed(1)),
-      firing: sub >= 0.5
-    });
+    weighted += sub * w; weightSum += w;
+    channels.push({ fred_id: ch.fred_id, name: ch.name, value: val, display: ch.fmt(val), sub_score: Number((sub * 100).toFixed(1)), firing: sub >= 0.5 });
+  }
+  if (!weightSum) return null;
+  const score = Number(((weighted / weightSum) * 100).toFixed(1));
+  return { score, flag: flagFor(score), channels, firing: channels.filter(c => c.firing).map(c => c.name) };
+}
+
+// ── Real GPR index ───────────────────────────────────────────────────────────
+// Band the raw index against documented anchors: long-run avg ≈ 100; regional
+// conflict noise ~120–180; major-event territory ≥ 200 (e.g. Russia–Ukraine
+// Feb 2022 ≈ 230, Iraq war ≈ 350, 9/11 ≈ 500).
+export function gprFlagFor(value) {
+  if (value >= 200) return 'ACUTE';
+  if (value >= 115) return 'ELEVATED';
+  return 'CALM';
+}
+
+export function gprReading(gpr) {
+  const value = gpr?.latest;
+  if (value == null || !Number.isFinite(value)) return null;
+  // 0–100 stress score: 60 → 0, 240 → 100.
+  const score = Number((clamp01((value - 60) / 180) * 100).toFixed(1));
+  return { value: Number(value.toFixed(1)), date: gpr.date ?? null, score, flag: gprFlagFor(value) };
+}
+
+// ── Combined overlay ─────────────────────────────────────────────────────────
+export function computeGeopoliticalFlag(indicators, gpr = null) {
+  const market = marketStress(indicators);
+  const gprRead = gprReading(gpr);
+  if (!market && !gprRead) return null;
+
+  const headline = gprRead || market;
+  const source   = gprRead ? 'GPR' : 'market-proxy';
+
+  let corroboration = null;
+  if (gprRead && market) {
+    const gprStressed    = gprRead.flag !== 'CALM';
+    const marketStressed = market.flag !== 'CALM';
+    corroboration = gprStressed && marketStressed ? 'confirmed'
+      : gprStressed && !marketStressed ? 'news-leads-market'
+      : !gprStressed && marketStressed ? 'market-stress-not-geopolitical'
+      : 'calm';
   }
 
-  if (!weightSum) return null;
-
-  const score = Number(((weighted / weightSum) * 100).toFixed(1));
-  const flag  = flagFor(score);
-  const firing = channels.filter(c => c.firing).map(c => c.name);
-
   return {
-    score,
-    flag,
-    channels,
-    firing,
-    note: 'Market-transmitted proxy (VIX + credit + safe-haven USD), not the news-based GPR index. Separate from the recession composite.'
+    score: headline.score,
+    flag: headline.flag,
+    source,
+    gpr: gprRead,
+    market,
+    corroboration,
+    note: gprRead
+      ? 'Headline = Caldara–Iacoviello GPR index (news-based). Market channels (VIX + credit + USD) shown as corroboration. Separate from the recession composite.'
+      : 'Market-transmitted proxy (VIX + credit + safe-haven USD); GPR index not available. Separate from the recession composite.'
   };
 }

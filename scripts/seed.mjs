@@ -165,9 +165,15 @@ async function main() {
     return { ...indicator, ...result };
   });
 
-  const snapshot = buildSnapshot(normalized, '2026-05-19');
+  // Seed a representative GPR reading (~96 = slightly below the 100 baseline,
+  // CALM) so the demo exercises the GPR-headline path. Production overwrites
+  // docs/data/gpr.json via scripts/gpr.mjs when GPR_DATA_URL is configured.
+  const gpr = { latest: 96.4, date: '2026-05-01', recent: [], source: 'seed (demo)' };
+
+  const snapshot = buildSnapshot(normalized, '2026-05-19', { gpr });
 
   await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.writeFile(path.join(DATA_DIR, 'gpr.json'), JSON.stringify(gpr, null, 2));
   await fs.writeFile(path.join(DATA_DIR, 'current.json'), JSON.stringify(snapshot, null, 2));
 
   // Prior snapshot: rebuild with each series' final (latest) observation dropped,

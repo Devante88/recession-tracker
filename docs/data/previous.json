@@ -1,6 +1,6 @@
 {
   "as_of": "2026-04-19",
-  "generated_at": "2026-05-22T21:50:56.690Z",
+  "generated_at": "2026-05-22T21:57:08.911Z",
   "composite": {
     "score": 49,
     "alert": "YELLOW",
@@ -14,36 +14,43 @@
   "geopolitical": {
     "score": 36.9,
     "flag": "ELEVATED",
-    "channels": [
-      {
-        "fred_id": "VIXCLS",
-        "name": "Equity volatility (VIX)",
-        "value": 27.2941,
-        "display": "27.3",
-        "sub_score": 42.2,
-        "firing": false
-      },
-      {
-        "fred_id": "BAMLH0A0HYM2",
-        "name": "Credit risk (HY spread)",
-        "value": 4.1497,
-        "display": "4.15%",
-        "sub_score": 14.4,
-        "firing": false
-      },
-      {
-        "fred_id": "DTWEXBGS",
-        "name": "Safe-haven USD",
-        "value": 121.3959,
-        "display": "121.4",
-        "sub_score": 64.1,
-        "firing": true
-      }
-    ],
-    "firing": [
-      "Safe-haven USD"
-    ],
-    "note": "Market-transmitted proxy (VIX + credit + safe-haven USD), not the news-based GPR index. Separate from the recession composite."
+    "source": "market-proxy",
+    "gpr": null,
+    "market": {
+      "score": 36.9,
+      "flag": "ELEVATED",
+      "channels": [
+        {
+          "fred_id": "VIXCLS",
+          "name": "Equity volatility (VIX)",
+          "value": 27.2941,
+          "display": "27.3",
+          "sub_score": 42.2,
+          "firing": false
+        },
+        {
+          "fred_id": "BAMLH0A0HYM2",
+          "name": "Credit risk (HY spread)",
+          "value": 4.1497,
+          "display": "4.15%",
+          "sub_score": 14.4,
+          "firing": false
+        },
+        {
+          "fred_id": "DTWEXBGS",
+          "name": "Safe-haven USD",
+          "value": 121.3959,
+          "display": "121.4",
+          "sub_score": 64.1,
+          "firing": true
+        }
+      ],
+      "firing": [
+        "Safe-haven USD"
+      ]
+    },
+    "corroboration": null,
+    "note": "Market-transmitted proxy (VIX + credit + safe-haven USD); GPR index not available. Separate from the recession composite."
   },
   "factor_contributions": [
     {

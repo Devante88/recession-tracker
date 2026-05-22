@@ -51,6 +51,11 @@ jobs:
             echo "No existing snapshot to archive (first run)"
           fi
 
+      - name: Ingest GPR geopolitical risk index (optional)
+        env:
+          GPR_DATA_URL: ${{ secrets.GPR_DATA_URL }}
+        run: node scripts/gpr.mjs
+
       - name: Fetch FRED data and compute snapshot
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}

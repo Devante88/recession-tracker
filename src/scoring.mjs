@@ -200,7 +200,7 @@ function lastMonthly(series, months = 24) {
 /**
  * Top-level: produce the full snapshot payload from normalized indicators.
  */
-export function buildSnapshot(normalizedIndicators, asOfDate) {
+export function buildSnapshot(normalizedIndicators, asOfDate, { gpr = null } = {}) {
   const layerScores    = computeLayerScores(normalizedIndicators);
   const compositeScore = computeCompositeScore(layerScores);
   const withData       = normalizedIndicators.filter(x => x.latest !== null).length;
@@ -267,7 +267,7 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       yield_curve_spread:         ycSpread,
       ensemble_score:             ensembleScore
     },
-    geopolitical: computeGeopoliticalFlag(normalizedIndicators),
+    geopolitical: computeGeopoliticalFlag(normalizedIndicators, gpr),
     factor_contributions: factorContributions,
     layers: Object.fromEntries(
       Object.entries(layerScores).map(([layer, score]) => [

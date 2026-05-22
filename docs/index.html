@@ -2151,34 +2151,55 @@ function renderGeopolitical(snap) {
   const panel = document.getElementById('geoPanel');
   if (!panel) return;
   const g = snap?.geopolitical;
-  if (!g || !g.channels?.length) { panel.style.display = 'none'; return; }
+  const market = g?.market;
+  if (!g || (!market?.channels?.length && !g.gpr)) { panel.style.display = 'none'; return; }
   panel.style.display = '';
 
-  const FLAG_COLOR = { CALM: 'var(--green)', ELEVATED: 'var(--yellow)', ACUTE: 'var(--red)' };
   const FLAG_CLASS = { CALM: 'badge-green', ELEVATED: 'badge-yellow', ACUTE: 'badge-red' };
-  const color = FLAG_COLOR[g.flag] || 'var(--muted)';
 
   const flagEl = document.getElementById('geoFlag');
-  flagEl.textContent = `${g.flag} · ${g.score}/100`;
+  const srcLabel = g.source === 'GPR' ? 'GPR' : 'market proxy';
+  flagEl.textContent = `${g.flag} · ${g.score}/100 · ${srcLabel}`;
   flagEl.className = `badge ${FLAG_CLASS[g.flag] || ''}`;
 
-  document.getElementById('geoChannels').innerHTML = g.channels.map(c => {
+  // Authoritative GPR row (when available) + the market channels as corroboration.
+  let rows = '';
+  if (g.gpr) {
+    const w = Math.max(2, Math.min(100, g.gpr.score));
+    const c = g.gpr.flag === 'ACUTE' ? 'var(--red)' : g.gpr.flag === 'ELEVATED' ? 'var(--yellow)' : 'var(--green)';
+    rows += `
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="flex:0 0 180px;font-size:13px;color:var(--text);font-weight:600">GPR index (news-based)</div>
+        <div style="flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
+          <div style="width:${w}%;height:100%;background:${c}"></div>
+        </div>
+        <div style="flex:0 0 88px;text-align:right;font-size:12px;color:var(--muted)">${g.gpr.value} · ${g.gpr.flag}</div>
+      </div>`;
+  }
+  rows += (market?.channels || []).map(c => {
     const w = Math.max(2, Math.min(100, c.sub_score));
     const cColor = c.sub_score >= 50 ? 'var(--red)' : c.sub_score >= 25 ? 'var(--yellow)' : 'var(--green)';
     return `
       <div style="display:flex;align-items:center;gap:12px">
-        <div style="flex:0 0 180px;font-size:13px;color:var(--text)">${c.name}${c.firing ? ' <span style="color:var(--red)">●</span>' : ''}</div>
+        <div style="flex:0 0 180px;font-size:13px;color:var(--muted)">${c.name}${c.firing ? ' <span style="color:var(--red)">●</span>' : ''}</div>
         <div style="flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden">
           <div style="width:${w}%;height:100%;background:${cColor}"></div>
         </div>
         <div style="flex:0 0 88px;text-align:right;font-size:12px;color:var(--muted)">${c.display} · ${Math.round(c.sub_score)}</div>
       </div>`;
   }).join('');
+  document.getElementById('geoChannels').innerHTML = rows;
 
-  const summary = g.firing.length
-    ? `Firing now: ${g.firing.join(', ')}. ${g.note}`
-    : `No channels firing — markets are not pricing acute event risk. ${g.note}`;
-  document.getElementById('geoSummary').textContent = summary;
+  const CORROB = {
+    confirmed: 'Markets are corroborating the geopolitical news — stress is being priced.',
+    'news-leads-market': 'Geopolitical news is elevated but markets are not yet pricing it — watch for catch-up.',
+    'market-stress-not-geopolitical': 'Market stress is present but GPR is calm — likely not geopolitical in origin.',
+    calm: 'Both the GPR index and markets are calm.'
+  };
+  const summary = g.corroboration ? CORROB[g.corroboration] : (market?.firing?.length
+    ? `Firing now: ${market.firing.join(', ')}.`
+    : 'No market channels firing.');
+  document.getElementById('geoSummary').textContent = `${summary} ${g.note}`;
 }
 
 function renderProbGauge(snap) {
