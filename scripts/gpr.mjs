@@ -2,39 +2,44 @@
 // docs/data/gpr.json so the dashboard can use the authoritative news-based
 // signal instead of only the market-transmission proxy.
 //
-// The GPR index is published as .xls/.dta from matteoiacoviello.com (not the
-// FRED API), so we read it from a CSV mirror at GPR_DATA_URL. The CSV must have
-// a date column (month/date/DATE) and a GPR column (GPR/GPRD/GPRH). Exits 0
-// (no error) when GPR_DATA_URL is unset or the fetch fails — the app falls back
-// to the market proxy, exactly like the optional narrative/alert steps.
+// Source is set via GPR_DATA_URL. Both the authors' native .xlsx export and a
+// plain .csv mirror are supported (format auto-detected by the ZIP magic), so
+// no spreadsheet dependency is needed — the .xlsx is unzipped with src/xlsx.mjs
+// using Node's built-in zlib. The file must have a date column (month/date/...)
+// and a GPR column (GPR/GPRD/GPRH). Exits 0 (no error) when GPR_DATA_URL is
+// unset or the fetch fails — the app falls back to the market proxy, exactly
+// like the optional narrative/alert steps.
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { parseXlsx } from '../src/xlsx.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
-function parseCsv(text) {
-  const lines = text.trim().split(/\r?\n/).filter(Boolean);
-  if (lines.length < 2) return [];
-  const header = lines[0].split(',').map(h => h.trim());
-  const lower  = header.map(h => h.toLowerCase());
-  const dateIdx = lower.findIndex(h => ['date', 'month', 'observation_date', 'time'].includes(h));
-  // Prefer the benchmark monthly GPR, then daily GPRD, then any GPR* column.
+// Map a rows-of-cells table (header + data) to [{ date, value }].
+function rowsToSeries(rows) {
+  if (!rows || rows.length < 2) return [];
+  const header = rows[0].map(h => String(h).trim().toLowerCase());
+  const dateIdx = header.findIndex(h => ['date', 'month', 'observation_date', 'time', 'yearmonth'].includes(h));
   const gprIdx = (() => {
     for (const want of ['gpr', 'gprd', 'gprh']) {
-      const i = lower.indexOf(want);
+      const i = header.indexOf(want);
       if (i >= 0) return i;
     }
-    return lower.findIndex(h => h.startsWith('gpr'));
+    return header.findIndex(h => h.startsWith('gpr'));
   })();
   if (dateIdx < 0 || gprIdx < 0) return [];
 
-  return lines.slice(1).map(line => {
-    const cells = line.split(',');
-    const value = Number(cells[gprIdx]);
-    const date  = (cells[dateIdx] || '').trim();
+  return rows.slice(1).map(r => {
+    const value = Number(r[gprIdx]);
+    const date = String(r[dateIdx] ?? '').trim();
     return Number.isFinite(value) && date ? { date, value } : null;
   }).filter(Boolean);
+}
+
+function parseCsv(text) {
+  const rows = text.trim().split(/\r?\n/).filter(Boolean).map(line => line.split(','));
+  return rowsToSeries(rows);
 }
 
 async function main() {
@@ -48,22 +53,22 @@ async function main() {
   try {
     const res = await fetch(url, { headers: { 'User-Agent': 'recession-tracker/1.0' } });
     if (!res.ok) { console.error(`GPR fetch failed: HTTP ${res.status} — skipping`); return; }
-    series = parseCsv(await res.text());
+    const buf = Buffer.from(await res.arrayBuffer());
+    const isZip = buf.length > 4 && buf.readUInt32LE(0) === 0x04034b50; // PK\x03\x04 → xlsx
+    series = isZip ? rowsToSeries(parseXlsx(buf)) : parseCsv(buf.toString('utf8'));
   } catch (e) {
-    console.error(`GPR fetch error: ${e.message} — skipping`);
+    console.error(`GPR fetch/parse error: ${e.message} — skipping`);
     return;
   }
 
-  if (!series.length) { console.error('GPR CSV had no usable rows — skipping'); return; }
+  if (!series.length) { console.error('GPR source had no usable rows — skipping'); return; }
 
   series.sort((a, b) => a.date.localeCompare(b.date));
-  const recent = series.slice(-36);
-  const last   = series[series.length - 1];
-
+  const last = series[series.length - 1];
   const out = {
     latest: last.value,
     date: last.date,
-    recent,
+    recent: series.slice(-36),
     source: 'Caldara & Iacoviello GPR index',
     source_url: url,
     ingested_at: new Date().toISOString()
