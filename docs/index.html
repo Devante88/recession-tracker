@@ -146,6 +146,67 @@
                      border-radius: 6px; color: var(--muted); padding: 5px 8px;
                      font-size: 12px; font-family: inherit; resize: none; }
     .wl-note-input:focus { outline: none; border-color: var(--accent); }
+    /* ── PORTFOLIO TRACKER ───────────────────────────────────────────────────── */
+    .port-add-row  { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .port-input    { background: var(--panel-2); border: 1px solid var(--border);
+                     border-radius: 8px; color: var(--text); padding: 9px 12px;
+                     font-size: 13px; font-family: inherit; }
+    .port-input:focus { outline: none; border-color: var(--accent); }
+    .port-input.wide  { flex: 1; min-width: 100px; }
+    .port-add-btn  { background: var(--accent); color: #fff; border: none;
+                     border-radius: 8px; padding: 9px 16px; font-size: 13px;
+                     font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+    .port-add-btn:hover { opacity: 0.85; }
+    .port-table    { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .port-table th { color: var(--muted); text-align: left; font-size: 10px;
+                     text-transform: uppercase; letter-spacing: .08em;
+                     padding: 8px 10px; border-bottom: 1px solid var(--border); }
+    .port-table td { padding: 10px 10px; border-bottom: 1px solid var(--border);
+                     vertical-align: middle; }
+    .port-table tr:last-child td { border-bottom: none; }
+    .port-table .rm-btn { background: none; border: none; color: var(--muted);
+                          cursor: pointer; font-size: 15px; padding: 2px 6px; }
+    .port-table .rm-btn:hover { color: var(--red); }
+    .port-pnl-pos { color: var(--green); font-weight: 700; }
+    .port-pnl-neg { color: var(--red);   font-weight: 700; }
+    .port-summary  { display: grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+                     gap: 10px; margin-bottom: 20px; }
+    .port-alloc-wrap { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+    .port-alloc-legend { font-size: 12px; line-height: 2; }
+    .port-alloc-dot { display: inline-block; width: 10px; height: 10px;
+                      border-radius: 50%; margin-right: 6px; }
+    /* ── OPTIONS CALCULATOR ──────────────────────────────────────────────────── */
+    .opts-grid     { display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+                     margin-bottom: 20px; }
+    @media (max-width: 700px) { .opts-grid { grid-template-columns: 1fr; } }
+    .opts-form     { background: var(--panel-2); border-radius: 14px; padding: 20px; }
+    .opts-form h3  { font-size: 14px; font-weight: 700; margin-bottom: 14px;
+                     color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .opts-field    { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+    .opts-field label { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                        letter-spacing: .06em; }
+    .opts-field input, .opts-field select {
+                     background: var(--panel-3); border: 1px solid var(--border);
+                     border-radius: 7px; color: var(--text); padding: 8px 12px;
+                     font-size: 14px; font-family: inherit; }
+    .opts-field input:focus, .opts-field select:focus { outline: none; border-color: var(--accent); }
+    .opts-calc-btn { width: 100%; background: var(--accent); color: #fff; border: none;
+                     border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 700;
+                     cursor: pointer; font-family: inherit; margin-top: 6px; }
+    .opts-calc-btn:hover { opacity: 0.85; }
+    .opts-result   { background: var(--panel-2); border-radius: 14px; padding: 20px; }
+    .opts-result h3 { font-size: 14px; font-weight: 700; margin-bottom: 14px;
+                      color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+    .opts-greeks   { display: grid; grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
+                     gap: 10px; margin-bottom: 16px; }
+    .greek-card    { background: var(--panel-3); border-radius: 10px; padding: 12px; text-align: center; }
+    .greek-card .gname { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                         letter-spacing: .06em; margin-bottom: 4px; }
+    .greek-card .gval  { font-size: 22px; font-weight: 800; }
+    .greek-card .gdesc { font-size: 10px; color: var(--muted); margin-top: 3px; }
+    .opts-payoff   { margin-top: 16px; }
+    /* ── LEVEL 2 / MARKET DEPTH ──────────────────────────────────────────────── */
+    .l2-sym-row    { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
     /* ── SCENARIO ANALYSIS ───────────────────────────────────────────────────── */
     .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
                      gap: 12px; margin-bottom: 16px; }
@@ -490,6 +551,8 @@
     <button class="tab-btn"        data-tab="backtest">30-Year Backtest</button>
     <button class="tab-btn"        data-tab="markets">Markets</button>
     <button class="tab-btn"        data-tab="watchlist">Watchlist</button>
+    <button class="tab-btn"        data-tab="portfolio">Portfolio</button>
+    <button class="tab-btn"        data-tab="options">Options</button>
     <button class="tab-btn"        data-tab="signals">Expert Signals</button>
     <button class="tab-btn"        data-tab="methodology">Methodology</button>
     <a class="tab-btn" href="feed.xml" target="_blank" rel="noopener">RSS Feed ↗</a>
@@ -1144,9 +1207,9 @@
           <tr><td>Custom watchlist (local, browser-saved)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>Fixed income analytics (rates, spreads, TIPS)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>Macro scenario stress test</td><td class="chk">✓</td><td class="chk">✓</td><td class="dash">—</td></tr>
-          <tr><td>Real-time Level 2 quotes / order book</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
-          <tr><td>Options chains &amp; Greeks</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
-          <tr><td>Portfolio integration &amp; P&amp;L tracking</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Real-time Level 2 &amp; market depth chart</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Options pricing &amp; Greeks (Black-Scholes)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Portfolio P&amp;L tracking with macro overlay</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>Open source &amp; free</td><td class="chk">✓</td><td class="dash">$24K+/yr</td><td class="dash">Account req'd</td></tr>
         </tbody>
       </table>
@@ -1323,6 +1386,204 @@
     </section>
 
   </div><!-- /tab-watchlist -->
+
+  <!-- PORTFOLIO TAB -->
+  <div class="tab-content" id="tab-portfolio" hidden>
+
+    <!-- Portfolio Summary Stats -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header">
+        <h2>Portfolio Tracker</h2>
+        <div style="display:flex;gap:8px">
+          <button class="export-btn" id="portImportBtn" title="Import CSV">Import CSV</button>
+          <input type="file" id="portImportFile" accept=".csv" style="display:none">
+          <button class="export-btn" id="portExportBtn" title="Export portfolio as CSV">Export CSV</button>
+          <button class="export-btn" id="portClearBtn" title="Clear all positions" style="color:var(--red)">Clear All</button>
+        </div>
+      </div>
+      <p class="panel-sub">Track positions with P&amp;L, portfolio allocation, and macro risk overlay. Saved in your browser — no account needed. Enter current prices manually or read them from the charts.</p>
+
+      <!-- Add position row -->
+      <div class="port-add-row" id="portAddRow">
+        <input class="port-input wide" id="portSym"    type="text"   placeholder="Ticker (e.g. SPY)" autocapitalize="characters" />
+        <input class="port-input"      id="portQty"    type="number" placeholder="Shares / Units" min="0" step="any" style="width:120px" />
+        <input class="port-input"      id="portCost"   type="number" placeholder="Avg Cost ($)" min="0" step="any" style="width:120px" />
+        <input class="port-input"      id="portPrice"  type="number" placeholder="Current Price ($)" min="0" step="any" style="width:140px" />
+        <select class="port-input" id="portClass" style="width:140px">
+          <option value="Equity">Equity</option>
+          <option value="ETF">ETF</option>
+          <option value="Bond">Bond / Fixed Income</option>
+          <option value="Commodity">Commodity</option>
+          <option value="Crypto">Crypto</option>
+          <option value="Cash">Cash</option>
+          <option value="Other">Other</option>
+        </select>
+        <button class="port-add-btn" id="portAddBtn">+ Add Position</button>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="port-summary" id="portSummary">
+        <div class="stat-card"><div class="stat-label">Total Value</div><div class="stat-value" id="portTotalVal">—</div><div class="stat-sub">Current market value</div></div>
+        <div class="stat-card"><div class="stat-label">Total P&amp;L</div><div class="stat-value" id="portTotalPnl">—</div><div class="stat-sub" id="portTotalPnlPct">—</div></div>
+        <div class="stat-card"><div class="stat-label">Cost Basis</div><div class="stat-value" id="portCostBasis">—</div><div class="stat-sub">Total invested</div></div>
+        <div class="stat-card"><div class="stat-label">Positions</div><div class="stat-value" id="portCount">0</div><div class="stat-sub">Holdings tracked</div></div>
+        <div class="stat-card"><div class="stat-label">Macro Risk Score</div><div class="stat-value" id="portMacroScore">—</div><div class="stat-sub" id="portMacroSub">vs composite</div></div>
+        <div class="stat-card"><div class="stat-label">Equity Exposure</div><div class="stat-value" id="portEquityPct">—</div><div class="stat-sub">of portfolio</div></div>
+      </div>
+
+      <!-- Positions table -->
+      <div id="portEmptyMsg" style="color:var(--muted);font-size:13px;padding:12px 0;display:none">
+        No positions yet. Add a position above.
+      </div>
+      <div class="table-wrap">
+        <table class="port-table" id="portTable">
+          <thead>
+            <tr>
+              <th>Ticker</th><th>Class</th><th>Shares</th><th>Avg Cost</th>
+              <th>Current Price</th><th>Market Value</th><th>P&amp;L ($)</th><th>P&amp;L (%)</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="portTbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Portfolio allocation chart + macro risk context -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+      <section class="panel">
+        <div class="panel-header"><h2>Allocation Breakdown</h2></div>
+        <p class="panel-sub">By asset class.</p>
+        <div class="port-alloc-wrap">
+          <canvas id="portAllocChart" width="180" height="180" style="flex-shrink:0"></canvas>
+          <div class="port-alloc-legend" id="portAllocLegend"></div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-header"><h2>Portfolio Macro Risk</h2></div>
+        <p class="panel-sub">How recession risk maps to your holdings.</p>
+        <div id="portMacroAdvice" style="font-size:13px;line-height:1.7;color:var(--muted)">
+          Add positions and load the Live Dashboard to see macro-adjusted guidance.
+        </div>
+        <div style="margin-top:16px" id="portRiskBreakdown"></div>
+      </section>
+    </div>
+
+    <!-- Level 2 / Market Depth -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Level 2 &amp; Market Depth</h2></div>
+      <p class="panel-sub">Real-time price ladder, bid/ask depth, and order flow for any symbol. Powered by TradingView Advanced Chart — click the depth-of-market (DOM) button inside the chart for the order book view.</p>
+      <div class="l2-sym-row">
+        <input class="port-input wide" id="l2SymInput" type="text" placeholder="Enter symbol (e.g. SPY, AAPL, ES1!)" autocapitalize="characters" style="max-width:260px" />
+        <button class="port-add-btn" id="l2LoadBtn" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border)">Load Chart</button>
+        <span style="font-size:12px;color:var(--muted);align-self:center;margin-left:8px">Click the <strong>⊞ DOM</strong> or <strong>depth</strong> button inside the chart for the order book panel.</span>
+      </div>
+      <div id="l2ChartWrap" class="tv-wrap tradingview-widget-container" style="height:550px"></div>
+    </section>
+
+  </div><!-- /tab-portfolio -->
+
+  <!-- OPTIONS TAB -->
+  <div class="tab-content" id="tab-options" hidden>
+
+    <!-- Black-Scholes Calculator -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Options Pricing &amp; Greeks — Black-Scholes</h2></div>
+      <p class="panel-sub">Price European-style options and compute all five Greeks. Use the current VIX reading as a proxy for implied volatility on index options, or enter the contract's own IV.</p>
+      <div class="opts-grid">
+        <div class="opts-form">
+          <h3>Inputs</h3>
+          <div class="opts-field">
+            <label>Underlying Price (S)</label>
+            <input type="number" id="bs-S" placeholder="e.g. 530.00" step="0.01" min="0.01" />
+          </div>
+          <div class="opts-field">
+            <label>Strike Price (K)</label>
+            <input type="number" id="bs-K" placeholder="e.g. 525.00" step="0.01" min="0.01" />
+          </div>
+          <div class="opts-field">
+            <label>Days to Expiration</label>
+            <input type="number" id="bs-T" placeholder="e.g. 30" step="1" min="1" max="1825" />
+          </div>
+          <div class="opts-field">
+            <label>Implied Volatility (%) — VIX: <span id="bs-vix-hint" style="color:var(--accent)">—</span></label>
+            <input type="number" id="bs-IV" placeholder="e.g. 16.8" step="0.1" min="0.1" max="300" />
+          </div>
+          <div class="opts-field">
+            <label>Risk-Free Rate (%) — Fed Funds: <span id="bs-ff-hint" style="color:var(--accent)">—</span></label>
+            <input type="number" id="bs-r" placeholder="e.g. 3.75" step="0.01" min="0" />
+          </div>
+          <div class="opts-field">
+            <label>Option Type</label>
+            <select id="bs-type">
+              <option value="both">Show Both (Call + Put)</option>
+              <option value="call">Call Only</option>
+              <option value="put">Put Only</option>
+            </select>
+          </div>
+          <div class="opts-field">
+            <label>Contracts (×100 shares)</label>
+            <input type="number" id="bs-contracts" value="1" step="1" min="1" />
+          </div>
+          <button class="opts-calc-btn" id="bsCalcBtn">Calculate →</button>
+        </div>
+
+        <div class="opts-result" id="bsResult">
+          <h3>Results</h3>
+          <div style="color:var(--muted);font-size:13px">Fill in the inputs and click Calculate.</div>
+        </div>
+      </div>
+
+      <!-- Payoff diagram -->
+      <div class="opts-payoff" id="optsPayoffSection" style="display:none">
+        <div class="panel-header" style="margin-bottom:8px"><h2>Payoff at Expiration</h2></div>
+        <p class="panel-sub" id="optsPayoffSub"></p>
+        <canvas id="optsPayoffChart" height="240"></canvas>
+      </div>
+    </section>
+
+    <!-- Options explainer / education -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Greeks Reference</h2></div>
+      <div class="meth-grid">
+        <div class="meth-card">
+          <h4>Delta (Δ)</h4>
+          <p>Rate of change of the option price with respect to the underlying price. A call delta of 0.60 means the option gains $0.60 for every $1 rise in the stock. Delta ∈ [0,1] for calls, [−1,0] for puts. Also approximates the probability of expiring in-the-money.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Gamma (Γ)</h4>
+          <p>Rate of change of Delta. High gamma means delta changes rapidly as the stock moves — ATM options near expiry have the highest gamma. Gamma risk is highest for short-dated positions. Long options have positive gamma (you benefit from large moves).</p>
+        </div>
+        <div class="meth-card">
+          <h4>Theta (Θ)</h4>
+          <p>Time decay — how much the option loses per day as expiration approaches. Negative for long options (you lose value each day). ATM options decay fastest near expiry. Theta = Vega's opponent: selling options earns theta but risks vega loss if IV spikes.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Vega (ν)</h4>
+          <p>Sensitivity to implied volatility. A vega of 0.20 means the option gains $0.20 for every 1% rise in IV. Long options benefit from rising IV (VIX spikes). During recessions, IV surges — long put positions profit from both delta and vega simultaneously.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Rho (ρ)</h4>
+          <p>Sensitivity to interest rates. A 1% rise in rates increases a call option by rho and decreases a put by rho. Rho matters most for long-dated options (LEAPS). Fed rate cuts (RED composite) reduce call rho; rate hikes do the opposite.</p>
+        </div>
+        <div class="meth-card">
+          <h4>Options &amp; Macro Context</h4>
+          <p>When the composite is RED, buying puts on broad market ETFs (SPY, QQQ) can hedge portfolio risk. Rising VIX inflates premiums — buying options in GREEN conditions (low VIX, cheap premiums) to hedge against future RED scenarios is the classic "disaster insurance" trade.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Live options chain via TradingView -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Live Options Chain</h2></div>
+      <p class="panel-sub">Interactive options chain with real-time bid/ask, open interest, and volume. Enter a symbol below.</p>
+      <div class="l2-sym-row">
+        <input class="port-input wide" id="optsChainSym" type="text" placeholder="Symbol (e.g. SPY, AAPL, QQQ)" autocapitalize="characters" style="max-width:260px" value="SPY" />
+        <button class="port-add-btn" id="optsChainLoadBtn" style="background:var(--panel-2);color:var(--text);border:1px solid var(--border)">Load Chart</button>
+      </div>
+      <div id="optsChainWrap" class="tv-wrap tradingview-widget-container" style="height:520px"></div>
+    </section>
+
+  </div><!-- /tab-options -->
 
   <!-- METHODOLOGY TAB -->
   <div class="tab-content" id="tab-methodology" hidden>
@@ -3024,8 +3285,10 @@ let activeTab = 'live';
 
 let signalsRendered = false;
 let watchlistRendered = false;
+let portfolioRendered = false;
+let optionsRendered   = false;
 function setTab(name) {
-  if (!['live','backtest','markets','watchlist','signals','methodology'].includes(name)) name = 'live';
+  if (!['live','backtest','markets','watchlist','portfolio','options','signals','methodology'].includes(name)) name = 'live';
   activeTab = name;
   document.querySelectorAll('.tab-btn[data-tab]').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
@@ -3052,6 +3315,19 @@ function setTab(name) {
       watchlistRendered = true;
     }
     updateWatchlistMacroContext();
+  }
+  if (name === 'portfolio') {
+    if (!portfolioRendered) {
+      initPortfolio();
+      portfolioRendered = true;
+    }
+    updatePortfolioMacro();
+  }
+  if (name === 'options') {
+    if (!optionsRendered) {
+      initOptions();
+      optionsRendered = true;
+    }
   }
 }
 
@@ -4041,6 +4317,524 @@ function renderSignals() {
   });
 }
 
+// ─── PORTFOLIO TRACKER ───────────────────────────────────────────────────────
+function initPortfolio() {
+  const KEY = 'recession-tracker-portfolio-v1';
+  const ASSET_COLORS = {
+    Equity: '#66b3ff', ETF: '#4dd9c0', Bond: '#c97af1',
+    Commodity: '#f0e442', Crypto: '#ff9f7a', Cash: '#2ddc8c', Other: '#7a84a8'
+  };
+
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } };
+  const save = d  => localStorage.setItem(KEY, JSON.stringify(d));
+  const fmt$ = v  => v === null || v === undefined ? '—' : '$' + Number(v).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const fmtPct = v => v === null || v === undefined ? '—' : (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+
+  function calcRow(p) {
+    const mv   = p.qty * p.price;
+    const cost = p.qty * p.cost;
+    const pnl  = mv - cost;
+    const pct  = cost > 0 ? (pnl / cost) * 100 : null;
+    return { mv, cost, pnl, pct };
+  }
+
+  let allocChart = null;
+
+  function renderAlloc(positions) {
+    const totals = {};
+    positions.forEach(p => {
+      const { mv } = calcRow(p);
+      totals[p.assetClass] = (totals[p.assetClass] || 0) + mv;
+    });
+    const totalMV = Object.values(totals).reduce((a, b) => a + b, 0);
+    const labels  = Object.keys(totals);
+    const data    = labels.map(l => totals[l]);
+    const colors  = labels.map(l => ASSET_COLORS[l] || '#7a84a8');
+
+    const canvas = document.getElementById('portAllocChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (allocChart) allocChart.destroy();
+
+    if (!data.length) { ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
+
+    allocChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 2, borderColor: 'var(--panel)' }] },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a2340', titleColor: '#eef2ff', bodyColor: '#7a84a8',
+            callbacks: { label: i => ` ${i.label}: ${fmt$(i.parsed)} (${totalMV > 0 ? (i.parsed / totalMV * 100).toFixed(1) : 0}%)` }
+          }
+        }
+      }
+    });
+
+    const legend = document.getElementById('portAllocLegend');
+    if (legend) {
+      legend.innerHTML = labels.map((l, i) =>
+        `<div><span class="port-alloc-dot" style="background:${colors[i]}"></span><strong>${l}</strong> — ${fmt$(data[i])} (${totalMV > 0 ? (data[i] / totalMV * 100).toFixed(1) : 0}%)</div>`
+      ).join('');
+    }
+  }
+
+  function renderTable() {
+    const positions = load();
+    const tbody  = document.getElementById('portTbody');
+    const emptyEl = document.getElementById('portEmptyMsg');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    if (!positions.length) {
+      if (emptyEl) emptyEl.style.display = '';
+      document.getElementById('portCount').textContent = '0';
+      ['portTotalVal','portTotalPnl','portCostBasis','portEquityPct','portMacroScore'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.textContent = '—';
+      });
+      renderAlloc([]);
+      return;
+    }
+    if (emptyEl) emptyEl.style.display = 'none';
+
+    let totalMV = 0, totalCost = 0, totalPnl = 0;
+    let equityMV = 0;
+
+    positions.forEach((p, idx) => {
+      const { mv, cost, pnl, pct } = calcRow(p);
+      totalMV   += mv;
+      totalCost += cost;
+      totalPnl  += pnl;
+      if (['Equity','ETF'].includes(p.assetClass)) equityMV += mv;
+
+      const pnlClass = pnl >= 0 ? 'port-pnl-pos' : 'port-pnl-neg';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${p.symbol}</strong></td>
+        <td><span style="background:${ASSET_COLORS[p.assetClass]||'#7a84a8'}22;color:${ASSET_COLORS[p.assetClass]||'#7a84a8'};border-radius:4px;padding:2px 7px;font-size:11px;font-weight:700">${p.assetClass}</span></td>
+        <td>${Number(p.qty).toLocaleString(undefined,{maximumFractionDigits:4})}</td>
+        <td>${fmt$(p.cost)}</td>
+        <td>
+          <input type="number" step="0.01" min="0" value="${p.price}"
+            style="background:var(--panel-2);border:1px solid var(--border);border-radius:5px;
+                   color:var(--text);padding:4px 7px;width:90px;font-size:12px;font-family:inherit"
+            data-idx="${idx}" class="price-edit" />
+        </td>
+        <td>${fmt$(mv)}</td>
+        <td class="${pnlClass}">${fmt$(pnl)}</td>
+        <td class="${pnlClass}">${fmtPct(pct)}</td>
+        <td><button class="rm-btn port-table" data-idx="${idx}" title="Remove">×</button></td>`;
+      tbody.appendChild(tr);
+    });
+
+    document.getElementById('portCount').textContent     = positions.length;
+    document.getElementById('portTotalVal').textContent  = fmt$(totalMV);
+    document.getElementById('portCostBasis').textContent = fmt$(totalCost);
+
+    const pnlEl = document.getElementById('portTotalPnl');
+    pnlEl.textContent  = fmt$(totalPnl);
+    pnlEl.style.color  = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+    const pnlPctEl = document.getElementById('portTotalPnlPct');
+    pnlPctEl.textContent = totalCost > 0 ? fmtPct(totalPnl / totalCost * 100) : '—';
+
+    const eqPct = totalMV > 0 ? (equityMV / totalMV * 100).toFixed(1) + '%' : '—';
+    document.getElementById('portEquityPct').textContent = eqPct;
+
+    renderAlloc(positions);
+    updatePortfolioMacro();
+
+    // Live price-edit listeners
+    tbody.querySelectorAll('.price-edit').forEach(inp => {
+      inp.addEventListener('change', () => {
+        const data = load();
+        const i = parseInt(inp.dataset.idx);
+        if (data[i]) { data[i].price = parseFloat(inp.value) || 0; save(data); renderTable(); }
+      });
+    });
+    // Remove listeners
+    tbody.querySelectorAll('.rm-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const data = load();
+        data.splice(parseInt(btn.dataset.idx), 1);
+        save(data); renderTable();
+      });
+    });
+  }
+
+  function addPosition() {
+    const sym   = document.getElementById('portSym')?.value.trim().toUpperCase();
+    const qty   = parseFloat(document.getElementById('portQty')?.value);
+    const cost  = parseFloat(document.getElementById('portCost')?.value);
+    const price = parseFloat(document.getElementById('portPrice')?.value);
+    const cls   = document.getElementById('portClass')?.value || 'Equity';
+    if (!sym || isNaN(qty) || isNaN(cost)) {
+      alert('Symbol, Shares, and Avg Cost are required.');
+      return;
+    }
+    const data = load();
+    data.push({ symbol: sym, qty, cost, price: isNaN(price) ? cost : price, assetClass: cls, addedAt: new Date().toISOString() });
+    save(data);
+    ['portSym','portQty','portCost','portPrice'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    renderTable();
+  }
+
+  document.getElementById('portAddBtn')?.addEventListener('click', addPosition);
+  document.getElementById('portSym')?.addEventListener('keydown', e => { if (e.key === 'Enter') addPosition(); });
+
+  // Export CSV
+  document.getElementById('portExportBtn')?.addEventListener('click', () => {
+    const rows = [['Symbol','Asset Class','Shares','Avg Cost','Current Price','Market Value','P&L','P&L%'].join(',')]
+      .concat(load().map(p => {
+        const { mv, pnl, pct } = calcRow(p);
+        return [p.symbol, p.assetClass, p.qty, p.cost, p.price, mv.toFixed(2), pnl.toFixed(2), (pct||0).toFixed(2)].join(',');
+      }));
+    const a = document.createElement('a');
+    a.href = 'data:text/csv,' + encodeURIComponent(rows.join('\n'));
+    a.download = `portfolio-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  });
+
+  // Import CSV
+  document.getElementById('portImportBtn')?.addEventListener('click', () => document.getElementById('portImportFile')?.click());
+  document.getElementById('portImportFile')?.addEventListener('change', async e => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    const lines = text.trim().split('\n').slice(1);
+    const data = load();
+    lines.forEach(line => {
+      const [symbol, assetClass, qty, cost, price] = line.split(',');
+      if (symbol && qty && cost) {
+        data.push({ symbol: symbol.trim().toUpperCase(), assetClass: assetClass||'Equity', qty: parseFloat(qty), cost: parseFloat(cost), price: parseFloat(price||cost), addedAt: new Date().toISOString() });
+      }
+    });
+    save(data); renderTable();
+    e.target.value = '';
+  });
+
+  // Clear all
+  document.getElementById('portClearBtn')?.addEventListener('click', () => {
+    if (confirm('Clear all positions?')) { save([]); renderTable(); }
+  });
+
+  // Level 2 chart loader
+  function loadL2Chart(symbol) {
+    const wrap = document.getElementById('l2ChartWrap');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    const w = document.createElement('div');
+    w.className = 'tradingview-widget-container__widget';
+    w.style.height = '100%';
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src  = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+    s.async = true;
+    s.textContent = JSON.stringify({
+      autosize: true,
+      symbol: symbol || 'NASDAQ:SPY',
+      interval: '5',
+      timezone: 'America/New_York',
+      theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+      style: '1',
+      locale: 'en',
+      withdateranges: true,
+      range: '1D',
+      hide_side_toolbar: false,
+      allow_symbol_change: true,
+      watchlist: ['NASDAQ:SPY','NASDAQ:QQQ','AMEX:GLD','CBOT:ZN1!','CBOE:VIX'],
+      studies: ['Volume@tv-basicstudies', 'VWAP@tv-basicstudies'],
+      show_popup_button: true,
+      popup_width: '1000',
+      popup_height: '650'
+    });
+    wrap.appendChild(w);
+    wrap.appendChild(s);
+  }
+
+  document.getElementById('l2LoadBtn')?.addEventListener('click', () => {
+    const sym = document.getElementById('l2SymInput')?.value.trim();
+    loadL2Chart(sym || 'SPY');
+  });
+  loadL2Chart('SPY');
+
+  renderTable();
+}
+
+function updatePortfolioMacro() {
+  const snap = window._snapshotCache;
+  if (!snap) return;
+  const score = snap.composite?.score ?? null;
+  const alert = snap.composite?.alert ?? '—';
+  if (score === null) return;
+
+  const el = document.getElementById('portMacroScore');
+  if (el) {
+    el.textContent = score;
+    el.style.color = score >= 60 ? 'var(--red)' : score >= 30 ? 'var(--yellow)' : 'var(--green)';
+  }
+  const subEl = document.getElementById('portMacroSub');
+  if (subEl) subEl.textContent = `Alert: ${alert}`;
+
+  const advice = document.getElementById('portMacroAdvice');
+  if (advice) {
+    let text, color;
+    if (score >= 60) {
+      text  = '🔴 RED — High recession risk. Consider reducing equity and high-yield bond exposure. Rotate toward short-duration Treasuries (SHY, BIL), gold (GLD), and defensive sectors (XLU, XLP, XLV). Consider put hedges on broad market ETFs (SPY puts). Cash is a position.';
+      color = 'var(--red)';
+    } else if (score >= 30) {
+      text  = '🟡 YELLOW — Elevated watch. Maintain diversification. Consider trimming high-beta positions and adding hedges. Ensure your bond allocation is adequate. Avoid adding significant leverage. Review concentration in cyclical sectors (XLY, XLB, XLI).';
+      color = 'var(--yellow)';
+    } else {
+      text  = '🟢 GREEN — Low recession risk. Historical precedent supports maintaining risk-on positioning. Continue monitoring; the Financial Leading and Labor layers typically turn first when conditions deteriorate. Ensure you have a hedge plan ready.';
+      color = 'var(--green)';
+    }
+    advice.textContent = text;
+    advice.style.color = color;
+  }
+
+  // Risk breakdown by asset class
+  const KEY = 'recession-tracker-portfolio-v1';
+  let positions = [];
+  try { positions = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch {}
+  const riskEl = document.getElementById('portRiskBreakdown');
+  if (!riskEl || !positions.length) return;
+
+  const riskMap = { Equity: 'HIGH', ETF: 'VARIES', Bond: 'LOW-MED', Commodity: 'MEDIUM', Crypto: 'HIGH', Cash: 'NONE', Other: 'UNKNOWN' };
+  const colorMap = { HIGH:'var(--red)', VARIES:'var(--yellow)', 'LOW-MED':'var(--green)', MEDIUM:'var(--yellow)', NONE:'var(--muted)', UNKNOWN:'var(--muted)' };
+  riskEl.innerHTML = positions.slice(0,8).map(p =>
+    `<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)">
+      <span style="font-weight:700">${p.symbol}</span>
+      <span style="color:${colorMap[riskMap[p.assetClass]]||'var(--muted)'}">Recession risk: ${riskMap[p.assetClass]||'—'}</span>
+    </div>`
+  ).join('');
+}
+
+// ─── OPTIONS CALCULATOR (BLACK-SCHOLES) ────────────────────────────────────────
+function initOptions() {
+  // Standard normal CDF via Horner's method
+  function normCDF(x) {
+    const a1=0.254829592, a2=-0.284496736, a3=1.421413741, a4=-1.453152027, a5=1.061405429, p=0.3275911;
+    const sign = x < 0 ? -1 : 1;
+    x = Math.abs(x) / Math.SQRT2;
+    const t = 1 / (1 + p * x);
+    const y = 1 - (((((a5*t + a4)*t) + a3)*t + a2)*t + a1)*t*Math.exp(-x*x);
+    return 0.5 * (1 + sign * y);
+  }
+  function normPDF(x) { return Math.exp(-0.5 * x * x) / Math.sqrt(2 * Math.PI); }
+
+  function bs(S, K, T, r, sigma) {
+    if (T <= 0 || sigma <= 0 || S <= 0 || K <= 0) return null;
+    const d1 = (Math.log(S/K) + (r + 0.5*sigma*sigma)*T) / (sigma*Math.sqrt(T));
+    const d2 = d1 - sigma*Math.sqrt(T);
+    const Nd1 = normCDF(d1), Nd2 = normCDF(d2);
+    const Nd1n = normCDF(-d1), Nd2n = normCDF(-d2);
+    const sqrtT = Math.sqrt(T);
+    const expRT = Math.exp(-r*T);
+
+    const callPrice = S*Nd1 - K*expRT*Nd2;
+    const putPrice  = K*expRT*Nd2n - S*Nd1n;
+
+    const gamma  = normPDF(d1) / (S*sigma*sqrtT);
+    const vega   = S*normPDF(d1)*sqrtT / 100; // per 1% IV move
+    const thetaC = (-(S*normPDF(d1)*sigma)/(2*sqrtT) - r*K*expRT*Nd2) / 365;
+    const thetaP = (-(S*normPDF(d1)*sigma)/(2*sqrtT) + r*K*expRT*Nd2n) / 365;
+    const rhoC   = K*T*expRT*Nd2 / 100;       // per 1% rate move
+    const rhoP   = -K*T*expRT*Nd2n / 100;
+
+    return {
+      call: { price: callPrice, delta: Nd1,     theta: thetaC, rho: rhoC, prob_itm: Nd1 },
+      put:  { price: putPrice,  delta: Nd1-1,   theta: thetaP, rho: rhoP, prob_itm: Nd2n },
+      gamma, vega, d1, d2
+    };
+  }
+
+  let payoffChart = null;
+
+  function renderResult(res, S, K, T, IV, r, contracts, type) {
+    const el = document.getElementById('bsResult');
+    if (!el || !res) return;
+    const R = 100 * contracts;
+    const fmt = (v, d=3) => v == null ? '—' : v.toFixed(d);
+    const fmtMoney = v => v == null ? '—' : (v >= 0 ? '+' : '') + '$' + Math.abs(v*R).toFixed(2);
+
+    const showCall = type !== 'put';
+    const showPut  = type !== 'call';
+
+    const greekRow = (name, callVal, putVal, desc, unit='') => {
+      const showC = showCall ? `<td style="text-align:right;font-weight:700;color:var(--accent)">${fmt(callVal)}${unit}</td>` : '';
+      const showP = showPut  ? `<td style="text-align:right;font-weight:700;color:var(--red)">${fmt(putVal)}${unit}</td>` : '';
+      return `<tr><td style="color:var(--muted)">${name}</td>${showC}${showP}<td style="color:var(--muted);font-size:11px">${desc}</td></tr>`;
+    };
+
+    const callHeader = showCall ? '<th style="color:var(--accent)">Call</th>' : '';
+    const putHeader  = showPut  ? '<th style="color:var(--red)">Put</th>'  : '';
+
+    el.innerHTML = `
+      <h3>Results — ${contracts} contract${contracts>1?'s':''} × 100 shares</h3>
+      <div class="opts-greeks" style="margin-bottom:16px">
+        ${showCall ? `<div class="greek-card"><div class="gname">Call Price</div><div class="gval" style="color:var(--accent)">$${fmt(res.call.price,2)}</div><div class="gdesc">Per share · Total: $${(res.call.price*R).toFixed(2)}</div></div>` : ''}
+        ${showPut  ? `<div class="greek-card"><div class="gname">Put Price</div><div class="gval" style="color:var(--red)">$${fmt(res.put.price,2)}</div><div class="gdesc">Per share · Total: $${(res.put.price*R).toFixed(2)}</div></div>` : ''}
+        <div class="greek-card"><div class="gname">Gamma</div><div class="gval">${fmt(res.gamma,4)}</div><div class="gdesc">Both calls &amp; puts</div></div>
+        <div class="greek-card"><div class="gname">Vega</div><div class="gval">$${fmt(res.vega*R,2)}</div><div class="gdesc">Per 1% IV move (${contracts}c)</div></div>
+      </div>
+      <div class="table-wrap">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr><th style="text-align:left;color:var(--muted);font-size:10px;padding:6px 8px">Greek</th>${callHeader}${putHeader}<th style="text-align:left;color:var(--muted);font-size:10px">Meaning</th></tr></thead>
+          <tbody style="font-size:12px">
+            ${greekRow('Delta',       res.call.delta,    res.put.delta,   '$/$ move in underlying')}
+            ${greekRow('Theta/day',   res.call.theta,    res.put.theta,   'Time decay per calendar day','$')}
+            ${greekRow('Rho /1%rate', res.call.rho,      res.put.rho,     'Sensitivity to 1% rate change','$')}
+            ${greekRow('Prob ITM',    res.call.prob_itm, res.put.prob_itm,'Approx. prob of expiring ITM','%')}
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:10px">
+        d₁=${fmt(res.d1,4)} · d₂=${fmt(res.d2,4)} · T=${T.toFixed(4)} yr · IV=${(IV*100).toFixed(1)}% · r=${(r*100).toFixed(2)}%
+      </div>`;
+
+    // Payoff chart
+    const sec = document.getElementById('optsPayoffSection');
+    const sub = document.getElementById('optsPayoffSub');
+    if (sec) sec.style.display = '';
+    if (sub) sub.textContent = `At expiration with ${T > 0.0833 ? Math.round(T*365)+' days' : 'same-day expiry'} remaining. Breakevens shown.`;
+
+    const range = S * 0.35;
+    const prices = Array.from({length:80}, (_,i) => S - range + i * (range * 2 / 79));
+    const callPayoffs = prices.map(p => Math.max(0, p - K) - res.call.price);
+    const putPayoffs  = prices.map(p => Math.max(0, K - p) - res.put.price);
+
+    const canvas = document.getElementById('optsPayoffChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (payoffChart) payoffChart.destroy();
+
+    const datasets = [];
+    if (showCall) datasets.push({ label:`Long Call (×${R}sh)`, data: callPayoffs.map(v=>v*R), borderColor:'#66b3ff', borderWidth:2, pointRadius:0, fill:false, tension:0 });
+    if (showPut)  datasets.push({ label:`Long Put (×${R}sh)`,  data: putPayoffs.map(v=>v*R),  borderColor:'#ff9f7a', borderWidth:2, pointRadius:0, fill:false, tension:0 });
+
+    payoffChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: prices.map(p => '$'+p.toFixed(1)), datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: true, labels: { color:'#7a84a8', font:{size:11} } },
+          tooltip: { backgroundColor:'#1a2340', titleColor:'#eef2ff', bodyColor:'#7a84a8',
+                     callbacks: { label: i => ` ${i.dataset.label}: ${i.parsed.y >= 0 ? '+' : ''}$${i.parsed.y.toFixed(2)}` } },
+          annotation: {}
+        },
+        scales: {
+          x: { ticks: { color:'#7a84a8', maxTicksLimit:10, font:{size:10} }, grid:{color:'rgba(255,255,255,0.03)'} },
+          y: { ticks: { color:'#7a84a8', font:{size:11}, callback: v => (v>=0?'+':'')+'$'+v.toFixed(0) },
+               grid: { color: 'rgba(255,255,255,0.04)' } }
+        }
+      }
+    });
+  }
+
+  function calculate() {
+    const S = parseFloat(document.getElementById('bs-S')?.value);
+    const K = parseFloat(document.getElementById('bs-K')?.value);
+    const days = parseFloat(document.getElementById('bs-T')?.value);
+    const IVpct = parseFloat(document.getElementById('bs-IV')?.value);
+    const rPct  = parseFloat(document.getElementById('bs-r')?.value);
+    const type  = document.getElementById('bs-type')?.value || 'both';
+    const contracts = parseInt(document.getElementById('bs-contracts')?.value) || 1;
+
+    if ([S,K,days,IVpct,rPct].some(v => isNaN(v) || v <= 0)) {
+      document.getElementById('bsResult').innerHTML = '<h3>Results</h3><p style="color:var(--red)">Please fill in all inputs with positive values.</p>';
+      const sec = document.getElementById('optsPayoffSection');
+      if (sec) sec.style.display = 'none';
+      return;
+    }
+
+    const T = days / 365;
+    const r = rPct / 100;
+    const sigma = IVpct / 100;
+    const res = bs(S, K, T, r, sigma);
+    if (!res) { document.getElementById('bsResult').innerHTML = '<h3>Results</h3><p style="color:var(--red)">Calculation error — check inputs.</p>'; return; }
+    renderResult(res, S, K, T, sigma, r, contracts, type);
+  }
+
+  document.getElementById('bsCalcBtn')?.addEventListener('click', calculate);
+  document.getElementById('bs-S')?.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+
+  // Prefill hints from live snapshot
+  const snap = window._snapshotCache;
+  if (snap) {
+    const vix = snap.indicators?.find(i => i.fred_id === 'VIXCLS');
+    const ff  = snap.indicators?.find(i => i.fred_id === 'FEDFUNDS');
+    if (vix?.latest_value != null) {
+      document.getElementById('bs-vix-hint').textContent = vix.latest_value.toFixed(1) + '%';
+      const ivEl = document.getElementById('bs-IV');
+      if (ivEl && !ivEl.value) ivEl.value = vix.latest_value.toFixed(1);
+    }
+    if (ff?.latest_value != null) {
+      document.getElementById('bs-ff-hint').textContent = ff.latest_value.toFixed(2) + '%';
+      const rEl = document.getElementById('bs-r');
+      if (rEl && !rEl.value) rEl.value = ff.latest_value.toFixed(2);
+    }
+  }
+
+  // Prefill hints after snapshot loads too
+  window.addEventListener('snapshotLoaded', () => {
+    const s = window._snapshotCache;
+    if (!s) return;
+    const vix = s.indicators?.find(i => i.fred_id === 'VIXCLS');
+    const ff  = s.indicators?.find(i => i.fred_id === 'FEDFUNDS');
+    if (vix?.latest_value != null) {
+      document.getElementById('bs-vix-hint').textContent = vix.latest_value.toFixed(1) + '%';
+      const ivEl = document.getElementById('bs-IV');
+      if (ivEl && !ivEl.value) ivEl.value = vix.latest_value.toFixed(1);
+    }
+    if (ff?.latest_value != null) {
+      document.getElementById('bs-ff-hint').textContent = ff.latest_value.toFixed(2) + '%';
+      const rEl = document.getElementById('bs-r');
+      if (rEl && !rEl.value) rEl.value = ff.latest_value.toFixed(2);
+    }
+  });
+
+  // Options chain chart loader
+  function loadChain(symbol) {
+    const wrap = document.getElementById('optsChainWrap');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    const w = document.createElement('div');
+    w.className = 'tradingview-widget-container__widget';
+    w.style.height = '100%';
+    const s = document.createElement('script');
+    s.type  = 'text/javascript';
+    s.src   = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+    s.async = true;
+    s.textContent = JSON.stringify({
+      autosize: true,
+      symbol: symbol || 'NASDAQ:SPY',
+      interval: 'D',
+      timezone: 'America/New_York',
+      theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+      style: '1',
+      locale: 'en',
+      withdateranges: true,
+      range: '3M',
+      hide_side_toolbar: false,
+      allow_symbol_change: true,
+      studies: ['RSI@tv-basicstudies','MACD@tv-basicstudies','Volume@tv-basicstudies'],
+      show_popup_button: true,
+      popup_width: '1000',
+      popup_height: '650'
+    });
+    wrap.appendChild(w);
+    wrap.appendChild(s);
+  }
+
+  document.getElementById('optsChainLoadBtn')?.addEventListener('click', () => {
+    const sym = document.getElementById('optsChainSym')?.value.trim();
+    loadChain(sym || 'SPY');
+  });
+  loadChain('SPY');
+}
+
 // ─── FIXED INCOME ANALYTICS ──────────────────────────────────────────────────
 function renderFixedIncome() {
   const snap = window._snapshotCache;
@@ -4243,6 +5037,8 @@ function renderFixedIncome() {
     const active = document.querySelector('.scenario-card.active');
     if (active) renderScenarioResult(active.dataset.scenario);
     renderFixedIncome();
+    if (portfolioRendered) updatePortfolioMacro();
+    if (watchlistRendered) updateWatchlistMacroContext();
   });
 })();
 
