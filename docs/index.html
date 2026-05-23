@@ -112,6 +112,60 @@
                    gap: 12px; margin-bottom: 20px; }
     .mkt-ctx-card { background: var(--panel-2); border: 1px solid var(--border);
                     border-radius: 12px; padding: 16px; }
+    /* ── FX / INTERNATIONAL PANELS ──────────────────────────────────────────── */
+    .fx-pairs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr));
+                     gap: 10px; margin-bottom: 16px; }
+    .fx-pair-card  { background: var(--panel-2); border: 1px solid var(--border);
+                     border-radius: 10px; padding: 12px; text-align: center; }
+    .fx-pair-card .pair  { font-size: 13px; font-weight: 700; color: var(--text); }
+    .fx-pair-card .rate  { font-size: 18px; font-weight: 800; margin: 4px 0; color: var(--accent); }
+    .fx-pair-card .chng  { font-size: 11px; color: var(--muted); }
+    /* ── WATCHLIST TAB ───────────────────────────────────────────────────────── */
+    .wl-add-row    { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+    .wl-input      { flex: 1; min-width: 160px; background: var(--panel-2);
+                     border: 1px solid var(--border); border-radius: 8px;
+                     color: var(--text); padding: 9px 12px; font-size: 14px;
+                     font-family: inherit; }
+    .wl-input:focus { outline: none; border-color: var(--accent); }
+    .wl-add-btn    { background: var(--accent); color: #fff; border: none;
+                     border-radius: 8px; padding: 9px 18px; font-size: 14px;
+                     font-weight: 600; cursor: pointer; font-family: inherit; }
+    .wl-add-btn:hover { opacity: 0.85; }
+    .wl-grid       { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+                     gap: 14px; margin-bottom: 20px; }
+    .wl-card       { background: var(--panel); border: 1px solid var(--border);
+                     border-radius: 14px; overflow: hidden; position: relative; }
+    .wl-card-header{ display: flex; justify-content: space-between; align-items: center;
+                     padding: 12px 14px 0; }
+    .wl-ticker     { font-size: 15px; font-weight: 800; letter-spacing: 0.04em; }
+    .wl-remove-btn { background: none; border: none; color: var(--muted); cursor: pointer;
+                     font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 4px; }
+    .wl-remove-btn:hover { color: var(--red); }
+    .wl-note-input { width: calc(100% - 28px); margin: 6px 14px 0;
+                     background: var(--panel-2); border: 1px solid var(--border);
+                     border-radius: 6px; color: var(--muted); padding: 5px 8px;
+                     font-size: 12px; font-family: inherit; resize: none; }
+    .wl-note-input:focus { outline: none; border-color: var(--accent); }
+    /* ── SCENARIO ANALYSIS ───────────────────────────────────────────────────── */
+    .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+                     gap: 12px; margin-bottom: 16px; }
+    .scenario-card { background: var(--panel-2); border: 2px solid var(--border);
+                     border-radius: 12px; padding: 16px; cursor: pointer;
+                     transition: border-color 0.15s; }
+    .scenario-card:hover, .scenario-card.active { border-color: var(--accent); }
+    .scenario-card h4  { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .scenario-card p   { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .scenario-result   { background: var(--panel-2); border-radius: 12px;
+                         padding: 20px; margin-top: 12px; }
+    /* ── FIXED INCOME ────────────────────────────────────────────────────────── */
+    .fi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr));
+               gap: 10px; margin-bottom: 16px; }
+    .fi-card { background: var(--panel-2); border: 1px solid var(--border);
+               border-radius: 10px; padding: 14px; }
+    .fi-card .fi-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
+                         letter-spacing: 0.06em; margin-bottom: 4px; }
+    .fi-card .fi-val   { font-size: 20px; font-weight: 800; }
+    .fi-card .fi-sub   { font-size: 11px; color: var(--muted); margin-top: 3px; }
     .mkt-ctx-card h4 { font-size: 12px; font-weight: 700; color: var(--accent);
                        text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
     .mkt-ctx-card p  { font-size: 12px; color: var(--muted); line-height: 1.65; }
@@ -435,6 +489,7 @@
     <button class="tab-btn active" data-tab="live">Live Dashboard</button>
     <button class="tab-btn"        data-tab="backtest">30-Year Backtest</button>
     <button class="tab-btn"        data-tab="markets">Markets</button>
+    <button class="tab-btn"        data-tab="watchlist">Watchlist</button>
     <button class="tab-btn"        data-tab="signals">Expert Signals</button>
     <button class="tab-btn"        data-tab="methodology">Methodology</button>
     <a class="tab-btn" href="feed.xml" target="_blank" rel="noopener">RSS Feed ↗</a>
@@ -913,6 +968,83 @@
   </div>
 </section>
 
+    <!-- FX & Currency Markets (full width) -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>FX &amp; Currency Markets</h2></div>
+      <p class="panel-sub">Major forex pairs and the US Dollar Index. A surging DXY tightens global financial conditions; EM currencies weaken relative to USD — a reliable late-cycle stress signal.</p>
+      <div class="fx-pairs-grid" id="fxPairsCards">
+        <div class="fx-pair-card"><div class="pair">EUR/USD</div><div class="rate" id="fx-eurusd">—</div><div class="chng">Euro vs Dollar</div></div>
+        <div class="fx-pair-card"><div class="pair">GBP/USD</div><div class="rate" id="fx-gbpusd">—</div><div class="chng">Pound vs Dollar</div></div>
+        <div class="fx-pair-card"><div class="pair">USD/JPY</div><div class="rate" id="fx-usdjpy">—</div><div class="chng">Dollar vs Yen</div></div>
+        <div class="fx-pair-card"><div class="pair">USD/CHF</div><div class="rate" id="fx-usdchf">—</div><div class="chng">Dollar vs Franc</div></div>
+        <div class="fx-pair-card"><div class="pair">AUD/USD</div><div class="rate" id="fx-audusd">—</div><div class="chng">Aussie vs Dollar</div></div>
+        <div class="fx-pair-card"><div class="pair">USD/CAD</div><div class="rate" id="fx-usdcad">—</div><div class="chng">Dollar vs Loonie</div></div>
+        <div class="fx-pair-card"><div class="pair">USD/CNH</div><div class="rate" id="fx-usdcnh">—</div><div class="chng">Dollar vs Offshore Yuan</div></div>
+        <div class="fx-pair-card"><div class="pair">DXY</div><div class="rate" id="fx-dxy">—</div><div class="chng">Dollar Index</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="tv-wrap tradingview-widget-container" id="tv-forex" style="height:420px"></div>
+        <div class="tv-wrap tradingview-widget-container" id="tv-dxy" style="height:420px"></div>
+      </div>
+    </section>
+
+    <!-- International Markets (full width) -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>International Markets</h2></div>
+      <p class="panel-sub">Global equity indices, European bonds, and EM markets. Synchronized global downturns are historically deeper and longer — global breadth here informs the Global layer of the recession composite.</p>
+      <div class="tv-wrap tradingview-widget-container" id="tv-global" style="height:500px"></div>
+    </section>
+
+    <!-- Fixed Income Analytics -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Fixed Income Analytics</h2></div>
+      <p class="panel-sub">Live Treasury rates, TIPS breakeven inflation, and corporate bond spread breakdown — the bond market's real-time macro signal.</p>
+      <div class="fi-grid" id="fiGrid">
+        <div class="fi-card"><div class="fi-label">Fed Funds Rate</div><div class="fi-val" id="fi-fedfunds">—</div><div class="fi-sub">FRED FEDFUNDS</div></div>
+        <div class="fi-card"><div class="fi-label">10Y Treasury</div><div class="fi-val" id="fi-10y">—</div><div class="fi-sub">Derived from spread</div></div>
+        <div class="fi-card"><div class="fi-label">2Y Treasury</div><div class="fi-val" id="fi-2y">—</div><div class="fi-sub">Derived from spread</div></div>
+        <div class="fi-card"><div class="fi-label">10Y-3M Spread</div><div class="fi-val" id="fi-t10y3m">—</div><div class="fi-sub" id="fi-t10y3m-sub">FRED T10Y3M</div></div>
+        <div class="fi-card"><div class="fi-label">TIPS Breakeven</div><div class="fi-val" id="fi-tips">—</div><div class="fi-sub">10Y inflation expectation</div></div>
+        <div class="fi-card"><div class="fi-label">HY Credit Spread</div><div class="fi-val" id="fi-hy">—</div><div class="fi-sub">BAMLH0A0HYM2</div></div>
+        <div class="fi-card"><div class="fi-label">BAA-10Y Spread</div><div class="fi-val" id="fi-baa">—</div><div class="fi-sub">Corp default risk</div></div>
+        <div class="fi-card"><div class="fi-label">STLFSI</div><div class="fi-val" id="fi-stlfsi">—</div><div class="fi-sub">St. Louis Fin. Stress Index</div></div>
+      </div>
+      <div class="tv-wrap tradingview-widget-container" id="tv-rates" style="height:380px"></div>
+    </section>
+
+    <!-- Macro Scenario Stress Test -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Macro Scenario Stress Test</h2></div>
+      <p class="panel-sub">See how the composite score would shift under each historical macro scenario. Select a scenario to view the estimated impact on each indicator layer.</p>
+      <div class="scenario-grid" id="scenarioCards">
+        <div class="scenario-card active" data-scenario="current">
+          <h4>📊 Current Conditions</h4>
+          <p>Live composite reading from FRED data — your baseline.</p>
+        </div>
+        <div class="scenario-card" data-scenario="soft-landing">
+          <h4>🌤 Soft Landing</h4>
+          <p>Inflation returns to 2%, unemployment stays below 4.5%, no recession. Fed cuts gradually.</p>
+        </div>
+        <div class="scenario-card" data-scenario="mild-recession">
+          <h4>🌧 Mild Recession</h4>
+          <p>Unemployment +2pp, GDP -1.5%, credit spreads widen to 500bps. 2001-style downturn.</p>
+        </div>
+        <div class="scenario-card" data-scenario="severe-recession">
+          <h4>⛈ Severe Recession</h4>
+          <p>Unemployment +5pp, GDP -4%, HY spreads >800bps, credit crunch. 2008-style shock.</p>
+        </div>
+        <div class="scenario-card" data-scenario="stagflation">
+          <h4>🔥 Stagflation</h4>
+          <p>Inflation 6%+, GDP stagnant, Fed forced to hike. 1970s analog — worst of both worlds.</p>
+        </div>
+        <div class="scenario-card" data-scenario="boom">
+          <h4>🚀 Expansion / Boom</h4>
+          <p>Strong growth, tight labor market, benign credit conditions. 1990s analog.</p>
+        </div>
+      </div>
+      <div class="scenario-result" id="scenarioResult"></div>
+    </section>
+
     <!-- Sector Heatmap + News (2-col) -->
     <div class="markets-grid" style="margin-bottom:14px">
       <section class="panel">
@@ -932,6 +1064,13 @@
       <div class="panel-header"><h2>Economic Calendar</h2></div>
       <p class="panel-sub">Upcoming high-impact macro events that can shift recession risk signals.</p>
       <div class="tv-wrap tradingview-widget-container" id="tv-calendar" style="height:500px"></div>
+    </section>
+
+    <!-- Earnings Calendar (full width) -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Earnings Calendar</h2></div>
+      <p class="panel-sub">Upcoming earnings releases — corporate earnings misses at scale are a leading indicator of late-cycle deterioration and can accelerate credit spread widening.</p>
+      <div class="tv-wrap tradingview-widget-container" id="tv-earnings" style="height:500px"></div>
     </section>
 
     <!-- How markets connect to recession risk -->
@@ -997,12 +1136,17 @@
           <tr><td>Commodity prices (Oil, Gold, Copper)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>Economic calendar</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>RSS feed for alert state changes</td><td class="chk">✓</td><td class="dash">—</td><td class="dash">—</td></tr>
+          <tr><td>FX &amp; currency markets (major pairs + DXY)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>International markets (DAX, FTSE, Nikkei, EM)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Earnings calendar</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>News &amp; economic calendar</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Sector heat maps &amp; rotation</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Custom watchlist (local, browser-saved)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Fixed income analytics (rates, spreads, TIPS)</td><td class="chk">✓</td><td class="chk">✓</td><td class="chk">✓</td></tr>
+          <tr><td>Macro scenario stress test</td><td class="chk">✓</td><td class="chk">✓</td><td class="dash">—</td></tr>
           <tr><td>Real-time Level 2 quotes / order book</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>Options chains &amp; Greeks</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>Portfolio integration &amp; P&amp;L tracking</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
-          <tr><td>News &amp; earnings calendar</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
-          <tr><td>Sector heat maps</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
-          <tr><td>FX &amp; international markets</td><td class="dash">—</td><td class="chk">✓</td><td class="chk">✓</td></tr>
           <tr><td>Open source &amp; free</td><td class="chk">✓</td><td class="dash">$24K+/yr</td><td class="dash">Account req'd</td></tr>
         </tbody>
       </table>
@@ -1114,6 +1258,71 @@
       </div>
     </section>
   </div><!-- /tab-signals -->
+
+  <!-- WATCHLIST TAB -->
+  <div class="tab-content" id="tab-watchlist" hidden>
+
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>My Watchlist</h2></div>
+      <p class="panel-sub">Add any ticker symbol (stocks, ETFs, indices, crypto). Saved automatically in your browser — no account needed.</p>
+      <div class="wl-add-row">
+        <input class="wl-input" id="wlInput" type="text" placeholder="Enter symbol (e.g. SPY, AAPL, GLD, BTC/USD)" autocomplete="off" autocapitalize="characters" />
+        <button class="wl-add-btn" id="wlAddBtn">+ Add</button>
+        <button class="export-btn" id="wlExportBtn" title="Export watchlist as CSV">Export CSV</button>
+      </div>
+      <div id="wlEmpty" style="color:var(--muted);font-size:13px;padding:12px 0;display:none">
+        Your watchlist is empty. Add a ticker above — prices load via TradingView and update in real time.
+      </div>
+      <div class="wl-grid" id="wlGrid"></div>
+    </section>
+
+    <!-- Watchlist macro context -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Watchlist vs Macro Risk</h2></div>
+      <p class="panel-sub">Cross-reference your holdings with the current recession composite. Higher composite scores historically precede drawdowns in risk assets.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px" id="wlMacroContext">
+        <div class="stat-card">
+          <div class="stat-label">Current Composite</div>
+          <div class="stat-value" id="wl-composite-score">—</div>
+          <div class="stat-sub">0–100 recession risk</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Alert State</div>
+          <div class="stat-value" id="wl-alert-state">—</div>
+          <div class="stat-sub">GREEN / YELLOW / RED</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Recession Probability</div>
+          <div class="stat-value" id="wl-prob">—</div>
+          <div class="stat-sub">12-month Estrella-Mishkin</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Market Positioning</div>
+          <div class="stat-value" id="wl-positioning">—</div>
+          <div class="stat-sub">Implied by composite score</div>
+        </div>
+      </div>
+      <div id="wlMacroAdvice" style="margin-top:16px;padding:16px;background:var(--panel-2);border-radius:10px;font-size:13px;line-height:1.7;color:var(--muted)">
+        Load the Live Dashboard to see macro context for your watchlist.
+      </div>
+    </section>
+
+    <!-- Multi-symbol comparison chart -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Symbol Comparison</h2></div>
+      <p class="panel-sub">Compare performance of multiple symbols on a single chart. Add tickers to your watchlist above, then select them here.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px" id="wlCompareChips"></div>
+      <div class="tv-wrap tradingview-widget-container" id="tv-wl-compare" style="height:460px"></div>
+    </section>
+
+    <!-- Screener -->
+    <section class="panel" style="margin-bottom:20px">
+      <div class="panel-header"><h2>Stock Screener</h2></div>
+      <p class="panel-sub">Filter stocks by fundamental and technical criteria — identify opportunities or risks relative to the macro cycle.</p>
+      <div class="tv-wrap tradingview-widget-container" id="tv-screener" style="height:550px"></div>
+    </section>
+
+  </div><!-- /tab-watchlist -->
 
   <!-- METHODOLOGY TAB -->
   <div class="tab-content" id="tab-methodology" hidden>
@@ -2734,6 +2943,7 @@ async function refresh({ initial = false } = {}) {
     lastGeneratedAt = current.generated_at;
 
     window._snapshotCache = current;
+    window.dispatchEvent(new Event('snapshotLoaded'));
     renderHeader(current);
     renderHero(current, history);
     renderLayerCards(current, history);
@@ -2758,7 +2968,7 @@ async function refresh({ initial = false } = {}) {
     renderCycleContext();
     renderBigFour(current);
     loadAlertLog(bust);
-    if (marketsRendered) { updateMarketSignals(); renderYieldCurve(current); }
+    if (marketsRendered) { updateMarketSignals(); renderYieldCurve(current); renderFixedIncome(); }
     loadNarrative(bust);
     if (!weightEditorInited) { initWeightEditor(current); weightEditorInited = true; }
     else updateWeightedComposite();
@@ -2813,8 +3023,9 @@ let marketsRendered  = false;
 let activeTab = 'live';
 
 let signalsRendered = false;
+let watchlistRendered = false;
 function setTab(name) {
-  if (!['live','backtest','markets','signals','methodology'].includes(name)) name = 'live';
+  if (!['live','backtest','markets','watchlist','signals','methodology'].includes(name)) name = 'live';
   activeTab = name;
   document.querySelectorAll('.tab-btn[data-tab]').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === name);
@@ -2834,6 +3045,13 @@ function setTab(name) {
   if (name === 'signals' && !signalsRendered) {
     renderSignals();
     signalsRendered = true;
+  }
+  if (name === 'watchlist') {
+    if (!watchlistRendered) {
+      initWatchlist();
+      watchlistRendered = true;
+    }
+    updateWatchlistMacroContext();
   }
 }
 
@@ -3244,8 +3462,162 @@ function renderMarkets() {
     ]
   });
 
+  // ── FX & Currency Markets ─────────────────────────────────────────────────
+  tv('tv-forex', 'embed-widget-market-overview', {
+    colorTheme: 'dark',
+    dateRange: '12M',
+    showChart: true,
+    locale: 'en',
+    width: '100%',
+    height: 420,
+    isTransparent: true,
+    showSymbolLogo: false,
+    tabs: [
+      {
+        title: 'Major Pairs',
+        symbols: [
+          { s: 'FX:EURUSD', d: 'EUR/USD' },
+          { s: 'FX:GBPUSD', d: 'GBP/USD' },
+          { s: 'FX:USDJPY', d: 'USD/JPY' },
+          { s: 'FX:USDCHF', d: 'USD/CHF' },
+          { s: 'FX:AUDUSD', d: 'AUD/USD' },
+          { s: 'FX:USDCAD', d: 'USD/CAD' },
+          { s: 'FX:NZDUSD', d: 'NZD/USD' }
+        ]
+      },
+      {
+        title: 'EM & Asia',
+        symbols: [
+          { s: 'FX:USDCNH', d: 'USD/CNH (Offshore Yuan)' },
+          { s: 'FX:USDINR', d: 'USD/INR' },
+          { s: 'FX:USDBRL', d: 'USD/BRL' },
+          { s: 'FX:USDMXN', d: 'USD/MXN' },
+          { s: 'FX:USDKRW', d: 'USD/KRW' },
+          { s: 'FX:USDZAR', d: 'USD/ZAR' }
+        ]
+      }
+    ]
+  });
+
+  tv('tv-dxy', 'embed-widget-symbol-overview', {
+    symbols: [
+      ['Dollar Index · DXY', 'TVC:DXY|12M'],
+      ['EUR/USD',             'FX:EURUSD|12M'],
+      ['USD/JPY',             'FX:USDJPY|12M']
+    ],
+    chartOnly: false,
+    width: '100%',
+    height: 420,
+    locale: 'en',
+    colorTheme: 'dark',
+    autosize: true,
+    showVolume: false,
+    showMA: false,
+    hideDateRanges: false,
+    hideMarketStatus: false,
+    hideSymbolLogo: false,
+    scalePosition: 'right',
+    scaleMode: 'Normal',
+    fontFamily: '-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif',
+    fontSize: '10',
+    noTimeScale: false,
+    valuesTracking: '1',
+    changeMode: 'price-and-percent',
+    chartType: 'area',
+    lineWidth: 2,
+    lineType: 0,
+    dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M']
+  });
+
+  // ── International Markets ─────────────────────────────────────────────────
+  tv('tv-global', 'embed-widget-market-overview', {
+    colorTheme: 'dark',
+    dateRange: '12M',
+    showChart: true,
+    locale: 'en',
+    width: '100%',
+    height: 500,
+    isTransparent: true,
+    showSymbolLogo: false,
+    tabs: [
+      {
+        title: 'Europe',
+        symbols: [
+          { s: 'INDEX:DEU40',  d: 'DAX 40 (Germany)'  },
+          { s: 'INDEX:UK100',  d: 'FTSE 100 (UK)'      },
+          { s: 'INDEX:FRA40',  d: 'CAC 40 (France)'    },
+          { s: 'INDEX:ESP35',  d: 'IBEX 35 (Spain)'    },
+          { s: 'INDEX:SMI',    d: 'SMI (Switzerland)'  },
+          { s: 'INDEX:AEX',    d: 'AEX (Netherlands)'  }
+        ]
+      },
+      {
+        title: 'Asia-Pacific',
+        symbols: [
+          { s: 'INDEX:NKY',    d: 'Nikkei 225 (Japan)'   },
+          { s: 'INDEX:HSI',    d: 'Hang Seng (HK)'       },
+          { s: 'INDEX:SHCOMP', d: 'Shanghai Composite'   },
+          { s: 'INDEX:AS51',   d: 'ASX 200 (Australia)'  },
+          { s: 'INDEX:SENSEX', d: 'SENSEX (India)'       },
+          { s: 'INDEX:KOSPI',  d: 'KOSPI (South Korea)'  }
+        ]
+      },
+      {
+        title: 'Americas',
+        symbols: [
+          { s: 'FOREXCOM:SPXUSD', d: 'S&P 500 (US)'       },
+          { s: 'INDEX:IBOV',      d: 'Bovespa (Brazil)'   },
+          { s: 'INDEX:TSX',       d: 'TSX (Canada)'       },
+          { s: 'INDEX:MERV',      d: 'MERVAL (Argentina)' }
+        ]
+      },
+      {
+        title: 'EM & Global',
+        symbols: [
+          { s: 'MSCI:EEM',        d: 'MSCI Emerging Mkts' },
+          { s: 'MSCI:EFA',        d: 'MSCI EAFE'          },
+          { s: 'MSCI:ACWI',       d: 'MSCI ACWI'          },
+          { s: 'TVC:DXY',         d: 'Dollar Index (DXY)' }
+        ]
+      }
+    ]
+  });
+
+  // ── Rates / Fixed Income chart ────────────────────────────────────────────
+  tv('tv-rates', 'embed-widget-symbol-overview', {
+    symbols: [
+      ['10Y Treasury · TVC:US10Y', 'TVC:US10Y|12M'],
+      ['2Y Treasury · TVC:US02Y',  'TVC:US02Y|12M'],
+      ['30Y Treasury · TVC:US30Y', 'TVC:US30Y|12M']
+    ],
+    chartOnly: false,
+    width: '100%',
+    height: 380,
+    locale: 'en',
+    colorTheme: 'dark',
+    autosize: true,
+    showVolume: false,
+    chartType: 'line',
+    lineWidth: 2,
+    lineType: 0,
+    dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M']
+  });
+
+  // ── Earnings Calendar ─────────────────────────────────────────────────────
+  tv('tv-earnings', 'embed-widget-events', {
+    colorTheme: 'dark',
+    isTransparent: true,
+    width: '100%',
+    height: 500,
+    locale: 'en',
+    importanceFilter: '0,1',
+    countryFilter: 'us',
+    showFilters: true
+  });
+
   // Update market-driven context signals using live snapshot data
   updateMarketSignals();
+  renderFixedIncome();
 
   // Yield curve + oil cards use live FRED data from the snapshot
   const snap = window._snapshotCache;
@@ -3667,6 +4039,442 @@ function renderSignals() {
         </div>
       </div>`;
   });
+}
+
+// ─── FIXED INCOME ANALYTICS ──────────────────────────────────────────────────
+function renderFixedIncome() {
+  const snap = window._snapshotCache;
+  if (!snap || !snap.indicators) return;
+  const get = id => snap.indicators.find(i => i.fred_id === id);
+  const fmt = v => v !== null && v !== undefined ? Number(v).toFixed(2) + '%' : '—';
+
+  const ff    = get('FEDFUNDS');
+  const t3m   = ff;
+  const t10y3 = get('T10Y3M');
+  const t10y2 = get('T10Y2Y');
+  const tips  = get('T10YIE');
+  const hy    = get('BAMLH0A0HYM2');
+  const baa   = get('BAA10YM');
+  const stl   = get('STLFSI3');
+
+  const ffV  = ff?.latest_value ?? null;
+  const t10y = ffV !== null && t10y3?.latest_value !== null
+    ? (ffV + (t10y3?.latest_value ?? 0)) : null;
+  const t2y  = t10y !== null && t10y2?.latest_value !== null
+    ? (t10y - (t10y2?.latest_value ?? 0)) : null;
+
+  const set = (id, val, color) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val;
+    if (color) el.style.color = color;
+  };
+
+  set('fi-fedfunds', ffV !== null ? ffV.toFixed(2) + '%' : '—');
+  set('fi-10y', t10y !== null ? t10y.toFixed(2) + '%' : '—');
+  set('fi-2y',  t2y  !== null ? t2y.toFixed(2) + '%'  : '—');
+
+  const spread = t10y3?.latest_value ?? null;
+  set('fi-t10y3m', spread !== null ? (spread >= 0 ? '+' : '') + spread.toFixed(2) + '%' : '—',
+      spread !== null ? (spread < 0 ? 'var(--red)' : spread < 0.3 ? 'var(--yellow)' : 'var(--green)') : null);
+  const subEl = document.getElementById('fi-t10y3m-sub');
+  if (subEl && spread !== null) subEl.textContent = spread < 0 ? 'Inverted — recession warning' : spread < 0.3 ? 'Flat — watch closely' : 'Positive — not inverted';
+
+  set('fi-tips', tips?.latest_value !== null ? (tips?.latest_value ?? '—') + '%' : '—',
+      tips?.alert === 'RED' ? 'var(--red)' : tips?.alert === 'YELLOW' ? 'var(--yellow)' : null);
+
+  const hyVal = hy?.latest_value ?? null;
+  set('fi-hy', hyVal !== null ? hyVal.toFixed(2) + '%' : '—',
+      hyVal !== null ? (hyVal >= 8 ? 'var(--red)' : hyVal >= 5 ? 'var(--yellow)' : 'var(--green)') : null);
+
+  const baaVal = baa?.latest_value ?? null;
+  set('fi-baa', baaVal !== null ? baaVal.toFixed(2) + '%' : '—',
+      baaVal !== null ? (baaVal >= 4 ? 'var(--red)' : baaVal >= 2.5 ? 'var(--yellow)' : 'var(--green)') : null);
+
+  const stlVal = stl?.latest_value ?? null;
+  set('fi-stlfsi', stlVal !== null ? stlVal.toFixed(2) : '—',
+      stlVal !== null ? (stlVal >= 1 ? 'var(--red)' : stlVal >= 0 ? 'var(--yellow)' : 'var(--green)') : null);
+
+  // Populate DXY card from FRED DTWEXBGS (broad dollar)
+  const dxy = snap.indicators?.find(i => i.fred_id === 'DTWEXBGS');
+  if (dxy?.latest_value != null) {
+    set('fx-dxy', dxy.latest_value.toFixed(1),
+        dxy.latest_value > 115 ? 'var(--red)' : dxy.latest_value > 105 ? 'var(--yellow)' : 'var(--green)');
+    document.querySelector('#fxPairsCards .fx-pair-card:last-child .chng').textContent =
+      dxy.alert === 'RED' ? 'Strong — tightening global conditions' :
+      dxy.alert === 'YELLOW' ? 'Above average — watch EM stress' : 'Normal range';
+  }
+}
+
+// ─── MACRO SCENARIO STRESS TEST ───────────────────────────────────────────────
+(function initScenarios() {
+  const SCENARIOS = {
+    current: null,
+    'soft-landing': {
+      label: 'Soft Landing',
+      description: 'Inflation back to 2%, unemployment ≤4.5%, Fed cuts 100bps over 12 months, credit spreads tighten, GDP growth ~2%.',
+      layerDeltas: { financial_lead: -15, labor: -8, inflation: -20, real_economy: -10, micro: -10, global: -8 },
+      composite: null,
+      alert: null,
+      analogues: ['1994–95 Greenspan soft landing', '2019 Fed pivot']
+    },
+    'mild-recession': {
+      label: 'Mild Recession',
+      description: 'Unemployment +2pp to ~6.2%, GDP -1.5%, HY spreads 500bps, Fed cuts aggressively. 2001-style tech/capex-led recession.',
+      layerDeltas: { financial_lead: +25, labor: +30, inflation: +5, real_economy: +20, micro: +20, global: +15 },
+      composite: null,
+      alert: null,
+      analogues: ['2001 dot-com recession', '1990–91 recession']
+    },
+    'severe-recession': {
+      label: 'Severe Recession',
+      description: 'Unemployment +5pp to ~9.2%, GDP -4%, HY spreads >800bps, credit crunch, Fed cuts to ZLB. 2008-style financial shock.',
+      layerDeltas: { financial_lead: +45, labor: +50, inflation: +10, real_economy: +40, micro: +35, global: +40 },
+      composite: null,
+      alert: null,
+      analogues: ['2008–09 Great Financial Crisis', '1981–82 Volcker recession']
+    },
+    'stagflation': {
+      label: 'Stagflation',
+      description: 'Inflation 6%+, GDP stagnant or slightly negative, Fed forced to hold rates high despite slowing growth. Worst-of-both-worlds scenario.',
+      layerDeltas: { financial_lead: +20, labor: +15, inflation: +40, real_economy: +10, micro: +15, global: +20 },
+      composite: null,
+      alert: null,
+      analogues: ['1973–75 oil shock', '1979–80 stagflation']
+    },
+    boom: {
+      label: 'Expansion / Boom',
+      description: 'Strong growth 3%+, unemployment near cycle lows, benign credit conditions, equity bull market. Fed on hold or hiking gently.',
+      layerDeltas: { financial_lead: -25, labor: -20, inflation: -5, real_economy: -20, micro: -20, global: -15 },
+      composite: null,
+      alert: null,
+      analogues: ['1996–99 tech boom', '2017–18 synchronized global growth']
+    }
+  };
+
+  function getAlert(score) {
+    return score >= 60 ? 'RED' : score >= 30 ? 'YELLOW' : 'GREEN';
+  }
+
+  function renderScenarioResult(scenarioKey) {
+    const snap = window._snapshotCache;
+    const el   = document.getElementById('scenarioResult');
+    if (!el) return;
+
+    if (scenarioKey === 'current' || !snap) {
+      const s = snap?.composite?.score ?? null;
+      const a = snap?.composite?.alert ?? '—';
+      el.innerHTML = s !== null ? `
+        <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+          <div>
+            <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Current Composite Score</div>
+            <div style="font-size:40px;font-weight:900;color:${s>=60?'var(--red)':s>=30?'var(--yellow)':'var(--green)'}">${s}</div>
+          </div>
+          <div><span class="badge ${a}">${a}</span></div>
+          <div style="font-size:13px;color:var(--muted);max-width:400px">This is the live composite score from FRED data. Select a scenario to see how conditions would shift.</div>
+        </div>` : '<p style="color:var(--muted);font-size:13px">Load the Live Dashboard first to see the current baseline.</p>';
+      return;
+    }
+
+    const sc = SCENARIOS[scenarioKey];
+    if (!sc) return;
+
+    const baseLayers = snap?.layers ?? {};
+    const baseComposite = snap?.composite?.score ?? 50;
+    const LAYER_W = { financial_lead: 0.27, labor: 0.22, inflation: 0.14, real_economy: 0.18, micro: 0.09, global: 0.10 };
+
+    let scenarioComposite = 0;
+    const layerRows = Object.entries(sc.layerDeltas).map(([key, delta]) => {
+      const baseScore  = baseLayers[key]?.score ?? 50;
+      const newScore   = Math.max(0, Math.min(100, baseScore + delta));
+      const w          = LAYER_W[key] ?? 0;
+      scenarioComposite += newScore * w;
+      const sign = delta > 0 ? '+' : '';
+      const dColor = delta > 0 ? 'var(--red)' : 'var(--green)';
+      return `<tr>
+        <td>${LAYER_NAMES[key] || key}</td>
+        <td style="color:${baseScore>=60?'var(--red)':baseScore>=30?'var(--yellow)':'var(--green)'}">${baseScore}</td>
+        <td style="color:${dColor};font-weight:700">${sign}${delta}</td>
+        <td style="color:${newScore>=60?'var(--red)':newScore>=30?'var(--yellow)':'var(--green)'};font-weight:700">${Math.round(newScore)}</td>
+      </tr>`;
+    }).join('');
+
+    scenarioComposite = Math.round(Math.max(0, Math.min(100, scenarioComposite)));
+    const scenarioAlert = getAlert(scenarioComposite);
+    const baseAlert = getAlert(baseComposite);
+
+    el.innerHTML = `
+      <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px">
+        <div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Baseline</div>
+          <div style="font-size:36px;font-weight:900;color:${baseComposite>=60?'var(--red)':baseComposite>=30?'var(--yellow)':'var(--green)'}">${Math.round(baseComposite)}</div>
+          <span class="badge ${baseAlert}">${baseAlert}</span>
+        </div>
+        <div style="font-size:28px;color:var(--muted);padding-top:20px">→</div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">${sc.label}</div>
+          <div style="font-size:36px;font-weight:900;color:${scenarioComposite>=60?'var(--red)':scenarioComposite>=30?'var(--yellow)':'var(--green)'}">${scenarioComposite}</div>
+          <span class="badge ${scenarioAlert}">${scenarioAlert}</span>
+        </div>
+        <div style="flex:1;min-width:240px">
+          <div style="font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:8px">${sc.description}</div>
+          <div style="font-size:12px;color:var(--muted)">Historical analogues: ${sc.analogues.join(', ')}</div>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="alert-log-table">
+          <thead><tr><th>Layer</th><th>Baseline</th><th>Scenario Δ</th><th>Scenario Score</th></tr></thead>
+          <tbody>${layerRows}</tbody>
+        </table>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px">Scenario deltas are directional estimates based on historical recession analogue magnitudes. Not a forecast.</p>`;
+  }
+
+  document.addEventListener('click', e => {
+    const card = e.target.closest('.scenario-card');
+    if (!card) return;
+    document.querySelectorAll('.scenario-card').forEach(c => c.classList.remove('active'));
+    card.classList.add('active');
+    renderScenarioResult(card.dataset.scenario);
+  });
+
+  // Re-render when snapshot loads
+  window.addEventListener('snapshotLoaded', () => {
+    const active = document.querySelector('.scenario-card.active');
+    if (active) renderScenarioResult(active.dataset.scenario);
+    renderFixedIncome();
+  });
+})();
+
+// ─── WATCHLIST ────────────────────────────────────────────────────────────────
+function initWatchlist() {
+  const STORAGE_KEY = 'recession-tracker-watchlist-v2';
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+  }
+  function save(list) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  }
+  function normalize(sym) {
+    return sym.toUpperCase().trim().replace(/\s+/g,'');
+  }
+
+  function tvMiniChart(containerId, symbol, theme) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    const widget = document.createElement('div');
+    widget.className = 'tradingview-widget-container__widget';
+    widget.style.height = '100%';
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+    script.async = true;
+    script.textContent = JSON.stringify({
+      symbol,
+      width: '100%',
+      height: 200,
+      locale: 'en',
+      dateRange: '12M',
+      colorTheme: theme || 'dark',
+      isTransparent: true,
+      autosize: true,
+      largeChartUrl: ''
+    });
+    el.appendChild(widget);
+    el.appendChild(script);
+  }
+
+  function renderWatchlist() {
+    const list = load();
+    const grid  = document.getElementById('wlGrid');
+    const empty = document.getElementById('wlEmpty');
+    if (!grid) return;
+    grid.innerHTML = '';
+    if (!list.length) {
+      if (empty) empty.style.display = '';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+
+    list.forEach((item, idx) => {
+      const cardId   = `wl-card-${idx}`;
+      const chartId  = `wl-chart-${idx}`;
+      const noteId   = `wl-note-${idx}`;
+      const removeId = `wl-remove-${idx}`;
+
+      const card = document.createElement('div');
+      card.className = 'wl-card';
+      card.id = cardId;
+      card.innerHTML = `
+        <div class="wl-card-header">
+          <span class="wl-ticker">${item.symbol}</span>
+          <button class="wl-remove-btn" id="${removeId}" title="Remove from watchlist">×</button>
+        </div>
+        <textarea class="wl-note-input" id="${noteId}" rows="1"
+          placeholder="Add a note…">${item.note || ''}</textarea>
+        <div class="tv-wrap tradingview-widget-container" id="${chartId}" style="height:200px"></div>
+      `;
+      grid.appendChild(card);
+
+      tvMiniChart(chartId, item.symbol, document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
+
+      document.getElementById(removeId)?.addEventListener('click', () => {
+        const updated = load().filter((_, i) => i !== idx);
+        save(updated);
+        renderWatchlist();
+        updateCompareChart();
+      });
+
+      const noteEl = document.getElementById(noteId);
+      if (noteEl) {
+        noteEl.addEventListener('change', () => {
+          const updated = load();
+          if (updated[idx]) updated[idx].note = noteEl.value;
+          save(updated);
+        });
+      }
+    });
+
+    updateCompareChart();
+  }
+
+  function updateCompareChart() {
+    const list   = load();
+    const chips  = document.getElementById('wlCompareChips');
+    const tvWrap = document.getElementById('tv-wl-compare');
+    if (!chips || !tvWrap) return;
+
+    chips.innerHTML = list.map(item => `
+      <span style="background:var(--panel-2);border:1px solid var(--border);border-radius:20px;
+                   padding:4px 12px;font-size:12px;font-weight:600;">${item.symbol}</span>
+    `).join('');
+
+    if (!list.length) return;
+    tvWrap.innerHTML = '';
+    const widget = document.createElement('div');
+    widget.className = 'tradingview-widget-container__widget';
+    widget.style.height = '100%';
+    const script = document.createElement('script');
+    script.type  = 'text/javascript';
+    script.src   = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+    script.async = true;
+    script.textContent = JSON.stringify({
+      symbols: list.slice(0, 5).map(item => [item.symbol, `${item.symbol}|12M`]),
+      chartOnly: false,
+      width: '100%',
+      height: 460,
+      locale: 'en',
+      colorTheme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+      autosize: true,
+      showVolume: false,
+      chartType: 'area',
+      lineWidth: 2,
+      dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M']
+    });
+    tvWrap.appendChild(widget);
+    tvWrap.appendChild(script);
+  }
+
+  // ── Screener widget ────────────────────────────────────────────────────────
+  const screenerEl = document.getElementById('tv-screener');
+  if (screenerEl) {
+    const sw = document.createElement('div');
+    sw.className = 'tradingview-widget-container__widget';
+    sw.style.height = '100%';
+    const ss = document.createElement('script');
+    ss.type  = 'text/javascript';
+    ss.src   = 'https://s3.tradingview.com/external-embedding/embed-widget-screener.js';
+    ss.async = true;
+    ss.textContent = JSON.stringify({
+      width: '100%',
+      height: 550,
+      defaultColumn: 'overview',
+      defaultScreen: 'most_capitalized',
+      market: 'america',
+      showToolbar: true,
+      colorTheme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+      locale: 'en',
+      isTransparent: true
+    });
+    screenerEl.appendChild(sw);
+    screenerEl.appendChild(ss);
+  }
+
+  // ── Add ticker ─────────────────────────────────────────────────────────────
+  function addTicker() {
+    const input = document.getElementById('wlInput');
+    if (!input) return;
+    const sym = normalize(input.value);
+    if (!sym) return;
+    const list = load();
+    if (list.find(x => x.symbol === sym)) {
+      input.value = '';
+      return;
+    }
+    list.push({ symbol: sym, note: '', addedAt: new Date().toISOString() });
+    save(list);
+    input.value = '';
+    renderWatchlist();
+  }
+
+  document.getElementById('wlAddBtn')?.addEventListener('click', addTicker);
+  document.getElementById('wlInput')?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTicker();
+  });
+
+  // ── Export CSV ─────────────────────────────────────────────────────────────
+  document.getElementById('wlExportBtn')?.addEventListener('click', () => {
+    const list = load();
+    const rows = [['Symbol','Note','Added'].join(',')].concat(
+      list.map(x => [x.symbol, `"${(x.note||'').replace(/"/g,'""')}"`, x.addedAt||''].join(','))
+    );
+    const a = document.createElement('a');
+    a.href = 'data:text/csv,' + encodeURIComponent(rows.join('\n'));
+    a.download = 'watchlist.csv';
+    a.click();
+  });
+
+  renderWatchlist();
+}
+
+function updateWatchlistMacroContext() {
+  const snap = window._snapshotCache;
+  if (!snap) return;
+  const score = snap.composite?.score ?? null;
+  const alert = snap.composite?.alert ?? '—';
+  const prob  = snap.composite?.recession_probability_12mo ?? null;
+
+  const setEl = (id, v, col) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = v;
+    if (col) el.style.color = col;
+  };
+
+  if (score !== null) {
+    const col = score >= 60 ? 'var(--red)' : score >= 30 ? 'var(--yellow)' : 'var(--green)';
+    setEl('wl-composite-score', score, col);
+    setEl('wl-alert-state', alert,
+      alert === 'RED' ? 'var(--red)' : alert === 'YELLOW' ? 'var(--yellow)' : 'var(--green)');
+    setEl('wl-prob', prob !== null ? Math.round(prob * 100) + '%' : '—',
+      prob !== null ? (prob >= 0.5 ? 'var(--red)' : prob >= 0.3 ? 'var(--yellow)' : 'var(--green)') : null);
+
+    let pos, advice;
+    if (score >= 60) {
+      pos = 'Defensive'; advice = 'Composite is RED — historically consistent with elevated recession risk within 6–12 months. Consider reducing cyclical exposure (equities, high-yield, commodities) and rotating toward defensives (short-duration Treasuries, gold, consumer staples, utilities).';
+    } else if (score >= 30) {
+      pos = 'Cautious'; advice = 'Composite is YELLOW — watch mode. Risk is elevated but not recessionary. Consider trimming high-beta positions, ensuring adequate hedges, and reducing leverage. Monitor for further deterioration in labor and financial layers.';
+    } else {
+      pos = 'Risk-On'; advice = 'Composite is GREEN — low recession risk. Historical precedent supports holding risk assets (equities, high-yield). Continue monitoring for regime changes in the financial leading and labor layers, which tend to turn first.';
+    }
+    setEl('wl-positioning', pos);
+    const advEl = document.getElementById('wlMacroAdvice');
+    if (advEl) {
+      advEl.textContent = advice;
+      advEl.style.color = score >= 60 ? 'var(--red)' : score >= 30 ? 'var(--yellow)' : 'var(--green)';
+    }
+  }
 }
 
 // ─── THEME TOGGLE ─────────────────────────────────────────────────────────────
