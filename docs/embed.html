@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recession Tracker — Embed Badge</title>
+  <style>
+    :root {
+      --green: #2ddc8c; --yellow: #f1c84a; --red: #ff7a7a;
+      --bg: #0b1020; --panel: #121a2f; --text: #eef2ff; --muted: #7a84a8;
+      --border: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      padding: 6px;
+    }
+    a.badge {
+      display: flex; align-items: center; gap: 12px; text-decoration: none;
+      background: var(--panel); color: var(--text);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 16px; max-width: 320px;
+    }
+    .score { font-size: 32px; font-weight: 800; line-height: 1; }
+    .meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .title { font-size: 12px; font-weight: 700; letter-spacing: 0.04em;
+             text-transform: uppercase; color: var(--muted); }
+    .state { font-size: 14px; font-weight: 700; }
+    .sub { font-size: 11px; color: var(--muted); }
+    .err { font-size: 13px; color: var(--muted); padding: 12px 16px;
+           border: 1px solid var(--border); border-radius: 12px; background: var(--panel); }
+  </style>
+</head>
+<body>
+  <a class="badge" id="badge" href="https://devante88.github.io/recession-tracker/" target="_blank" rel="noopener">
+    <div class="score" id="score">—</div>
+    <div class="meta">
+      <div class="title">Recession Risk</div>
+      <div class="state" id="state">Loading…</div>
+      <div class="sub" id="sub"></div>
+    </div>
+  </a>
+
+  <script>
+    const COLORS = { GREEN: '#2ddc8c', YELLOW: '#f1c84a', RED: '#ff7a7a' };
+    // Resolve the data path relative to where this badge is hosted so it works
+    // both on the live site and when embedded via an absolute URL.
+    const DATA_URL = new URL('data/current.json', document.baseURI).href;
+
+    fetch(`${DATA_URL}?t=${Date.now()}`)
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+      .then(d => {
+        const c = d.composite || {};
+        const score = c.score ?? '—';
+        const state = c.alert || 'GREEN';
+        const color = COLORS[state] || COLORS.GREEN;
+        const scoreEl = document.getElementById('score');
+        scoreEl.textContent = score;
+        scoreEl.style.color = color;
+        const stateEl = document.getElementById('state');
+        stateEl.textContent = `${state} · ${c.rating ?? '—'}/10`;
+        stateEl.style.color = color;
+        document.getElementById('sub').textContent =
+          `as of ${d.as_of || '—'}`;
+      })
+      .catch(err => {
+        document.body.innerHTML =
+          `<div class="err">Recession Tracker badge unavailable (${err.message})</div>`;
+      });
+  </script>
+</body>
+</html>

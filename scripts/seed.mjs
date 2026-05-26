@@ -5,8 +5,13 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { REGISTRY } from '../src/registry.mjs';
+import { REGISTRY, LAYER_WEIGHTS } from '../src/registry.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
+import { buildFreshnessReport } from '../src/freshness.mjs';
+import { evaluateBacktest } from '../src/backtest-eval.mjs';
+import { outOfSampleStudy } from '../src/oos-research.mjs';
+import { weightStudy } from '../src/weight-opt.mjs';
+import { robustnessStudy } from '../src/walk-forward.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -73,13 +78,11 @@ const SEED = {
   WEI:           { latest:  2.1,     mean:  1.8,  std: 1.4  },
 
   // ── New Tier 1 indicators ────────────────────────────────────────────────────
-  NAPM:      { latest: 49.2,    mean: 52.1,   std: 3.8   },  // ISM Mfg PMI, slightly below 50
   T10YIE:    { latest:  2.35,   mean:  2.15,  std: 0.45  },  // TIPS breakeven
   WALCL:     { latest: 6850000, mean: 7200000, std: 680000 }, // Fed balance sheet ($M)
   UMCSENT:   { latest: 67.4,    mean: 74.2,   std: 8.5   },  // UMich sentiment, depressed
   PSAVERT:   { latest:  4.8,    mean:  5.9,   std: 1.8   },  // saving rate low
   CSUSHPISA: { latest: 318.5,   mean: 285.0,  std: 28.0  },  // Case-Shiller elevated
-  NMFCI:     { latest: 51.4,    mean: 54.2,   std: 3.5   },  // ISM Services, above 50
   PPIACO:    { latest: 272.4,   mean: 258.0,  std: 18.5  },  // PPI elevated
 
   // ── New Part A indicators ────────────────────────────────────────────────────
@@ -87,15 +90,23 @@ const SEED = {
   CIVPART: { latest: 62.7,  mean: 62.2,  std: 0.6  },
   TCU:     { latest: 77.8,  mean: 78.5,  std: 1.4  },
 
+  // ── New indicators (upgrade) ─────────────────────────────────────────────────
+  // St. Louis Financial Stress Index: 0 = average; negative = below-average stress
+  STLFSI3:  { latest: -0.42,  mean:  0.00,  std: 0.85 },
+  // Building permits, SAAR thousands; broad decline leads recessions 2-3 months
+  PERMIT:   { latest:  1443,  mean:  1480,  std: 210  },
+  // Nominal broad trade-weighted dollar index; strong USD = global financial tightening
+  DTWEXBGS: { latest: 117.0,  mean: 110.5,  std: 6.8  },
+
   // ── Global / International ──────────────────────────────────────────────────
-  // OECD CLI: below 100 = below trend; threshold=100
-  OECDLOLITOAASTSAM: { latest:  99.6,  mean: 100.1, std: 0.7  },
+  // G7 CLI: below 100 = below trend; threshold=100 (replaces OECDLOLITOAASTSAM, discontinued Nov 2022)
+  G7LOLITOAASTSAM:   { latest:  99.7,  mean: 100.1, std: 0.7  },
   // EU yield curve spread (10Y - 3M, derived); threshold=0
   EURYLDCRV:         { latest:   0.72, mean:  0.15, std: 1.05 },
   // Euro area harmonized unemployment; z-score
   LRHUTTTTEZM156S:   { latest:   6.5,  mean:  7.1,  std: 0.8  },
-  // Euro area real GDP index; z-score
-  NAEXKP01EZQ661S:   { latest: 127.4,  mean: 124.8, std: 2.4  },
+  // Euro area real GDP, chained 2010 EUR millions (ECB/Eurostat, replaces frozen NAEXKP01EZQ661S)
+  CLVMNACSCAB1GQEA:  { latest: 2886191, mean: 2750000, std: 95000 },
 };
 
 /**
@@ -103,7 +114,20 @@ const SEED = {
  * normalized to exactly the target mean and std. This ensures z-score
  * normalization produces predictable scores.
  */
-function makeSeries(fredId) {
+// Days since the snapshot's as_of that a series of the given cadence would
+// realistically have last reported. Keeps the seeded demo's freshness card
+// truthful instead of flagging every series as stale.
+function latestLagDays(frequency) {
+  switch ((frequency || '').toLowerCase()) {
+    case 'daily':     return 1;
+    case 'weekly':    return 4;
+    case 'monthly':   return 0;
+    case 'quarterly': return 0;
+    default:          return 0;
+  }
+}
+
+function makeSeries(fredId, frequency = 'monthly') {
   const { latest, mean, std } = SEED[fredId];
   const MONTHS = 48; // 4 years — enough for 24-month history with 36-month z-score window
   const now = new Date('2026-05-01');
@@ -128,26 +152,47 @@ function makeSeries(fredId) {
     return { date: d.toISOString().slice(0, 7) + '-01', value: Number((mean + n * std).toFixed(4)) };
   });
 
-  // Append the true latest value
-  series.push({ date: '2026-05-01', value: latest });
+  // Append the true latest value, dated by the series' release cadence relative
+  // to the as_of date (2026-05-19) so daily/weekly series look freshly reported.
+  const latestDate = new Date('2026-05-19');
+  latestDate.setDate(latestDate.getDate() - latestLagDays(frequency));
+  series.push({ date: latestDate.toISOString().slice(0, 10), value: latest });
   return series;
 }
 
 async function main() {
   const normalized = REGISTRY.map(indicator => {
-    const series = SEED[indicator.fred_id] ? makeSeries(indicator.fred_id) : [];
+    const series = SEED[indicator.fred_id] ? makeSeries(indicator.fred_id, indicator.frequency) : [];
     const result = normalizeIndicator(series, indicator);
     return { ...indicator, ...result };
   });
 
-  const snapshot = buildSnapshot(normalized, '2026-05-19');
+  // Seed a representative GPR reading (~96 = slightly below the 100 baseline,
+  // CALM) so the demo exercises the GPR-headline path. Production overwrites
+  // docs/data/gpr.json via scripts/gpr.mjs when GPR_DATA_URL is configured.
+  const gpr = { latest: 96.4, date: '2026-05-01', recent: [], source: 'seed (demo)' };
+
+  const snapshot = buildSnapshot(normalized, '2026-05-19', { gpr });
 
   await fs.mkdir(DATA_DIR, { recursive: true });
+  await fs.writeFile(path.join(DATA_DIR, 'gpr.json'), JSON.stringify(gpr, null, 2));
   await fs.writeFile(path.join(DATA_DIR, 'current.json'), JSON.stringify(snapshot, null, 2));
+
+  // Prior snapshot: rebuild with each series' final (latest) observation dropped,
+  // approximating last month's reading. Lets the "What Changed" panel show a real
+  // diff on the seeded demo. In production the workflow archives the prior run.
+  const prevNormalized = REGISTRY.map(indicator => {
+    const full = SEED[indicator.fred_id] ? makeSeries(indicator.fred_id, indicator.frequency) : [];
+    const series = full.slice(0, -1);
+    const result = normalizeIndicator(series, indicator);
+    return { ...indicator, ...result };
+  });
+  const prevSnapshot = buildSnapshot(prevNormalized, '2026-04-19');
+  await fs.writeFile(path.join(DATA_DIR, 'previous.json'), JSON.stringify(prevSnapshot, null, 2));
 
   // Build 24-month computed history from the synthetic series
   const rawData = Object.fromEntries(
-    REGISTRY.map(ind => [ind.fred_id, SEED[ind.fred_id] ? makeSeries(ind.fred_id) : []])
+    REGISTRY.map(ind => [ind.fred_id, SEED[ind.fred_id] ? makeSeries(ind.fred_id, ind.frequency) : []])
   );
   const history = buildHistoryFromSeries(rawData, REGISTRY);
 
@@ -157,6 +202,39 @@ async function main() {
   // In production, fetch.mjs writes 30 years here.
   const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 36, windowMonths: 24 });
   await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
+
+  // Model validation against NBER recessions (degenerate on the 3-year synthetic
+  // seed since no NBER recession falls in range; production replays 30 years).
+  const validation = {
+    generated_at: new Date().toISOString(),
+    yellow: evaluateBacktest(backtest, { flagAt: 'YELLOW' }),
+    red:    evaluateBacktest(backtest, { flagAt: 'RED' })
+  };
+  await fs.writeFile(path.join(DATA_DIR, 'validation.json'), JSON.stringify(validation, null, 2));
+
+  // Out-of-sample study (degenerate on synthetic seed; production replays 30 years).
+  const oos = outOfSampleStudy(backtest);
+  await fs.writeFile(path.join(DATA_DIR, 'oos.json'), JSON.stringify(oos, null, 2));
+  await fs.writeFile(path.join(DATA_DIR, 'weights.json'), JSON.stringify(weightStudy(backtest, { base: LAYER_WEIGHTS }), null, 2));
+  await fs.writeFile(path.join(DATA_DIR, 'robustness.json'), JSON.stringify(robustnessStudy(backtest), null, 2));
+
+  // Alert log: state transitions from history, newest first
+  const alertLog = [];
+  let prevAlert = null;
+  for (const snap of [...history].sort((a, b) => a.date.localeCompare(b.date))) {
+    if (snap.alert !== prevAlert) {
+      if (prevAlert !== null) {
+        alertLog.push({ date: snap.date, alert: snap.alert, score: snap.composite, change: `${prevAlert} → ${snap.alert}` });
+      }
+      prevAlert = snap.alert;
+    }
+  }
+  await fs.writeFile(path.join(DATA_DIR, 'alert-log.json'), JSON.stringify(alertLog.reverse(), null, 2));
+
+  // Freshness report (mirrors production fetch.mjs) — dates are seeded by cadence
+  const freshness = buildFreshnessReport(REGISTRY, rawData, new Date('2026-05-19'));
+  freshness.fetch = { succeeded: REGISTRY.length, failed: 0 };
+  await fs.writeFile(path.join(DATA_DIR, 'meta.json'), JSON.stringify(freshness, null, 2));
 
   // Print summary
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert})\n`);

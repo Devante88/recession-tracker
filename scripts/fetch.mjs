@@ -7,6 +7,12 @@ import path from 'node:path';
 import { REGISTRY } from '../src/registry.mjs';
 import { fetchAllSeries } from '../src/fred.mjs';
 import { normalizeIndicator, buildSnapshot, buildHistoryFromSeries } from '../src/scoring.mjs';
+import { buildFreshnessReport } from '../src/freshness.mjs';
+import { evaluateBacktest } from '../src/backtest-eval.mjs';
+import { outOfSampleStudy } from '../src/oos-research.mjs';
+import { weightStudy } from '../src/weight-opt.mjs';
+import { robustnessStudy } from '../src/walk-forward.mjs';
+import { LAYER_WEIGHTS } from '../src/registry.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
@@ -57,8 +63,18 @@ async function main() {
     return { ...indicator, ...result };
   });
 
+  // Optional GPR index reading (written by scripts/gpr.mjs when GPR_DATA_URL is
+  // configured). Ignore the committed seed/demo sentinel so it never leaks into
+  // a production snapshot — only a real ingested reading counts.
+  let gpr = null;
+  try {
+    const g = JSON.parse(await fs.readFile(path.join(DATA_DIR, 'gpr.json'), 'utf8'));
+    if (g && !/seed/i.test(g.source || '')) gpr = g;
+    else console.log('GPR file is the seed sentinel — using market proxy headline');
+  } catch {}
+
   const asOf     = new Date().toISOString().slice(0, 10);
-  const snapshot = buildSnapshot(normalized, asOf);
+  const snapshot = buildSnapshot(normalized, asOf, { gpr });
 
   await fs.mkdir(DATA_DIR, { recursive: true });
   await fs.writeFile(path.join(DATA_DIR, 'current.json'), JSON.stringify(snapshot, null, 2));
@@ -70,6 +86,77 @@ async function main() {
   console.log('Building 30-year backtest...');
   const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 360, windowMonths: 60 });
   await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
+
+  // Model validation: score the backtest replay against NBER recession dates.
+  const validation = {
+    generated_at: new Date().toISOString(),
+    yellow: evaluateBacktest(backtest, { flagAt: 'YELLOW' }),
+    red:    evaluateBacktest(backtest, { flagAt: 'RED' })
+  };
+  await fs.writeFile(path.join(DATA_DIR, 'validation.json'), JSON.stringify(validation, null, 2));
+  const v = validation.yellow;
+  console.log(`Validation (≥YELLOW): hit ${v.hit_rate ?? '—'}, FPR ${v.false_positive_rate ?? '—'}, lead ${v.avg_lead_months ?? '—'}mo, Brier ${v.brier ?? '—'}`);
+
+  // Out-of-sample study: optimize alert cutoffs on the older half of history,
+  // freeze them, and measure skill on the held-out recent recessions.
+  const oos = outOfSampleStudy(backtest);
+  await fs.writeFile(path.join(DATA_DIR, 'oos.json'), JSON.stringify(oos, null, 2));
+  if (oos.valid) {
+    console.log(`OOS AUC: train ${oos.auc.train} → test ${oos.auc.test}  |  RED cutoff ${oos.red.train.cutoff}: J ${oos.red.train.youden_j} → ${oos.red.test.youden_j} (gap ${oos.red.generalization_gap})`);
+  } else {
+    console.log(`OOS study skipped: ${oos.reason}`);
+  }
+
+  // Out-of-sample layer-weight study: does tuning the composite weights on the
+  // train window beat the doctrinal weights on held-out recessions?
+  const weights = weightStudy(backtest, { base: LAYER_WEIGHTS });
+  await fs.writeFile(path.join(DATA_DIR, 'weights.json'), JSON.stringify(weights, null, 2));
+  if (weights.valid) {
+    console.log(`Weight study: doctrinal test AUC ${weights.doctrinal.test_auc} vs optimized ${weights.optimized.test_auc} (gain ${weights.test_auc_gain}) — ${weights.verdict}`);
+  }
+
+  // Robustness: walk-forward folds + block-bootstrap AUC confidence interval.
+  const robustness = robustnessStudy(backtest);
+  await fs.writeFile(path.join(DATA_DIR, 'robustness.json'), JSON.stringify(robustness, null, 2));
+  if (robustness.walk_forward.valid) {
+    const wf = robustness.walk_forward.summary, b = robustness.bootstrap_auc;
+    console.log(`Walk-forward: ${wf.n_folds} folds, mean test AUC ${wf.mean_test_auc} [${wf.min_test_auc}–${wf.max_test_auc}]`);
+    if (b) console.log(`Bootstrap AUC: ${b.point} (95% CI ${b.ci95[0]}–${b.ci95[1]})`);
+  }
+
+  // Alert log: state transitions from full history, newest first
+  const allHistory = [...history].sort((a, b) => a.date.localeCompare(b.date));
+  const alertLog = [];
+  let prevAlert = null;
+  for (const snap of allHistory) {
+    if (snap.alert !== prevAlert) {
+      if (prevAlert !== null) alertLog.push({ date: snap.date, alert: snap.alert, score: snap.composite, change: `${prevAlert} → ${snap.alert}` });
+      prevAlert = snap.alert;
+    }
+  }
+  await fs.writeFile(path.join(DATA_DIR, 'alert-log.json'), JSON.stringify(alertLog.reverse(), null, 2));
+
+  // Freshness guard: detect series that have silently stopped updating (the
+  // discontinued/restructured FRED failure mode). Write a health report and
+  // abort if a meaningful share of series are stale so a degraded composite
+  // never ships unnoticed.
+  const freshness = buildFreshnessReport(REGISTRY, rawData, new Date());
+  freshness.fetch = { succeeded: successCount, failed: failureCount };
+  await fs.writeFile(path.join(DATA_DIR, 'meta.json'), JSON.stringify(freshness, null, 2));
+
+  if (freshness.stale_count || freshness.missing_count) {
+    console.warn(`\n⚠ Freshness: ${freshness.stale_count} stale, ${freshness.missing_count} missing of ${freshness.total}`);
+    for (const s of freshness.stale)   console.warn(`  STALE   ${s.fred_id} — last ${s.latest_date} (${s.days}d > ${s.sla}d SLA)`);
+    for (const id of freshness.missing) console.warn(`  MISSING ${id} — no observations returned`);
+  } else {
+    console.log(`\n✓ Freshness: all ${freshness.total} series within SLA`);
+  }
+
+  const degraded = freshness.stale_count + freshness.missing_count;
+  if (degraded / freshness.total > 0.15) {
+    console.error(`Too many stale/missing series (${degraded}/${freshness.total} > 15%) — aborting before publish.`);
+    process.exit(1);
+  }
 
   console.log(`\nComposite: ${snapshot.composite.score} (${snapshot.composite.alert}) — Rating: ${snapshot.composite.rating}/10`);
   console.log(`Ensemble:  ${snapshot.composite.ensemble_score}`);

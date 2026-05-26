@@ -7,6 +7,7 @@
 //   composite → alertState → GREEN | YELLOW | RED
 
 import { LAYER_WEIGHTS } from './registry.mjs';
+import { computeGeopoliticalFlag } from './geopolitical.mjs';
 
 /**
  * Logistic squashing function. Maps real line → [0, 1].
@@ -75,6 +76,9 @@ export function normalizeIndicator(series, indicator) {
   const { threshold, direction } = indicator;
   let normalized;
 
+  let normMean = null;
+  let normStd  = null;
+
   if (threshold !== null && threshold !== undefined) {
     const denom = Math.abs(threshold) || 1;
     normalized = series.map(p => {
@@ -85,6 +89,8 @@ export function normalizeIndicator(series, indicator) {
     });
   } else {
     const { mean, std } = meanStd(series.map(x => x.value));
+    normMean = Number(mean.toFixed(4));
+    normStd  = Number(std.toFixed(4));
     normalized = series.map(p => {
       const z = (p.value - mean) / std;
       const raw = direction === 'direct' ? -z : z;
@@ -113,7 +119,7 @@ export function normalizeIndicator(series, indicator) {
     anomaly = Math.abs(latestChange - cm) > 1.5 * cs;
   }
 
-  return { latest: last, levelScore, momentumScore: momentum, score: blendedScore, series: normalized, percentileRank, anomaly };
+  return { latest: last, levelScore, momentumScore: momentum, score: blendedScore, series: normalized, percentileRank, anomaly, norm_mean: normMean, norm_std: normStd };
 }
 
 /**
@@ -194,7 +200,7 @@ function lastMonthly(series, months = 24) {
 /**
  * Top-level: produce the full snapshot payload from normalized indicators.
  */
-export function buildSnapshot(normalizedIndicators, asOfDate) {
+export function buildSnapshot(normalizedIndicators, asOfDate, { gpr = null } = {}) {
   const layerScores    = computeLayerScores(normalizedIndicators);
   const compositeScore = computeCompositeScore(layerScores);
   const withData       = normalizedIndicators.filter(x => x.latest !== null).length;
@@ -212,10 +218,27 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
   const sahmVal  = sahm?.latest?.value ?? null;
   const sahmProb = sahmVal !== null ? Math.min(1, Math.max(0, sahmVal / 0.5)) : null;
 
-  // 3-model ensemble: composite (0-1) + probit + Sahm proxy
-  const ensembleInputs = [compositeScore / 100, recessionProb, sahmProb].filter(x => x != null);
-  const ensembleScore  = ensembleInputs.length
-    ? Number(((ensembleInputs.reduce((a, b) => a + b, 0) / ensembleInputs.length) * 100).toFixed(1))
+  // Credit spread probability proxy: BAA-10Y spread 1.5% → 0%, 4.5% → 100%
+  const baa      = normalizedIndicators.find(x => x.fred_id === 'BAA10YM');
+  const baaVal   = baa?.latest?.value ?? null;
+  const creditProb = baaVal !== null ? Math.min(1, Math.max(0, (baaVal - 1.5) / 3.0)) : null;
+
+  // Weighted ensemble of four signals, each a recession probability in [0,1].
+  // Weights reflect each signal's documented forecasting role rather than an
+  // equal average: the Estrella-Mishkin probit is the only peer-reviewed model
+  // (highest weight); the broad composite is diversified but coincident-leaning;
+  // Sahm is confirmatory (fires at recession onset, low lead); credit spreads
+  // lead but are noisy. Weights renormalize over whichever signals are present.
+  const ENSEMBLE_WEIGHTS = { composite: 0.30, probit: 0.35, sahm: 0.15, credit: 0.20 };
+  const ensembleParts = [
+    { p: compositeScore / 100, w: ENSEMBLE_WEIGHTS.composite },
+    { p: recessionProb,        w: ENSEMBLE_WEIGHTS.probit },
+    { p: sahmProb,             w: ENSEMBLE_WEIGHTS.sahm },
+    { p: creditProb,           w: ENSEMBLE_WEIGHTS.credit }
+  ].filter(x => x.p != null && Number.isFinite(x.p));
+  const ensembleWeightSum = ensembleParts.reduce((a, b) => a + b.w, 0);
+  const ensembleScore = ensembleWeightSum
+    ? Number(((ensembleParts.reduce((a, b) => a + b.p * b.w, 0) / ensembleWeightSum) * 100).toFixed(1))
     : null;
 
   // Factor contributions: each indicator's signed contribution to composite
@@ -244,6 +267,7 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       yield_curve_spread:         ycSpread,
       ensemble_score:             ensembleScore
     },
+    geopolitical: computeGeopoliticalFlag(normalizedIndicators, gpr),
     factor_contributions: factorContributions,
     layers: Object.fromEntries(
       Object.entries(layerScores).map(([layer, score]) => [
@@ -270,6 +294,8 @@ export function buildSnapshot(normalizedIndicators, asOfDate) {
       threshold:       x.threshold,
       direction:       x.direction,
       frequency:       x.frequency,
+      norm_mean:       x.norm_mean ?? null,
+      norm_std:        x.norm_std ?? null,
       history:         lastMonthly(x.series || [], 24)
     }))
   };

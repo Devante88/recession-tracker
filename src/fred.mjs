@@ -10,21 +10,39 @@ const FRED_BASE = 'https://api.stlouisfed.org/fred/series/observations';
  * @returns {Promise<Array<{date: string, value: number}>>}
  */
 export async function fetchFredSeries(fredId, apiKey, opts = {}) {
-  const limit = opts.limit ?? 2000;  // ~5 years of daily, much more for monthly
+  const limit = opts.limit ?? 2000;
   const url = `${FRED_BASE}?series_id=${fredId}&api_key=${apiKey}&file_type=json&sort_order=desc&limit=${limit}`;
-  const res = await fetch(url, {
-    headers: { 'User-Agent': 'recession-tracker/1.0 (github.com/Devante88/recession-tracker)' }
-  });
-  if (!res.ok) {
-    throw new Error(`FRED fetch failed for ${fredId}: HTTP ${res.status}`);
+  const headers = { 'User-Agent': 'recession-tracker/1.0 (github.com/Devante88/recession-tracker)' };
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    let res;
+    try {
+      res = await fetch(url, { headers });
+    } catch (netErr) {
+      if (attempt < 3) { await new Promise(r => setTimeout(r, attempt * 1500)); continue; }
+      throw new Error(`FRED network error for ${fredId}: ${netErr.message}`);
+    }
+
+    if (res.status === 429) {
+      const wait = attempt * 5000;
+      console.warn(`  Rate limited on ${fredId}, waiting ${wait}ms (attempt ${attempt}/3)...`);
+      await new Promise(r => setTimeout(r, wait));
+      continue;
+    }
+
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      throw new Error(`HTTP ${res.status} for ${fredId} — ${body.slice(0, 200)}`);
+    }
+
+    const json = await res.json();
+    return (json.observations || [])
+      .filter(x => x.value !== '.')
+      .map(x => ({ date: x.date, value: Number(x.value) }))
+      .filter(x => Number.isFinite(x.value))
+      .reverse();
   }
-  const json = await res.json();
-  const observations = json.observations || [];
-  return observations
-    .filter(x => x.value !== '.')
-    .map(x => ({ date: x.date, value: Number(x.value) }))
-    .filter(x => Number.isFinite(x.value))
-    .reverse();  // ascending order
+  throw new Error(`FRED fetch failed for ${fredId} after 3 attempts`);
 }
 
 /**

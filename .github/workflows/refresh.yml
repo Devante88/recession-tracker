@@ -22,23 +22,53 @@ jobs:
       - name: Run tests
         run: node --test tests/*.mjs
 
+      - name: Validate FRED series IDs still return data
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          export FRED_API_KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
+          node scripts/validate-series.mjs
+
       - name: Check FRED connectivity
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
-          echo "API key set: $([ -n "$FRED_API_KEY" ] && echo yes || echo NO — secret missing)"
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            "https://api.stlouisfed.org/fred/series/observations?series_id=T10Y3M&api_key=${FRED_API_KEY}&file_type=json&limit=1")
+          KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
+          echo "API key set: $([ -n "$KEY" ] && echo yes || echo NO — secret missing)"
+          echo "API key length: ${#KEY}"
+          curl -s -o /tmp/fred_probe.json -w "%{http_code}" \
+            -H "User-Agent: recession-tracker/1.0 (github.com/Devante88/recession-tracker)" \
+            "https://api.stlouisfed.org/fred/series/observations?series_id=T10Y3M&api_key=${KEY}&file_type=json&limit=1" \
+            > /tmp/fred_status.txt
+          STATUS=$(cat /tmp/fred_status.txt)
           echo "FRED probe HTTP status: $STATUS"
           if [ "$STATUS" != "200" ]; then
             echo "::error::FRED API returned $STATUS — check FRED_API_KEY secret and API quota"
+            echo "Response body:"
+            cat /tmp/fred_probe.json
             exit 1
           fi
+
+      - name: Archive prior snapshot for change tracking
+        run: |
+          if [ -f docs/data/current.json ]; then
+            cp docs/data/current.json docs/data/previous.json
+            echo "Archived current.json -> previous.json"
+          else
+            echo "No existing snapshot to archive (first run)"
+          fi
+
+      - name: Ingest GPR geopolitical risk index (optional)
+        env:
+          GPR_DATA_URL: ${{ secrets.GPR_DATA_URL }}
+        run: node scripts/gpr.mjs
 
       - name: Fetch FRED data and compute snapshot
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: node scripts/fetch.mjs
+        run: |
+          export FRED_API_KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
+          node scripts/fetch.mjs
 
       - name: Generate RSS feed for alert state changes
         run: node scripts/feed.mjs
