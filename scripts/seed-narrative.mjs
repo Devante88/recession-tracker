@@ -6,8 +6,8 @@ const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 const cur   = JSON.parse(await fs.readFile(path.join(DATA_DIR, 'current.json'), 'utf8'));
 const score = cur.composite.score;
 const alert = cur.composite.alert;
-const prob  = cur.composite.recession_probability_12mo != null
-  ? Math.round(cur.composite.recession_probability_12mo * 100) + '%' : 'N/A';
+const prob  = cur.recession_probability_12mo != null
+  ? Math.round(cur.recession_probability_12mo * 100) + '%' : 'N/A';
 
 const posture = alert === 'GREEN'
   ? 'low recession risk, with the economy on relatively solid footing'

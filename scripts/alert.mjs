@@ -54,8 +54,8 @@ async function main() {
   // State changed — fire webhook and subscriber notifications
   const e    = EMOJI[cur.alert] ?? '⚪';
   const ep   = EMOJI[prev.alert] ?? '⚪';
-  const prob = snapshot.composite?.recession_probability_12mo != null
-    ? `${(snapshot.composite.recession_probability_12mo * 100).toFixed(1)}%`
+  const prob = snapshot.recession_probability_12mo != null
+    ? `${(snapshot.recession_probability_12mo * 100).toFixed(1)}%`
     : 'N/A';
   const changeDesc = `Alert changed from ${prev.alert} to ${cur.alert}. Composite score: ${cur.score}. Recession probability: ${prob}.`;
 
