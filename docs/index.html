@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#1a2340">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" onerror="console.warn('Chart.js CDN unavailable — charts disabled')"></script>
   <style>
     :root {
       --bg:      #0b1020;
@@ -2174,6 +2174,7 @@ function buildChartDatasets(history) {
 }
 
 function renderChart(history) {
+  if (typeof Chart === 'undefined') return;
   // Register shaded risk-zone bands once (idempotent)
   if (!Chart.registry.plugins.get('riskZones')) {
     Chart.register({
@@ -2516,6 +2517,7 @@ function openModal(ind) {
   document.getElementById('modalDate').textContent = fmtDate(ind.latest_date);
   document.getElementById('modalFredLink').href = `https://fred.stlouisfed.org/series/${ind.fred_id}`;
 
+  if (typeof Chart === 'undefined') return;
   const ctx = document.getElementById('modalChart').getContext('2d');
   if (modalChart) modalChart.destroy();
   const history = ind.history || [];
@@ -3277,7 +3279,7 @@ function renderPlaybook(sorted) {
         // Destroy existing if any
         if (playbookCharts[idx]) { playbookCharts[idx].destroy(); playbookCharts[idx] = null; }
         const canvas = document.getElementById(`playbook-chart-${idx}`);
-        if (!canvas || !window.length) return;
+        if (!canvas || !window.length || typeof Chart === 'undefined') return;
         const labels = window.map(d => d.date.slice(0, 7));
         const values = window.map(d => d.composite);
         const recStart = startDate;
@@ -3353,10 +3355,10 @@ async function refresh({ initial = false } = {}) {
     renderHeader(current);
     renderHero(current, history);
     renderLayerCards(current, history);
-    renderChart(history);
+    try { renderChart(history); } catch (ce) { console.warn('chart render failed:', ce.message); }
     renderTable(current.indicators || []);
     renderEnsemble(current);
-    renderFactorChart(current);
+    try { renderFactorChart(current); } catch (ce) { console.warn('factor chart failed:', ce.message); }
     renderDiffusion(current);
     renderFreshness(current);
     renderRegime(history);
@@ -3484,6 +3486,7 @@ function setTab(name) {
 // 5Y  = midpoint(2Y, 10Y) — rough estimate
 // 30Y = 10Y + 0.35 — historical avg premium (rough)
 function renderYieldCurve(snap) {
+  if (typeof Chart === 'undefined') return;
   const canvas = document.getElementById('yieldCurveChart');
   const tableEl = document.getElementById('yieldCurveTable');
   if (!canvas || !tableEl) return;
@@ -4109,6 +4112,11 @@ document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
 });
 
 async function renderBacktest() {
+  if (typeof Chart === 'undefined') {
+    document.getElementById('btStats').innerHTML =
+      '<p style="color:var(--muted);font-size:13px">Charts unavailable (Chart.js CDN offline). Data still loads.</p>';
+    return;
+  }
   let data;
   try {
     data = await fetch(`data/backtest.json?t=${Date.now()}`).then(r => r.json());
@@ -4376,6 +4384,7 @@ function renderEnsemble(snap) {
 // ─── FACTOR CONTRIBUTION CHART ────────────────────────────────────────────────
 let factorChartInst = null;
 function renderFactorChart(snap) {
+  if (typeof Chart === 'undefined') return;
   const contribs = snap?.factor_contributions;
   const section  = document.getElementById('factorChartSection');
   if (!contribs || !contribs.length) { if (section) section.style.display = 'none'; return; }
@@ -4486,6 +4495,7 @@ function initPortfolio() {
   let allocChart = null;
 
   function renderAlloc(positions) {
+    if (typeof Chart === 'undefined') return;
     const totals = {};
     positions.forEach(p => {
       const { mv } = calcRow(p);
@@ -4850,7 +4860,7 @@ function initOptions() {
     const putPayoffs  = prices.map(p => Math.max(0, K - p) - res.put.price);
 
     const canvas = document.getElementById('optsPayoffChart');
-    if (!canvas) return;
+    if (!canvas || typeof Chart === 'undefined') return;
     const ctx = canvas.getContext('2d');
     if (payoffChart) payoffChart.destroy();
 
