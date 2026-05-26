@@ -527,67 +527,134 @@
       box-shadow: 0 4px 20px rgba(102,179,255,0.4);
       transition: transform 0.15s, box-shadow 0.15s;
     }
-    #aiChatBtn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(102,179,255,0.55); }
+    #aiChatBtn:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(102,179,255,0.6); }
+    #aiChatBtn.has-key::after {
+      content: ''; position: absolute; top: 4px; right: 4px;
+      width: 10px; height: 10px; background: var(--green);
+      border-radius: 50%; border: 2px solid var(--bg);
+    }
     #aiChatPanel {
       position: fixed; bottom: 90px; right: 24px; z-index: 200;
-      width: 380px; max-width: calc(100vw - 32px);
+      width: 400px; max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 110px);
       background: var(--panel); border: 1px solid var(--border);
       border-radius: 16px; display: none; flex-direction: column;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.6);
       overflow: hidden;
+      animation: chatSlideIn 0.18s ease-out;
+    }
+    @keyframes chatSlideIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
     }
     #aiChatPanel.open { display: flex; }
     .ai-chat-header {
-      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      padding: 12px 14px; border-bottom: 1px solid var(--border);
       display: flex; align-items: center; justify-content: space-between;
-      background: var(--panel-2);
+      background: var(--panel-2); flex-shrink: 0;
     }
+    .ai-chat-header-left { display: flex; flex-direction: column; gap: 1px; }
     .ai-chat-header h4 { font-size: 14px; font-weight: 700; margin: 0; }
-    .ai-chat-header span { font-size: 11px; color: var(--muted); }
-    .ai-chat-close { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; }
-    .ai-chat-close:hover { color: var(--text); }
+    .ai-chat-header-sub { font-size: 11px; color: var(--muted); }
+    .ai-chat-header-actions { display: flex; align-items: center; gap: 4px; }
+    .ai-hdr-btn {
+      background: none; border: none; color: var(--muted); font-size: 13px;
+      cursor: pointer; padding: 4px 6px; border-radius: 6px;
+      transition: background 0.1s, color 0.1s;
+    }
+    .ai-hdr-btn:hover { background: var(--panel-3); color: var(--text); }
     #aiChatMessages {
-      flex: 1; overflow-y: auto; padding: 12px; min-height: 200px; max-height: 340px;
+      flex: 1; overflow-y: auto; padding: 12px 12px 8px;
       display: flex; flex-direction: column; gap: 8px;
+      min-height: 160px;
     }
     .chat-msg {
-      max-width: 88%; padding: 8px 12px; border-radius: 12px;
-      font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+      max-width: 90%; border-radius: 12px;
+      font-size: 13px; line-height: 1.55; word-break: break-word;
+      position: relative;
     }
-    .chat-msg.user { background: var(--accent); color: #0b1020; align-self: flex-end; border-bottom-right-radius: 4px; }
-    .chat-msg.assistant { background: var(--panel-2); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
-    .chat-msg.system { background: transparent; color: var(--muted); font-size: 12px; align-self: center; font-style: italic; }
+    .chat-msg-inner { padding: 8px 12px; }
+    .chat-msg.user .chat-msg-inner { background: var(--accent); color: #0b1020; border-radius: 12px 12px 4px 12px; }
+    .chat-msg.assistant .chat-msg-inner { background: var(--panel-2); color: var(--text); border-radius: 12px 12px 12px 4px; white-space: pre-wrap; }
+    .chat-msg.error .chat-msg-inner { background: rgba(255,122,122,0.15); color: var(--red); border-radius: 12px; font-size: 12px; }
+    .chat-msg.system .chat-msg-inner { background: transparent; color: var(--muted); font-size: 11px; font-style: italic; text-align: center; }
+    .chat-msg.user { align-self: flex-end; }
+    .chat-msg.assistant, .chat-msg.error { align-self: flex-start; }
+    .chat-msg.system { align-self: center; }
+    .chat-copy-btn {
+      display: none; position: absolute; top: 4px; right: -28px;
+      background: var(--panel-3); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--muted); font-size: 11px;
+      padding: 3px 6px; cursor: pointer;
+    }
+    .chat-msg.assistant:hover .chat-copy-btn { display: block; }
+    .chat-copy-btn:hover { color: var(--text); }
+    .chat-typing {
+      display: flex; gap: 4px; align-items: center;
+      padding: 10px 14px; background: var(--panel-2);
+      border-radius: 12px 12px 12px 4px; align-self: flex-start;
+    }
+    .chat-typing span {
+      width: 6px; height: 6px; background: var(--muted); border-radius: 50%;
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+    .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+    .ai-suggested {
+      display: flex; flex-direction: column; gap: 6px; padding: 8px 12px;
+    }
+    .ai-suggested p { font-size: 11px; color: var(--muted); margin: 0 0 4px; }
+    .ai-suggest-btn {
+      background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 12px; padding: 6px 10px; cursor: pointer;
+      text-align: left; transition: border-color 0.1s, background 0.1s;
+    }
+    .ai-suggest-btn:hover { border-color: var(--accent); background: var(--panel-3); }
     .ai-chat-form {
       display: flex; gap: 8px; padding: 10px 12px;
-      border-top: 1px solid var(--border); background: var(--panel-2);
+      border-top: 1px solid var(--border); background: var(--panel-2); flex-shrink: 0;
     }
     #aiChatInput {
       flex: 1; background: var(--panel-3); border: 1px solid var(--border);
       border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--text);
-      resize: none; min-height: 36px; max-height: 100px; font-family: inherit;
+      resize: none; height: 36px; max-height: 120px; font-family: inherit;
+      overflow: hidden; line-height: 1.4;
     }
     #aiChatInput:focus { outline: none; border-color: var(--accent); }
     #aiChatSend {
       background: var(--accent); border: none; border-radius: 8px;
       color: #0b1020; font-weight: 700; font-size: 13px; padding: 0 14px;
-      cursor: pointer; white-space: nowrap;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0; height: 36px;
+      transition: opacity 0.1s;
     }
-    #aiChatSend:disabled { opacity: 0.5; cursor: not-allowed; }
+    #aiChatSend:disabled { opacity: 0.45; cursor: not-allowed; }
     .ai-key-row {
       padding: 10px 12px; border-top: 1px solid var(--border);
       display: flex; gap: 6px; align-items: center; background: var(--panel-2);
+      flex-shrink: 0;
     }
+    .ai-key-row label { font-size: 11px; color: var(--muted); white-space: nowrap; }
     .ai-key-row input {
       flex: 1; background: var(--panel-3); border: 1px solid var(--border);
       border-radius: 6px; padding: 5px 8px; font-size: 11px; color: var(--muted);
-      font-family: monospace;
+      font-family: monospace; min-width: 0;
     }
     .ai-key-row input:focus { outline: none; border-color: var(--accent); color: var(--text); }
     .ai-key-btn {
-      background: var(--panel-3); border: 1px solid var(--border); border-radius: 6px;
-      color: var(--muted); font-size: 11px; padding: 5px 10px; cursor: pointer;
+      background: var(--accent); border: none; border-radius: 6px;
+      color: #0b1020; font-size: 11px; font-weight: 700; padding: 5px 10px; cursor: pointer;
+      white-space: nowrap;
     }
-    .ai-key-btn:hover { color: var(--text); }
+    .ai-key-btn:hover { opacity: 0.85; }
+    @media (max-width: 480px) {
+      #aiChatPanel { right: 0; left: 0; bottom: 0; border-radius: 16px 16px 0 0;
+        max-width: 100vw; max-height: 75vh; }
+      #aiChatBtn { bottom: 16px; right: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -801,6 +868,7 @@
       </div>
     </div>
     <div class="filter-row">
+      <input type="search" id="indSearch" placeholder="Search indicators…" style="background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:13px;min-width:180px" autocomplete="off">
       <select id="layerFilter">
         <option value="">All layers</option>
         <option value="financial_lead">Financial Leading</option>
@@ -2247,11 +2315,13 @@ function applyFilters() {
   const layer = document.getElementById('layerFilter').value;
   const cat   = document.getElementById('categoryFilter').value;
   const alrt  = document.getElementById('alertFilter').value;
+  const q     = (document.getElementById('indSearch')?.value || '').toLowerCase().trim();
 
   const filtered = sortIndicators(allIndicators.filter(ind => {
     if (layer && ind.layer !== layer) return false;
     if (cat   && ind.category !== cat) return false;
     if (alrt  && ind.alert !== alrt)   return false;
+    if (q && !ind.name.toLowerCase().includes(q) && !(ind.fred_id || '').toLowerCase().includes(q)) return false;
     return true;
   }));
 
@@ -2325,6 +2395,7 @@ function applyFilters() {
 ['layerFilter','categoryFilter','alertFilter'].forEach(id => {
   document.getElementById(id).addEventListener('change', applyFilters);
 });
+document.getElementById('indSearch')?.addEventListener('input', applyFilters);
 
 // ─── SORT LISTENERS ───────────────────────────────────────────────────────────
 document.querySelectorAll('th.sortable').forEach(th => {
@@ -5464,22 +5535,28 @@ if ('serviceWorker' in navigator) {
 </script>
 
 <!-- ── AI CHAT PANEL ──────────────────────────────────────────────────────── -->
-<button id="aiChatBtn" title="Ask the AI analyst">🤖</button>
-<div id="aiChatPanel" role="dialog" aria-label="AI Analyst Chat">
+<button id="aiChatBtn" title="Ask the AI analyst (Ctrl+Shift+A)" aria-label="Open AI analyst chat">🤖</button>
+<div id="aiChatPanel" role="dialog" aria-modal="true" aria-label="AI Analyst Chat">
   <div class="ai-chat-header">
-    <div>
+    <div class="ai-chat-header-left">
       <h4>AI Analyst</h4>
-      <span>Ask about recession risk, indicators, or the data</span>
+      <span class="ai-chat-header-sub">Powered by claude-opus-4-7 · data-aware</span>
     </div>
-    <button class="ai-chat-close" id="aiChatClose" aria-label="Close chat">×</button>
+    <div class="ai-chat-header-actions">
+      <button class="ai-hdr-btn" id="aiChatSettings" title="API key settings" aria-label="API key settings">⚙</button>
+      <button class="ai-hdr-btn" id="aiChatClear" title="Clear conversation" aria-label="Clear conversation">🗑</button>
+      <button class="ai-hdr-btn" id="aiChatClose" aria-label="Close chat (Esc)" style="font-size:18px">×</button>
+    </div>
   </div>
   <div id="aiChatMessages"></div>
+  <div class="ai-suggested" id="aiSuggested"></div>
   <form class="ai-chat-form" id="aiChatForm">
-    <textarea id="aiChatInput" placeholder="Ask a question…" rows="1"></textarea>
-    <button type="submit" id="aiChatSend">Send</button>
+    <textarea id="aiChatInput" placeholder="Ask a question… (Enter to send, Shift+Enter for newline)" rows="1" aria-label="Chat message"></textarea>
+    <button type="submit" id="aiChatSend" aria-label="Send message">↑</button>
   </form>
-  <div class="ai-key-row" id="aiKeyRow">
-    <input type="password" id="aiKeyInput" placeholder="Anthropic API key (sk-ant-…) — stored in browser only" autocomplete="off">
+  <div class="ai-key-row" id="aiKeyRow" style="display:none">
+    <label for="aiKeyInput">API key:</label>
+    <input type="password" id="aiKeyInput" placeholder="sk-ant-… stored in your browser only" autocomplete="off">
     <button type="button" class="ai-key-btn" id="aiKeySave">Save</button>
   </div>
 </div>
@@ -5487,94 +5564,188 @@ if ('serviceWorker' in navigator) {
 <script>
 (function initAiChat() {
   const LS_KEY = 'rt_anthropic_key';
-  const btn     = document.getElementById('aiChatBtn');
-  const panel   = document.getElementById('aiChatPanel');
-  const closeBtn= document.getElementById('aiChatClose');
-  const msgs    = document.getElementById('aiChatMessages');
-  const form    = document.getElementById('aiChatForm');
-  const input   = document.getElementById('aiChatInput');
-  const send    = document.getElementById('aiChatSend');
-  const keyRow  = document.getElementById('aiKeyRow');
-  const keyInput= document.getElementById('aiKeyInput');
-  const keySave = document.getElementById('aiKeySave');
+  const HISTORY_KEY = 'rt_chat_history';
+  const SUGGESTED = [
+    'What does the current composite score mean?',
+    'Which indicators are flashing the most risk right now?',
+    'What would need to change for the alert to go RED?',
+    'How reliable is the yield-curve indicator historically?'
+  ];
+
+  const btn      = document.getElementById('aiChatBtn');
+  const panel    = document.getElementById('aiChatPanel');
+  const closeBtn = document.getElementById('aiChatClose');
+  const clearBtn = document.getElementById('aiChatClear');
+  const settingsBtn = document.getElementById('aiChatSettings');
+  const msgs     = document.getElementById('aiChatMessages');
+  const suggested= document.getElementById('aiSuggested');
+  const form     = document.getElementById('aiChatForm');
+  const input    = document.getElementById('aiChatInput');
+  const send     = document.getElementById('aiChatSend');
+  const keyRow   = document.getElementById('aiKeyRow');
+  const keyInput = document.getElementById('aiKeyInput');
+  const keySave  = document.getElementById('aiKeySave');
 
   let history = [];
+  let streaming = false;
 
-  function getKey() { return localStorage.getItem(LS_KEY) || ''; }
-  function setKey(k) { localStorage.setItem(LS_KEY, k.trim()); }
+  // ── Key management ──────────────────────────────────────────────────────────
+  const getKey  = () => localStorage.getItem(LS_KEY) || '';
+  const setKey  = k  => { localStorage.setItem(LS_KEY, k.trim()); syncKeyUI(); };
+  const clearKey = () => { localStorage.removeItem(LS_KEY); syncKeyUI(); };
 
-  function updateKeyRow() {
+  function syncKeyUI() {
     const k = getKey();
     keyRow.style.display = k ? 'none' : 'flex';
-    if (k) keyInput.value = '';
+    btn.classList.toggle('has-key', !!k);
   }
 
   keySave.addEventListener('click', () => {
     const k = keyInput.value.trim();
     if (!k) return;
     setKey(k);
-    updateKeyRow();
-    addMsg('system', 'API key saved. You can now ask questions.');
+    keyInput.value = '';
+    addSystemMsg('API key saved — you can now ask questions.');
+    renderSuggested();
+  });
+  settingsBtn.addEventListener('click', () => {
+    keyRow.style.display = keyRow.style.display === 'none' ? 'flex' : 'none';
+    if (keyRow.style.display === 'flex') keyInput.focus();
   });
 
-  btn.addEventListener('click', () => {
-    panel.classList.toggle('open');
-    if (panel.classList.contains('open')) {
-      updateKeyRow();
-      if (!msgs.children.length) {
-        addMsg('assistant', 'Hi! I\'m your AI analyst. Ask me anything about the recession risk data, indicators, or what the current signals mean.');
-      }
-      input.focus();
-    }
-  });
-  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
-
-  function addMsg(role, text) {
-    const div = document.createElement('div');
-    div.className = 'chat-msg ' + role;
-    div.textContent = text;
-    msgs.appendChild(div);
-    msgs.scrollTop = msgs.scrollHeight;
-    return div;
+  // ── History persistence ──────────────────────────────────────────────────────
+  function saveHistory() {
+    try { sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch {}
+  }
+  function loadHistory() {
+    try { return JSON.parse(sessionStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
   }
 
+  // ── Message rendering ────────────────────────────────────────────────────────
+  function addMsg(role, text) {
+    hideSuggested();
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-msg ' + role;
+    const inner = document.createElement('div');
+    inner.className = 'chat-msg-inner';
+    inner.textContent = text;
+    wrap.appendChild(inner);
+    if (role === 'assistant') {
+      const copy = document.createElement('button');
+      copy.className = 'chat-copy-btn';
+      copy.title = 'Copy';
+      copy.textContent = '⎘';
+      copy.addEventListener('click', () => {
+        navigator.clipboard?.writeText(inner.textContent).then(() => {
+          copy.textContent = '✓'; setTimeout(() => { copy.textContent = '⎘'; }, 1500);
+        });
+      });
+      wrap.appendChild(copy);
+    }
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    return inner;
+  }
+
+  function addTypingIndicator() {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-typing';
+    wrap.id = 'chatTyping';
+    wrap.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    return wrap;
+  }
+
+  function addSystemMsg(text) {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-msg system';
+    const inner = document.createElement('div');
+    inner.className = 'chat-msg-inner';
+    inner.textContent = text;
+    wrap.appendChild(inner);
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ── Suggested questions ──────────────────────────────────────────────────────
+  function renderSuggested() {
+    suggested.innerHTML = '';
+    if (!getKey() || msgs.children.length > 0) return;
+    const p = document.createElement('p');
+    p.textContent = 'Suggested questions:';
+    suggested.appendChild(p);
+    SUGGESTED.forEach(q => {
+      const b = document.createElement('button');
+      b.className = 'ai-suggest-btn';
+      b.textContent = q;
+      b.addEventListener('click', () => { input.value = q; form.requestSubmit(); });
+      suggested.appendChild(b);
+    });
+  }
+  function hideSuggested() { suggested.innerHTML = ''; }
+
+  // ── Context builder ──────────────────────────────────────────────────────────
   function buildContext() {
     const snap = window._snapshotCache;
-    if (!snap) return 'No live data loaded yet.';
-    const top = snap.indicators?.slice(0, 12).map(i =>
-      `${i.name}: ${i.latest_value ?? 'N/A'} (alert: ${i.alert ?? 'N/A'})`
-    ).join('\n') || '';
+    if (!snap) return 'No live data has loaded yet.';
+    const comp = snap.composite || {};
+    const geo  = snap.geopolitical || {};
+    const layers = snap.layers || {};
+
+    const layerLines = Object.entries(layers).map(([k, v]) =>
+      `  ${k}: score=${v.score ?? 'N/A'} alert=${v.alert ?? 'N/A'}`
+    ).join('\n');
+
+    const indLines = (snap.indicators || []).map(i =>
+      `  ${i.name} [${i.fred_id}]: ${i.latest_value ?? 'N/A'} as of ${i.latest_date ?? 'N/A'} — alert: ${i.alert ?? 'N/A'} score: ${i.score ?? 'N/A'}`
+    ).join('\n');
+
     return [
+      `=== RECESSION TRACKER SNAPSHOT ===`,
       `As-of date: ${snap.as_of || 'unknown'}`,
-      `Composite recession score: ${snap.composite_score ?? 'N/A'}/100`,
-      `Overall alert: ${snap.alert ?? 'N/A'}`,
-      `Recession probability (yield curve probit): ${snap.recession_prob != null ? (snap.recession_prob * 100).toFixed(1) + '%' : 'N/A'}`,
-      `Confidence (data coverage): ${snap.confidence != null ? (snap.confidence * 100).toFixed(0) + '%' : 'N/A'}`,
-      '',
-      'Key indicators:',
-      top
+      ``,
+      `COMPOSITE`,
+      `  Score: ${comp.score ?? 'N/A'}/100`,
+      `  Alert: ${comp.alert ?? 'N/A'}`,
+      `  Rating: ${comp.rating ?? 'N/A'}/10`,
+      `  Confidence: ${comp.confidence != null ? (comp.confidence * 100).toFixed(0) + '%' : 'N/A'}`,
+      `  Recession probability (12mo, yield curve probit): ${comp.recession_probability_12mo != null ? (comp.recession_probability_12mo * 100).toFixed(1) + '%' : 'N/A'}`,
+      `  Yield curve spread (10Y-3M): ${comp.yield_curve_spread ?? 'N/A'}%`,
+      `  Yield curve inversion days: ${comp.yield_curve_inversion_days ?? 0}`,
+      `  Ensemble score: ${comp.ensemble_score ?? 'N/A'}`,
+      ``,
+      `GEOPOLITICAL`,
+      `  Score: ${geo.score ?? 'N/A'} Flag: ${geo.flag ?? 'N/A'} Source: ${geo.source ?? 'N/A'}`,
+      `  GPR index: ${geo.gpr?.value ?? 'N/A'} as of ${geo.gpr?.date ?? 'N/A'}`,
+      ``,
+      `LAYERS`,
+      layerLines,
+      ``,
+      `ALL INDICATORS (${(snap.indicators || []).length} total)`,
+      indLines
     ].join('\n');
   }
 
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
-  });
-
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const q = input.value.trim();
-    if (!q) return;
+  // ── Streaming API call ───────────────────────────────────────────────────────
+  async function sendMessage(userMsg) {
     const key = getKey();
-    if (!key) { updateKeyRow(); addMsg('system', 'Please enter your Anthropic API key first.'); return; }
+    if (!key) { syncKeyUI(); addSystemMsg('Please enter your Anthropic API key first.'); return; }
+    if (streaming) return;
 
-    addMsg('user', q);
-    history.push({ role: 'user', content: q });
-    input.value = '';
+    streaming = true;
+    history.push({ role: 'user', content: userMsg });
+    saveHistory();
+
+    const typing = addTypingIndicator();
     send.disabled = true;
 
-    const thinking = addMsg('assistant', '…');
-
-    const systemPrompt = `You are a concise financial analyst assistant embedded in a recession-tracking dashboard. Answer questions about recession risk, economic indicators, and the current data snapshot. Be direct and specific. Context:\n\n${buildContext()}`;
+    const systemPrompt =
+      `You are a sharp, concise financial analyst embedded in a live recession-tracking dashboard. ` +
+      `Answer questions about recession risk, economic indicators, and the current data. ` +
+      `Be direct and specific. Cite indicator names and values when relevant. ` +
+      `Keep answers focused — 2-4 short paragraphs max unless asked for more detail.\n\n` +
+      buildContext();
 
     try {
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -5587,9 +5758,10 @@ if ('serviceWorker' in navigator) {
         },
         body: JSON.stringify({
           model: 'claude-opus-4-7',
-          max_tokens: 512,
+          max_tokens: 1024,
+          stream: true,
           system: systemPrompt,
-          messages: history
+          messages: history.slice(-20)
         })
       });
 
@@ -5598,24 +5770,129 @@ if ('serviceWorker' in navigator) {
         throw new Error(err?.error?.message || `HTTP ${res.status}`);
       }
 
-      const data = await res.json();
-      const reply = data.content?.[0]?.text || '(no response)';
-      thinking.textContent = reply;
-      history.push({ role: 'assistant', content: reply });
-      if (history.length > 20) history = history.slice(-20);
+      typing.remove();
+      const replyEl = addMsg('assistant', '');
+      let fullText = '';
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop() || '';
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const ev = JSON.parse(data);
+            if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
+              fullText += ev.delta.text;
+              replyEl.textContent = fullText;
+              msgs.scrollTop = msgs.scrollHeight;
+            }
+          } catch {}
+        }
+      }
+
+      history.push({ role: 'assistant', content: fullText || '(no response)' });
+      if (history.length > 30) history = history.slice(-30);
+      saveHistory();
+
     } catch (err) {
-      thinking.textContent = `Error: ${err.message}`;
-      thinking.style.color = 'var(--red)';
+      typing.remove();
+      const errEl = addMsg('error', `Error: ${err.message}`);
       history.pop();
-      if (err.message.includes('401') || err.message.includes('invalid') || err.message.includes('unauthorized')) {
-        localStorage.removeItem(LS_KEY);
-        updateKeyRow();
+      if (/401|invalid.*key|unauthorized/i.test(err.message)) {
+        clearKey();
+        addSystemMsg('API key appears invalid — please re-enter it.');
       }
     } finally {
+      streaming = false;
       send.disabled = false;
+      resizeInput();
       input.focus();
     }
+  }
+
+  // ── Input auto-resize ────────────────────────────────────────────────────────
+  function resizeInput() {
+    input.style.height = '36px';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+  }
+  input.addEventListener('input', resizeInput);
+
+  // ── Form submit ──────────────────────────────────────────────────────────────
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
   });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q || streaming) return;
+    addMsg('user', q);
+    input.value = '';
+    resizeInput();
+    sendMessage(q);
+  });
+
+  // ── Clear ────────────────────────────────────────────────────────────────────
+  clearBtn.addEventListener('click', () => {
+    history = [];
+    msgs.innerHTML = '';
+    sessionStorage.removeItem(HISTORY_KEY);
+    addSystemMsg('Conversation cleared.');
+    renderSuggested();
+  });
+
+  // ── Open / close ─────────────────────────────────────────────────────────────
+  function openPanel() {
+    panel.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    syncKeyUI();
+
+    // Restore session history
+    if (!msgs.children.length) {
+      const saved = loadHistory();
+      if (saved.length) {
+        history = saved;
+        saved.forEach(m => {
+          if (m.role === 'user') addMsg('user', m.content);
+          else if (m.role === 'assistant') addMsg('assistant', m.content);
+        });
+      } else {
+        addSystemMsg('Ask me anything about the recession data and indicators.');
+        renderSuggested();
+      }
+    }
+    setTimeout(() => input.focus(), 50);
+  }
+  function closePanel() {
+    panel.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  btn.addEventListener('click', () => panel.classList.contains('open') ? closePanel() : openPanel());
+  closeBtn.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+      e.preventDefault();
+      panel.classList.contains('open') ? closePanel() : openPanel();
+    }
+  });
+
+  // ── Key input: save on Enter ─────────────────────────────────────────────────
+  keyInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); keySave.click(); }
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────────
+  syncKeyUI();
 })();
 </script>
 </body>
