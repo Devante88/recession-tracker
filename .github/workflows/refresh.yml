@@ -85,21 +85,6 @@ jobs:
           NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
         run: node scripts/alert.mjs
 
-      - name: Generate RSS feed for alert state changes
-        run: node scripts/feed.mjs
-
-      - name: Generate AI narrative briefing
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/narrative.mjs
-
-      - name: Send webhook alert on state change
-        env:
-          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
-          SUPABASE_NOTIFY_URL: ${{ secrets.SUPABASE_NOTIFY_URL }}
-          NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
-        run: node scripts/alert.mjs
-
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
