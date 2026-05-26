@@ -77,7 +77,6 @@ export function evaluateBacktest(entries, { flagAt = 'YELLOW', leadWindow = 12, 
     for (let i = 1; i <= leadWindow; i++) {
       const prev = byMonth.get(addMonths(rec.start, -i));
       if (prev && prev.flagged) lead = i;
-      else break;
     }
     episodes.push({
       label: rec.label,

@@ -203,7 +203,7 @@ function lastMonthly(series, months = 24) {
 export function buildSnapshot(normalizedIndicators, asOfDate, { gpr = null } = {}) {
   const layerScores    = computeLayerScores(normalizedIndicators);
   const compositeScore = computeCompositeScore(layerScores);
-  const withData       = normalizedIndicators.filter(x => x.latest !== null).length;
+  const withData       = normalizedIndicators.filter(x => x.latest?.value !== null && x.latest?.value !== undefined).length;
   const confidence     = normalizedIndicators.length > 0
     ? Number((withData / normalizedIndicators.length).toFixed(2)) : 0;
 

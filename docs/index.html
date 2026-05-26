@@ -517,6 +517,77 @@
       .hero-badge-row { flex-wrap: wrap; }
       .panel { padding: 16px; }
     }
+
+    /* ── AI CHAT ─────────────────────────────────────────────────────────────── */
+    #aiChatBtn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--accent); border: none; cursor: pointer;
+      font-size: 22px; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(102,179,255,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    #aiChatBtn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(102,179,255,0.55); }
+    #aiChatPanel {
+      position: fixed; bottom: 90px; right: 24px; z-index: 200;
+      width: 380px; max-width: calc(100vw - 32px);
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; display: none; flex-direction: column;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      overflow: hidden;
+    }
+    #aiChatPanel.open { display: flex; }
+    .ai-chat-header {
+      padding: 14px 16px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--panel-2);
+    }
+    .ai-chat-header h4 { font-size: 14px; font-weight: 700; margin: 0; }
+    .ai-chat-header span { font-size: 11px; color: var(--muted); }
+    .ai-chat-close { background: none; border: none; color: var(--muted); font-size: 20px; cursor: pointer; }
+    .ai-chat-close:hover { color: var(--text); }
+    #aiChatMessages {
+      flex: 1; overflow-y: auto; padding: 12px; min-height: 200px; max-height: 340px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .chat-msg {
+      max-width: 88%; padding: 8px 12px; border-radius: 12px;
+      font-size: 13px; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+    }
+    .chat-msg.user { background: var(--accent); color: #0b1020; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .chat-msg.assistant { background: var(--panel-2); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .chat-msg.system { background: transparent; color: var(--muted); font-size: 12px; align-self: center; font-style: italic; }
+    .ai-chat-form {
+      display: flex; gap: 8px; padding: 10px 12px;
+      border-top: 1px solid var(--border); background: var(--panel-2);
+    }
+    #aiChatInput {
+      flex: 1; background: var(--panel-3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--text);
+      resize: none; min-height: 36px; max-height: 100px; font-family: inherit;
+    }
+    #aiChatInput:focus { outline: none; border-color: var(--accent); }
+    #aiChatSend {
+      background: var(--accent); border: none; border-radius: 8px;
+      color: #0b1020; font-weight: 700; font-size: 13px; padding: 0 14px;
+      cursor: pointer; white-space: nowrap;
+    }
+    #aiChatSend:disabled { opacity: 0.5; cursor: not-allowed; }
+    .ai-key-row {
+      padding: 10px 12px; border-top: 1px solid var(--border);
+      display: flex; gap: 6px; align-items: center; background: var(--panel-2);
+    }
+    .ai-key-row input {
+      flex: 1; background: var(--panel-3); border: 1px solid var(--border);
+      border-radius: 6px; padding: 5px 8px; font-size: 11px; color: var(--muted);
+      font-family: monospace;
+    }
+    .ai-key-row input:focus { outline: none; border-color: var(--accent); color: var(--text); }
+    .ai-key-btn {
+      background: var(--panel-3); border: 1px solid var(--border); border-radius: 6px;
+      color: var(--muted); font-size: 11px; padding: 5px 10px; cursor: pointer;
+    }
+    .ai-key-btn:hover { color: var(--text); }
   </style>
 </head>
 <body>
@@ -1750,6 +1821,9 @@ const LAYER_BTN_CLASS = {
 };
 
 // ─── UTILITIES ───────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 function scoreColor(s) {
   if (s >= 60) return '#ff7a7a';
   if (s >= 30) return '#f1c84a';
@@ -4411,8 +4485,8 @@ function initPortfolio() {
       const pnlClass = pnl >= 0 ? 'port-pnl-pos' : 'port-pnl-neg';
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><strong>${p.symbol}</strong></td>
-        <td><span style="background:${ASSET_COLORS[p.assetClass]||'#7a84a8'}22;color:${ASSET_COLORS[p.assetClass]||'#7a84a8'};border-radius:4px;padding:2px 7px;font-size:11px;font-weight:700">${p.assetClass}</span></td>
+        <td><strong>${escHtml(p.symbol)}</strong></td>
+        <td><span style="background:${ASSET_COLORS[p.assetClass]||'#7a84a8'}22;color:${ASSET_COLORS[p.assetClass]||'#7a84a8'};border-radius:4px;padding:2px 7px;font-size:11px;font-weight:700">${escHtml(p.assetClass)}</span></td>
         <td>${Number(p.qty).toLocaleString(undefined,{maximumFractionDigits:4})}</td>
         <td>${fmt$(p.cost)}</td>
         <td>
@@ -4604,8 +4678,8 @@ function updatePortfolioMacro() {
   const colorMap = { HIGH:'var(--red)', VARIES:'var(--yellow)', 'LOW-MED':'var(--green)', MEDIUM:'var(--yellow)', NONE:'var(--muted)', UNKNOWN:'var(--muted)' };
   riskEl.innerHTML = positions.slice(0,8).map(p =>
     `<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)">
-      <span style="font-weight:700">${p.symbol}</span>
-      <span style="color:${colorMap[riskMap[p.assetClass]]||'var(--muted)'}">Recession risk: ${riskMap[p.assetClass]||'—'}</span>
+      <span style="font-weight:700">${escHtml(p.symbol)}</span>
+      <span style="color:${colorMap[riskMap[p.assetClass]]||'var(--muted)'}">Recession risk: ${escHtml(riskMap[p.assetClass]||'—')}</span>
     </div>`
   ).join('');
 }
@@ -4643,7 +4717,7 @@ function initOptions() {
     const rhoP   = -K*T*expRT*Nd2n / 100;
 
     return {
-      call: { price: callPrice, delta: Nd1,     theta: thetaC, rho: rhoC, prob_itm: Nd1 },
+      call: { price: callPrice, delta: Nd1,     theta: thetaC, rho: rhoC, prob_itm: Nd2 },
       put:  { price: putPrice,  delta: Nd1-1,   theta: thetaP, rho: rhoP, prob_itm: Nd2n },
       gamma, vega, d1, d2
     };
@@ -4852,10 +4926,12 @@ function renderFixedIncome() {
   const stl   = get('STLFSI3');
 
   const ffV  = ff?.latest_value ?? null;
-  const t10y = ffV !== null && t10y3?.latest_value !== null
-    ? (ffV + (t10y3?.latest_value ?? 0)) : null;
-  const t2y  = t10y !== null && t10y2?.latest_value !== null
-    ? (t10y - (t10y2?.latest_value ?? 0)) : null;
+  // T10Y3M = 10Y − 3M spread; FEDFUNDS ≈ 3M rate → approx 10Y yield
+  const t10y = ffV !== null && t10y3?.latest_value != null
+    ? (ffV + t10y3.latest_value) : null;
+  // T10Y2Y = 10Y − 2Y spread → approx 2Y yield
+  const t2y  = t10y !== null && t10y2?.latest_value != null
+    ? (t10y - t10y2.latest_value) : null;
 
   const set = (id, val, color) => {
     const el = document.getElementById(id);
@@ -4865,8 +4941,8 @@ function renderFixedIncome() {
   };
 
   set('fi-fedfunds', ffV !== null ? ffV.toFixed(2) + '%' : '—');
-  set('fi-10y', t10y !== null ? t10y.toFixed(2) + '%' : '—');
-  set('fi-2y',  t2y  !== null ? t2y.toFixed(2) + '%'  : '—');
+  set('fi-10y', t10y !== null ? '~' + t10y.toFixed(2) + '%' : '—');
+  set('fi-2y',  t2y  !== null ? '~' + t2y.toFixed(2)  + '%' : '—');
 
   const spread = t10y3?.latest_value ?? null;
   set('fi-t10y3m', spread !== null ? (spread >= 0 ? '+' : '') + spread.toFixed(2) + '%' : '—',
@@ -5104,11 +5180,11 @@ function initWatchlist() {
       card.id = cardId;
       card.innerHTML = `
         <div class="wl-card-header">
-          <span class="wl-ticker">${item.symbol}</span>
+          <span class="wl-ticker">${escHtml(item.symbol)}</span>
           <button class="wl-remove-btn" id="${removeId}" title="Remove from watchlist">×</button>
         </div>
         <textarea class="wl-note-input" id="${noteId}" rows="1"
-          placeholder="Add a note…">${item.note || ''}</textarea>
+          placeholder="Add a note…">${escHtml(item.note || '')}</textarea>
         <div class="tv-wrap tradingview-widget-container" id="${chartId}" style="height:200px"></div>
       `;
       grid.appendChild(card);
@@ -5143,7 +5219,7 @@ function initWatchlist() {
 
     chips.innerHTML = list.map(item => `
       <span style="background:var(--panel-2);border:1px solid var(--border);border-radius:20px;
-                   padding:4px 12px;font-size:12px;font-weight:600;">${item.symbol}</span>
+                   padding:4px 12px;font-size:12px;font-weight:600;">${escHtml(item.symbol)}</span>
     `).join('');
 
     if (!list.length) return;
@@ -5385,6 +5461,162 @@ startPolling();
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
+</script>
+
+<!-- ── AI CHAT PANEL ──────────────────────────────────────────────────────── -->
+<button id="aiChatBtn" title="Ask the AI analyst">🤖</button>
+<div id="aiChatPanel" role="dialog" aria-label="AI Analyst Chat">
+  <div class="ai-chat-header">
+    <div>
+      <h4>AI Analyst</h4>
+      <span>Ask about recession risk, indicators, or the data</span>
+    </div>
+    <button class="ai-chat-close" id="aiChatClose" aria-label="Close chat">×</button>
+  </div>
+  <div id="aiChatMessages"></div>
+  <form class="ai-chat-form" id="aiChatForm">
+    <textarea id="aiChatInput" placeholder="Ask a question…" rows="1"></textarea>
+    <button type="submit" id="aiChatSend">Send</button>
+  </form>
+  <div class="ai-key-row" id="aiKeyRow">
+    <input type="password" id="aiKeyInput" placeholder="Anthropic API key (sk-ant-…) — stored in browser only" autocomplete="off">
+    <button type="button" class="ai-key-btn" id="aiKeySave">Save</button>
+  </div>
+</div>
+
+<script>
+(function initAiChat() {
+  const LS_KEY = 'rt_anthropic_key';
+  const btn     = document.getElementById('aiChatBtn');
+  const panel   = document.getElementById('aiChatPanel');
+  const closeBtn= document.getElementById('aiChatClose');
+  const msgs    = document.getElementById('aiChatMessages');
+  const form    = document.getElementById('aiChatForm');
+  const input   = document.getElementById('aiChatInput');
+  const send    = document.getElementById('aiChatSend');
+  const keyRow  = document.getElementById('aiKeyRow');
+  const keyInput= document.getElementById('aiKeyInput');
+  const keySave = document.getElementById('aiKeySave');
+
+  let history = [];
+
+  function getKey() { return localStorage.getItem(LS_KEY) || ''; }
+  function setKey(k) { localStorage.setItem(LS_KEY, k.trim()); }
+
+  function updateKeyRow() {
+    const k = getKey();
+    keyRow.style.display = k ? 'none' : 'flex';
+    if (k) keyInput.value = '';
+  }
+
+  keySave.addEventListener('click', () => {
+    const k = keyInput.value.trim();
+    if (!k) return;
+    setKey(k);
+    updateKeyRow();
+    addMsg('system', 'API key saved. You can now ask questions.');
+  });
+
+  btn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+      updateKeyRow();
+      if (!msgs.children.length) {
+        addMsg('assistant', 'Hi! I\'m your AI analyst. Ask me anything about the recession risk data, indicators, or what the current signals mean.');
+      }
+      input.focus();
+    }
+  });
+  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+  function addMsg(role, text) {
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.textContent = text;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function buildContext() {
+    const snap = window._snapshotCache;
+    if (!snap) return 'No live data loaded yet.';
+    const top = snap.indicators?.slice(0, 12).map(i =>
+      `${i.name}: ${i.latest_value ?? 'N/A'} (alert: ${i.alert ?? 'N/A'})`
+    ).join('\n') || '';
+    return [
+      `As-of date: ${snap.as_of || 'unknown'}`,
+      `Composite recession score: ${snap.composite_score ?? 'N/A'}/100`,
+      `Overall alert: ${snap.alert ?? 'N/A'}`,
+      `Recession probability (yield curve probit): ${snap.recession_prob != null ? (snap.recession_prob * 100).toFixed(1) + '%' : 'N/A'}`,
+      `Confidence (data coverage): ${snap.confidence != null ? (snap.confidence * 100).toFixed(0) + '%' : 'N/A'}`,
+      '',
+      'Key indicators:',
+      top
+    ].join('\n');
+  }
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q) return;
+    const key = getKey();
+    if (!key) { updateKeyRow(); addMsg('system', 'Please enter your Anthropic API key first.'); return; }
+
+    addMsg('user', q);
+    history.push({ role: 'user', content: q });
+    input.value = '';
+    send.disabled = true;
+
+    const thinking = addMsg('assistant', '…');
+
+    const systemPrompt = `You are a concise financial analyst assistant embedded in a recession-tracking dashboard. Answer questions about recession risk, economic indicators, and the current data snapshot. Be direct and specific. Context:\n\n${buildContext()}`;
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-7',
+          max_tokens: 512,
+          system: systemPrompt,
+          messages: history
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || '(no response)';
+      thinking.textContent = reply;
+      history.push({ role: 'assistant', content: reply });
+      if (history.length > 20) history = history.slice(-20);
+    } catch (err) {
+      thinking.textContent = `Error: ${err.message}`;
+      thinking.style.color = 'var(--red)';
+      history.pop();
+      if (err.message.includes('401') || err.message.includes('invalid') || err.message.includes('unauthorized')) {
+        localStorage.removeItem(LS_KEY);
+        updateKeyRow();
+      }
+    } finally {
+      send.disabled = false;
+      input.focus();
+    }
+  });
+})();
 </script>
 </body>
 </html>

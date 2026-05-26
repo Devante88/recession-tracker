@@ -71,11 +71,11 @@ export function optimizeCutoff(rows, { fprBudget = 1, min = 5, max = 95, step = 
  * 0.5 = no skill, 1.0 = perfect separation. Threshold-independent.
  */
 export function rocAuc(rows) {
-  const pos = rows.filter(r => r.recession).map(r => r.composite);
-  const neg = rows.filter(r => !r.recession).map(r => r.composite);
+  const pos = rows.filter(r => r.recession).map(r => r.composite).filter(v => Number.isFinite(v));
+  const neg = rows.filter(r => !r.recession).map(r => r.composite).filter(v => Number.isFinite(v));
   if (!pos.length || !neg.length) return null;
 
-  const all = rows.map(r => r.composite).slice().sort((a, b) => a - b);
+  const all = rows.map(r => r.composite).filter(v => Number.isFinite(v)).slice().sort((a, b) => a - b);
   // Average ranks (1-based) for tie handling.
   const rankOf = new Map();
   let i = 0;

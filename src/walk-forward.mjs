@@ -78,8 +78,8 @@ export function walkForward(entries, { minTrainMonths = 120, stepMonths = 24, te
     summary: {
       n_folds: folds.length,
       mean_test_auc: round(mean(aucs)),
-      min_test_auc: round(Math.min(...aucs)),
-      max_test_auc: round(Math.max(...aucs)),
+      min_test_auc: round(aucs.length ? Math.min(...aucs) : null),
+      max_test_auc: round(aucs.length ? Math.max(...aucs) : null),
       mean_test_youden_j: round(mean(js))
     }
   };
