@@ -2085,13 +2085,33 @@ function sparklineSvg(values, color) {
   </svg>`;
 }
 
+// Count weekdays (Mon–Fri) strictly between two dates — measures how many
+// scheduled refreshes the snapshot has missed.
+function businessDaysBetween(from, to) {
+  let n = 0;
+  const d = new Date(from);
+  d.setUTCHours(0, 0, 0, 0);
+  const end = new Date(to);
+  end.setUTCHours(0, 0, 0, 0);
+  while (d < end) {
+    d.setUTCDate(d.getUTCDate() + 1);
+    const dow = d.getUTCDay();
+    if (dow !== 0 && dow !== 6) n++;
+  }
+  return n;
+}
+
+function relativeAge(days) {
+  if (days <= 0) return 'today';
+  if (days === 1) return 'yesterday';
+  return `${days} days ago`;
+}
+
 // ─── RENDER: HEADER ──────────────────────────────────────────────────────────
 function renderHeader(current) {
   document.getElementById('asOf').textContent = current.as_of || '—';
   const genAt = current.generated_at ? new Date(current.generated_at) : null;
-  document.getElementById('generatedAt').textContent = genAt
-    ? genAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-    : '—';
+  const genEl = document.getElementById('generatedAt');
 
   // Dynamic indicator count — never goes stale as the series list grows
   const count = (current.indicators || []).length;
@@ -2104,12 +2124,24 @@ function renderHeader(current) {
 
   if (genAt) {
     const days = Math.floor((Date.now() - genAt) / 86400000);
-    if (days > 5) {
+    const dateStr = genAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    if (genEl) {
+      genEl.textContent = `${dateStr} (${relativeAge(days)})`;
+      genEl.style.color = days >= 1 ? 'var(--yellow)' : '';
+    }
+
+    // The feed refreshes every weekday morning, so being more than one
+    // business day behind means a scheduled run was missed.
+    const missedRefreshes = businessDaysBetween(genAt, new Date());
+    if (missedRefreshes >= 1) {
       document.getElementById('staleTag').style.display = 'inline-block';
       const sb = document.getElementById('staleBanner');
-      sb.textContent = `⚠ Data is ${days} days old — next scheduled refresh is weekdays at 12:00 UTC (07:00 ET).`;
+      const noun = missedRefreshes === 1 ? 'weekday refresh appears' : 'weekday refreshes appear';
+      sb.textContent = `⚠ Data is from ${dateStr} (${relativeAge(days)}). ${missedRefreshes} ${noun} to have been missed — the next scheduled run is weekdays at 12:00 UTC (07:00 ET).`;
       sb.style.display = 'block';
     }
+  } else if (genEl) {
+    genEl.textContent = '—';
   }
 }
 
