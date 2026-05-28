@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#1a2340">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" onerror="console.warn('Chart.js CDN unavailable — charts disabled')"></script>
   <style>
     :root {
       --bg:      #0b1020;
@@ -56,7 +56,10 @@
     /* ── HEADER ─────────────────────────────────────────────────────────────── */
     header { display: flex; justify-content: space-between; align-items: flex-start;
              margin-bottom: 28px; flex-wrap: wrap; gap: 16px; }
-    .header-left h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+    .header-left h1 { font-size: 30px; font-weight: 900; letter-spacing: -0.03em;
+                      background: linear-gradient(90deg, var(--text) 0%, var(--accent) 100%);
+                      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+                      background-clip: text; }
     .header-left p  { color: var(--muted); font-size: 13px; margin-top: 3px; }
     .header-right   { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
     .as-of          { font-size: 13px; color: var(--muted); }
@@ -253,7 +256,13 @@
     .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px;
                  margin-bottom: 20px; }
     .stat-card { background: var(--panel); border: 1px solid var(--border);
-                 border-radius: 14px; padding: 16px 18px; }
+                 border-radius: 14px; padding: 16px 18px; position: relative; overflow: hidden;
+                 transition: border-color 0.2s, box-shadow 0.2s; }
+    .stat-card:hover { border-color: rgba(102,179,255,0.25); box-shadow: 0 2px 16px rgba(0,0,0,0.15); }
+    .stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+                        background: linear-gradient(90deg, var(--accent), transparent);
+                        opacity: 0; transition: opacity 0.2s; }
+    .stat-card:hover::after { opacity: 1; }
     .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
                   letter-spacing: 0.1em; margin-bottom: 6px; }
     .stat-value { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1; }
@@ -293,17 +302,24 @@
     .modal-footer { font-size: 12px; color: var(--muted); }
 
     /* ── HERO ────────────────────────────────────────────────────────────────── */
-    .hero { background: linear-gradient(135deg, var(--panel), var(--panel-2));
+    .hero { background: linear-gradient(135deg, var(--panel) 0%, var(--panel-2) 100%);
             border: 1px solid var(--border); border-radius: 20px;
-            padding: 36px 40px; margin-bottom: 20px;
+            padding: 36px 40px; margin-bottom: 20px; position: relative; overflow: hidden;
             display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; }
+    .hero::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+                    background: radial-gradient(ellipse at 0% 0%, rgba(102,179,255,0.06) 0%, transparent 60%); }
     .hero-left { text-align: center; min-width: 160px; }
     .hero-label { font-size: 11px; color: var(--muted); text-transform: uppercase;
                   letter-spacing: 0.12em; margin-bottom: 8px; }
     .hero-score { font-size: 88px; font-weight: 900; line-height: 1;
-                  letter-spacing: -0.04em; transition: color 0.4s; }
+                  letter-spacing: -0.04em; transition: color 0.4s;
+                  text-shadow: 0 0 40px currentColor; filter: drop-shadow(0 0 24px currentColor); }
+    .hero-score-ring { width: 180px; height: 180px; position: relative; margin: 0 auto 8px; }
+    .hero-score-ring svg { position: absolute; inset: 0; }
+    .hero-score-ring .score-text { position: absolute; inset: 0; display: flex;
+                                   flex-direction: column; align-items: center; justify-content: center; }
     .hero-badge-row { margin-top: 10px; display: flex; gap: 8px; align-items: center;
-                      justify-content: center; }
+                      justify-content: center; flex-wrap: wrap; }
     .trend { font-size: 13px; font-weight: 600; }
     .trend.up   { color: var(--red); }
     .trend.down { color: var(--green); }
@@ -323,11 +339,53 @@
     .risk-bar-nums  { display: flex; justify-content: space-between; font-size: 11px;
                       color: var(--muted); position: relative; margin-bottom: 20px; }
     .risk-bar-zone-label { font-size: 11px; position: absolute; transform: translateX(-50%); }
+    /* ── HERO QUICK STATS ──────────────────────────────────────────────────────── */
+    .hero-quick-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .hero-qs { background: var(--panel-3); border-radius: 10px; padding: 10px 12px; }
+    .hero-qs-label { font-size: 10px; color: var(--muted); text-transform: uppercase;
+                     letter-spacing: 0.08em; margin-bottom: 3px; }
+    .hero-qs-value { font-size: 18px; font-weight: 800; line-height: 1; }
 
+    /* ── KEY RISKS PANEL ────────────────────────────────────────────────────── */
+    .kr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+               gap: 12px; margin-top: 14px; }
+    .kr-card { border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column;
+               gap: 8px; border-left: 3px solid; cursor: pointer; transition: transform 0.12s; }
+    .kr-card:hover { transform: translateY(-1px); }
+    .kr-card.RED    { background: rgba(255,122,122,0.07); border-left-color: var(--red); }
+    .kr-card.YELLOW { background: rgba(241,200,74,0.07);  border-left-color: var(--yellow); }
+    .kr-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .kr-card-name { font-size: 13px; font-weight: 700; line-height: 1.3; }
+    .kr-card-score { font-size: 22px; font-weight: 900; line-height: 1; flex-shrink: 0; }
+    .kr-card-meta { display: flex; align-items: center; gap: 8px; }
+    .kr-card-layer { font-size: 10px; color: var(--muted); text-transform: uppercase;
+                     letter-spacing: 0.07em; }
+    .kr-bar-bg { height: 4px; border-radius: 2px; background: var(--panel-3); flex: 1; }
+    .kr-bar-fill { height: 100%; border-radius: 2px; }
+    .kr-sparkline { opacity: 0.8; display: block; }
+    .kr-card-val { font-size: 11px; color: var(--muted); }
+    /* ── TABLE SPARKLINE COL ─────────────────────────────────────────────────── */
+    .tbl-spark { display: block; }
+    .col-trend { min-width: 90px; }
+    @media (max-width: 860px) { .col-trend { display: none; } }
+    /* ── STAT CARD ENHANCEMENTS ──────────────────────────────────────────────── */
+    .stat-card { position: relative; overflow: hidden; }
+    .stat-card::before { content: ''; position: absolute; inset: 0; pointer-events: none;
+                         background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%); }
+    .stat-card-spark { position: absolute; bottom: 0; right: 0; opacity: 0.25; }
+    /* ── SIGNAL PULSE ────────────────────────────────────────────────────────── */
+    @keyframes risk-pulse { 0%,100% { box-shadow: 0 0 0 0 currentColor; }
+                            50% { box-shadow: 0 0 0 6px transparent; } }
+    .kr-card.RED .kr-card-score { color: var(--red); animation: none; }
+    .kr-card.YELLOW .kr-card-score { color: var(--yellow); }
     /* ── LAYER CARDS ─────────────────────────────────────────────────────────── */
     .layers { display: grid; grid-template-columns: repeat(5,1fr); gap: 14px; margin-bottom: 20px; }
     .card   { background: var(--panel); border: 1px solid var(--border); border-radius: 16px;
-              padding: 18px 16px; }
+              padding: 18px 16px; transition: transform 0.12s, box-shadow 0.15s; position: relative;
+              overflow: hidden; }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+                    background: var(--card-accent, var(--accent)); opacity: 0.7; }
     .card-top { display: flex; justify-content: space-between; align-items: flex-start;
                 margin-bottom: 8px; }
     .card-name { font-size: 11px; color: var(--muted); text-transform: uppercase;
@@ -348,7 +406,9 @@
 
     /* ── PANELS ──────────────────────────────────────────────────────────────── */
     .panel { background: var(--panel); border: 1px solid var(--border);
-             border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+             border-radius: 16px; padding: 24px; margin-bottom: 20px;
+             transition: box-shadow 0.2s; }
+    .panel:hover { box-shadow: 0 2px 24px rgba(0,0,0,0.18); }
     .panel-header { display: flex; justify-content: space-between; align-items: center;
                     margin-bottom: 6px; flex-wrap: wrap; gap: 12px; }
     .panel-header h2 { font-size: 17px; font-weight: 700; }
@@ -432,6 +492,8 @@
     .pctile-bar-fill { height: 100%; border-radius: 3px; }
     .pctile-val { font-size: 10px; color: var(--muted); }
     .anomaly-badge { font-size: 11px; margin-left: 4px; cursor: default; }
+    .hide-sm { }
+    @media (max-width: 860px) { .hide-sm { display: none !important; } }
 
     /* ── ALERT HISTORY LOG ───────────────────────────────────────────────────── */
     .alert-log-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -469,8 +531,10 @@
 
     /* ── AI NARRATIVE ────────────────────────────────────────────────────────── */
     .narrative-card { background: linear-gradient(135deg, var(--panel), var(--panel-2));
-                      border: 1px solid var(--border); border-radius: 16px;
-                      padding: 22px 26px; margin-bottom: 20px; position: relative; }
+                      border: 1px solid rgba(102,179,255,0.2); border-radius: 16px;
+                      padding: 22px 26px; margin-bottom: 20px; position: relative;
+                      box-shadow: 0 0 0 1px rgba(102,179,255,0.04),
+                                  inset 0 1px 0 rgba(255,255,255,0.04); }
     .narrative-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
     .narrative-header h2 { font-size: 13px; font-weight: 700; color: var(--muted);
                            text-transform: uppercase; letter-spacing: 0.1em; }
@@ -517,6 +581,172 @@
       .hero-badge-row { flex-wrap: wrap; }
       .panel { padding: 16px; }
     }
+
+    /* ── AI CHAT ─────────────────────────────────────────────────────────────── */
+    #aiChatBtn {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--accent); border: none; cursor: pointer;
+      font-size: 22px; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(102,179,255,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    #aiChatBtn:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(102,179,255,0.6); }
+    #aiChatBtn.has-key::after {
+      content: ''; position: absolute; top: 4px; right: 4px;
+      width: 10px; height: 10px; background: var(--green);
+      border-radius: 50%; border: 2px solid var(--bg);
+    }
+    #aiChatPanel {
+      position: fixed; bottom: 90px; right: 24px; z-index: 200;
+      width: 400px; max-width: calc(100vw - 32px);
+      max-height: calc(100vh - 110px);
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; display: none; flex-direction: column;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+      overflow: hidden;
+      animation: chatSlideIn 0.18s ease-out;
+    }
+    @keyframes chatSlideIn {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+    #aiChatPanel.open { display: flex; }
+    .ai-chat-header {
+      padding: 12px 14px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--panel-2); flex-shrink: 0;
+    }
+    .ai-chat-header-left { display: flex; flex-direction: column; gap: 1px; }
+    .ai-chat-header h4 { font-size: 14px; font-weight: 700; margin: 0; }
+    .ai-chat-header-sub { font-size: 11px; color: var(--muted); }
+    .ai-chat-header-actions { display: flex; align-items: center; gap: 4px; }
+    .ai-hdr-btn {
+      background: none; border: none; color: var(--muted); font-size: 13px;
+      cursor: pointer; padding: 4px 6px; border-radius: 6px;
+      transition: background 0.1s, color 0.1s;
+    }
+    .ai-hdr-btn:hover { background: var(--panel-3); color: var(--text); }
+    #aiChatMessages {
+      flex: 1; overflow-y: auto; padding: 12px 12px 8px;
+      display: flex; flex-direction: column; gap: 8px;
+      min-height: 160px;
+    }
+    .chat-msg {
+      max-width: 90%; border-radius: 12px;
+      font-size: 13px; line-height: 1.55; word-break: break-word;
+      position: relative;
+    }
+    .chat-msg-inner { padding: 8px 12px; }
+    .chat-msg.user .chat-msg-inner { background: var(--accent); color: #0b1020; border-radius: 12px 12px 4px 12px; }
+    .chat-msg.assistant .chat-msg-inner { background: var(--panel-2); color: var(--text); border-radius: 12px 12px 12px 4px; white-space: pre-wrap; }
+    .chat-msg.error .chat-msg-inner { background: rgba(255,122,122,0.15); color: var(--red); border-radius: 12px; font-size: 12px; }
+    .chat-msg.system .chat-msg-inner { background: transparent; color: var(--muted); font-size: 11px; font-style: italic; text-align: center; }
+    .chat-msg.user { align-self: flex-end; }
+    .chat-msg.assistant, .chat-msg.error { align-self: flex-start; }
+    .chat-msg.system { align-self: center; }
+    .chat-copy-btn {
+      display: none; position: absolute; top: 4px; right: -28px;
+      background: var(--panel-3); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--muted); font-size: 11px;
+      padding: 3px 6px; cursor: pointer;
+    }
+    .chat-msg.assistant:hover .chat-copy-btn { display: block; }
+    .chat-copy-btn:hover { color: var(--text); }
+    .chat-typing {
+      display: flex; gap: 4px; align-items: center;
+      padding: 10px 14px; background: var(--panel-2);
+      border-radius: 12px 12px 12px 4px; align-self: flex-start;
+    }
+    .chat-typing span {
+      width: 6px; height: 6px; background: var(--muted); border-radius: 50%;
+      animation: typingBounce 1.2s infinite ease-in-out;
+    }
+    .chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+      30% { transform: translateY(-5px); opacity: 1; }
+    }
+    .ai-suggested {
+      display: flex; flex-direction: column; gap: 6px; padding: 8px 12px;
+    }
+    .ai-suggested p { font-size: 11px; color: var(--muted); margin: 0 0 4px; }
+    .ai-suggest-btn {
+      background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-size: 12px; padding: 6px 10px; cursor: pointer;
+      text-align: left; transition: border-color 0.1s, background 0.1s;
+    }
+    .ai-suggest-btn:hover { border-color: var(--accent); background: var(--panel-3); }
+    .ai-chat-form {
+      display: flex; gap: 8px; padding: 10px 12px;
+      border-top: 1px solid var(--border); background: var(--panel-2); flex-shrink: 0;
+    }
+    #aiChatInput {
+      flex: 1; background: var(--panel-3); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 10px; font-size: 13px; color: var(--text);
+      resize: none; height: 36px; max-height: 120px; font-family: inherit;
+      overflow: hidden; line-height: 1.4;
+    }
+    #aiChatInput:focus { outline: none; border-color: var(--accent); }
+    #aiChatSend {
+      background: var(--accent); border: none; border-radius: 8px;
+      color: #0b1020; font-weight: 700; font-size: 13px; padding: 0 14px;
+      cursor: pointer; white-space: nowrap; flex-shrink: 0; height: 36px;
+      transition: opacity 0.1s;
+    }
+    #aiChatSend:disabled { opacity: 0.45; cursor: not-allowed; }
+    .ai-key-row {
+      padding: 10px 12px; border-top: 1px solid var(--border);
+      display: flex; gap: 6px; align-items: center; background: var(--panel-2);
+      flex-shrink: 0;
+    }
+    .ai-key-row label { font-size: 11px; color: var(--muted); white-space: nowrap; }
+    .ai-key-row input {
+      flex: 1; background: var(--panel-3); border: 1px solid var(--border);
+      border-radius: 6px; padding: 5px 8px; font-size: 11px; color: var(--muted);
+      font-family: monospace; min-width: 0;
+    }
+    .ai-key-row input:focus { outline: none; border-color: var(--accent); color: var(--text); }
+    .ai-key-btn {
+      background: var(--accent); border: none; border-radius: 6px;
+      color: #0b1020; font-size: 11px; font-weight: 700; padding: 5px 10px; cursor: pointer;
+      white-space: nowrap;
+    }
+    .ai-key-btn:hover { opacity: 0.85; }
+    @media (max-width: 480px) {
+      #aiChatPanel { right: 0; left: 0; bottom: 0; border-radius: 16px 16px 0 0;
+        max-width: 100vw; max-height: 75vh; }
+      #aiChatBtn { bottom: 16px; right: 16px; }
+    }
+
+    /* ── LIVE COUNTDOWN ──────────────────────────────────────────────────────── */
+    .live-countdown { font-size: 10px; opacity: 0.7; margin-left: 5px;
+                      font-variant-numeric: tabular-nums; letter-spacing: 0; }
+    .refresh-now-btn { background: none; border: 1px solid var(--border); border-radius: 6px;
+                       color: var(--muted); font-size: 15px; padding: 2px 7px; cursor: pointer;
+                       line-height: 1.4; transition: color 0.15s, border-color 0.15s, transform 0.2s; }
+    .refresh-now-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .refresh-now-btn.spinning { animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOAST ───────────────────────────────────────────────────────────────── */
+    #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 500;
+                      display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast { background: var(--panel-2); border: 1px solid var(--border);
+             border-radius: 10px; padding: 10px 16px; font-size: 13px;
+             color: var(--text); box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+             display: flex; align-items: center; gap: 8px;
+             animation: toastIn 0.22s ease-out; pointer-events: auto; }
+    .toast.success { border-color: rgba(45,220,140,0.3); }
+    .toast.info    { border-color: rgba(102,179,255,0.3); }
+    .toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .toast.success .toast-dot { background: var(--green); }
+    .toast.info    .toast-dot { background: var(--accent); }
+    @keyframes toastIn  { from { opacity:0; transform: translateX(16px); }
+                          to   { opacity:1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity:1; transform: translateX(0); }
+                          to   { opacity:0; transform: translateX(16px); } }
   </style>
 </head>
 <body>
@@ -536,14 +766,16 @@
       <div class="as-of">As of <span id="asOf">—</span></div>
       <div class="as-of">Updated <span id="generatedAt">—</span></div>
       <span class="live-tag" id="liveTag" title="Auto-refreshing every 5 minutes">
-        <span class="live-dot"></span>LIVE
+        <span class="live-dot"></span><span id="liveLabel">LIVE</span><span id="liveCountdown" class="live-countdown"></span>
       </span>
+      <button class="refresh-now-btn" id="refreshNowBtn" title="Refresh data now">↻</button>
       <span class="stale-tag" id="staleTag">DATA STALE</span>
     </div>
   </header>
 
   <div class="banner banner-error"  id="errorBanner"></div>
   <div class="banner banner-stale"  id="staleBanner"></div>
+  <div id="toastContainer"></div>
 
   <!-- TAB NAVIGATION -->
   <nav class="tabs">
@@ -565,13 +797,26 @@
   <section class="hero">
     <div class="hero-left">
       <div class="hero-label">Composite Risk Score</div>
-      <div class="hero-score" id="compositeScore">—</div>
+      <div class="hero-score-ring" id="heroRing">
+        <svg viewBox="0 0 180 180" width="180" height="180" style="position:absolute;inset:0">
+          <circle cx="90" cy="90" r="76" fill="none" stroke="var(--panel-3)" stroke-width="8"/>
+          <circle id="heroRingArc" cx="90" cy="90" r="76" fill="none"
+                  stroke="var(--accent)" stroke-width="8" stroke-linecap="round"
+                  stroke-dasharray="477.5" stroke-dashoffset="477.5"
+                  transform="rotate(-90 90 90)" style="transition:stroke-dashoffset 0.8s ease,stroke 0.4s"/>
+        </svg>
+        <div class="score-text">
+          <div class="hero-score" id="compositeScore">—</div>
+          <div class="hero-badge-row" style="margin-top:4px">
+            <span class="badge" id="compositeAlert">—</span>
+          </div>
+        </div>
+      </div>
       <div class="hero-badge-row">
-        <span class="badge" id="compositeAlert">—</span>
         <span class="rating-badge" id="ratingBadge">—/10</span>
         <span class="trend" id="compositeTrend"></span>
       </div>
-      <div style="margin-top:6px">
+      <div style="margin-top:5px">
         <span class="confidence-badge" id="confidenceBadge"></span>
       </div>
     </div>
@@ -589,6 +834,7 @@
         <span>100</span>
       </div>
       <div id="layerBars"></div>
+      <div class="hero-quick-stats" id="heroQuickStats"></div>
     </div>
   </section>
 
@@ -629,6 +875,16 @@
       <div class="stat-value" id="freshValue">—</div>
       <div class="stat-sub" id="freshSub">series updated within SLA window</div>
     </div>
+  </section>
+
+  <!-- KEY RISK SIGNALS -->
+  <section class="panel" id="keyRisksPanel" style="display:none">
+    <div class="panel-header">
+      <h2>Key Risk Signals</h2>
+      <span id="keyRisksCount" class="badge RED"></span>
+    </div>
+    <p class="panel-sub">Indicators flagged RED or YELLOW — ranked by score. Click to inspect.</p>
+    <div id="keyRisksContent" class="kr-grid"></div>
   </section>
 
   <!-- WHAT CHANGED PANEL -->
@@ -730,6 +986,7 @@
       </div>
     </div>
     <div class="filter-row">
+      <input type="search" id="indSearch" placeholder="Search indicators…" style="background:var(--panel-2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:13px;min-width:180px" autocomplete="off">
       <select id="layerFilter">
         <option value="">All layers</option>
         <option value="financial_lead">Financial Leading</option>
@@ -762,6 +1019,7 @@
           <th>Direction</th>
           <th class="sortable sort-desc" data-col="score">Score</th>
           <th class="sortable" data-col="alert">Alert</th>
+          <th class="hide-sm col-trend">24mo Trend</th>
         </tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
@@ -1750,6 +2008,9 @@ const LAYER_BTN_CLASS = {
 };
 
 // ─── UTILITIES ───────────────────────────────────────────────────────────────
+function escHtml(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 function scoreColor(s) {
   if (s >= 60) return '#ff7a7a';
   if (s >= 30) return '#f1c84a';
@@ -1897,6 +2158,14 @@ function renderHero(current, history) {
   trendEl.textContent = text;
   trendEl.className   = `trend ${cls}`;
 
+  // Ring arc — circumference = 2π×76 ≈ 477.5
+  const arc = document.getElementById('heroRingArc');
+  if (arc) {
+    const circ = 477.5;
+    arc.style.stroke = color;
+    arc.style.strokeDashoffset = String(circ - (score / 100) * circ);
+  }
+
   // Risk bar
   const fill = document.getElementById('riskBarFill');
   fill.style.width      = `${score}%`;
@@ -1921,6 +2190,31 @@ function renderHero(current, history) {
       </div>
     `;
   });
+
+  // Hero quick stats
+  const qs = document.getElementById('heroQuickStats');
+  if (qs) {
+    const inds = current.indicators || [];
+    const red    = inds.filter(i => i.alert === 'RED').length;
+    const yellow = inds.filter(i => i.alert === 'YELLOW').length;
+    const prob2 = current.composite?.recession_probability_12mo;
+    const probStr = prob2 != null ? `${Math.round(prob2 * 100)}%` : '—';
+    const probColor = prob2 >= 0.5 ? 'var(--red)' : prob2 >= 0.3 ? 'var(--yellow)' : 'var(--green)';
+    qs.innerHTML = `
+      <div class="hero-qs">
+        <div class="hero-qs-label">Red flags</div>
+        <div class="hero-qs-value" style="color:${red>0?'var(--red)':'var(--green)'}">${red}</div>
+      </div>
+      <div class="hero-qs">
+        <div class="hero-qs-label">Yellow flags</div>
+        <div class="hero-qs-value" style="color:${yellow>0?'var(--yellow)':'var(--green)'}">${yellow}</div>
+      </div>
+      <div class="hero-qs">
+        <div class="hero-qs-label">Recession prob</div>
+        <div class="hero-qs-value" style="color:${probColor}">${probStr}</div>
+      </div>
+    `;
+  }
 }
 
 // ─── RENDER: LAYER CARDS ──────────────────────────────────────────────────────
@@ -1944,6 +2238,7 @@ function renderLayerCards(current, history) {
 
     const card = document.createElement('div');
     card.className = 'card';
+    card.style.setProperty('--card-accent', color);
     card.innerHTML = `
       <div class="card-top">
         <span class="card-name">${LAYER_NAMES[key]}</span>
@@ -2032,6 +2327,7 @@ function buildChartDatasets(history) {
 }
 
 function renderChart(history) {
+  if (typeof Chart === 'undefined') return;
   // Register shaded risk-zone bands once (idempotent)
   if (!Chart.registry.plugins.get('riskZones')) {
     Chart.register({
@@ -2173,11 +2469,13 @@ function applyFilters() {
   const layer = document.getElementById('layerFilter').value;
   const cat   = document.getElementById('categoryFilter').value;
   const alrt  = document.getElementById('alertFilter').value;
+  const q     = (document.getElementById('indSearch')?.value || '').toLowerCase().trim();
 
   const filtered = sortIndicators(allIndicators.filter(ind => {
     if (layer && ind.layer !== layer) return false;
     if (cat   && ind.category !== cat) return false;
     if (alrt  && ind.alert !== alrt)   return false;
+    if (q && !ind.name.toLowerCase().includes(q) && !(ind.fred_id || '').toLowerCase().includes(q)) return false;
     return true;
   }));
 
@@ -2213,9 +2511,26 @@ function applyFilters() {
         <span style="font-size:10px;color:var(--muted)">${pct}th pct</span>
       </div>` : '';
 
+    const histVals = (ind.history || []).map(h => h.value).filter(v => v !== null && v !== undefined);
+    const sparkHtml = histVals.length >= 2
+      ? `<svg viewBox="0 0 90 28" class="tbl-spark" width="90" height="28">
+           ${(()=>{
+             const min = Math.min(...histVals), max = Math.max(...histVals);
+             const range = max - min || 1;
+             const pts = histVals.map((v, i) => {
+               const x = 2 + (i / (histVals.length - 1)) * 86;
+               const y = 26 - ((v - min) / range) * 22;
+               return `${x.toFixed(1)},${y.toFixed(1)}`;
+             }).join(' ');
+             return `<polyline points="${pts}" fill="none" stroke="${scoreColor(s)}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>`;
+           })()}
+         </svg>` : '<span style="color:var(--muted);font-size:11px">–</span>';
+
     const tr = document.createElement('tr');
     tr.dataset.fredId = ind.fred_id;
     tr.style.cursor = 'pointer';
+    if (ind.alert === 'RED')    tr.style.background = 'rgba(255,122,122,0.04)';
+    if (ind.alert === 'YELLOW') tr.style.background = 'rgba(241,200,74,0.04)';
     tr.innerHTML = `
       <td>
         <div class="ind-name">${ind.name}${momentumHtml}${anomalyHtml}</div>
@@ -2240,8 +2555,76 @@ function applyFilters() {
         ${pctileHtml}
       </td>
       <td><span class="badge ${a}">${ind.alert}</span></td>
+      <td class="hide-sm col-trend">${sparkHtml}</td>
     `;
     tbody.appendChild(tr);
+  });
+}
+
+// ─── KEY RISK SIGNALS ─────────────────────────────────────────────────────────
+function renderKeyRisks(indicators) {
+  const flagged = [...indicators]
+    .filter(i => i.alert === 'RED' || i.alert === 'YELLOW')
+    .sort((a, b) => b.score - a.score);
+
+  const panel = document.getElementById('keyRisksPanel');
+  const grid  = document.getElementById('keyRisksContent');
+  const countEl = document.getElementById('keyRisksCount');
+
+  if (!flagged.length) { panel.style.display = 'none'; return; }
+  panel.style.display = '';
+  countEl.textContent = `${flagged.length} flagged`;
+  countEl.className   = flagged.some(i => i.alert === 'RED') ? 'badge RED' : 'badge YELLOW';
+
+  grid.innerHTML = '';
+  flagged.forEach(ind => {
+    const s = ind.score ?? 0;
+    const histVals = (ind.history || []).map(h => h.value).filter(v => v !== null && v !== undefined);
+    let sparkSvg = '';
+    if (histVals.length >= 3) {
+      const min = Math.min(...histVals), max = Math.max(...histVals);
+      const range = max - min || 1;
+      const pts = histVals.slice(-16).map((v, i, arr) => {
+        const x = 2 + (i / (arr.length - 1)) * 96;
+        const y = 26 - ((v - min) / range) * 22;
+        return `${x.toFixed(1)},${y.toFixed(1)}`;
+      }).join(' ');
+      sparkSvg = `<svg viewBox="0 0 100 28" class="kr-sparkline" width="100" height="28">
+        <polyline points="${pts}" fill="none" stroke="${scoreColor(s)}" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`;
+    }
+
+    const card = document.createElement('div');
+    card.className = `kr-card ${ind.alert}`;
+    card.title = ind.description || '';
+    card.dataset.fredId = ind.fred_id;
+    card.innerHTML = `
+      <div class="kr-card-top">
+        <div class="kr-card-name">${ind.name}</div>
+        <div class="kr-card-score">${s}</div>
+      </div>
+      <div class="kr-card-meta">
+        <span class="badge ${ind.alert}">${ind.alert}</span>
+        <span class="kr-card-layer">${LAYER_NAMES[ind.layer] || ind.layer}</span>
+        <div class="kr-bar-bg" style="min-width:40px">
+          <div class="kr-bar-fill" style="width:${s}%;background:${scoreColor(s)}"></div>
+        </div>
+      </div>
+      ${sparkSvg ? `<div>${sparkSvg}</div>` : ''}
+      <div class="kr-card-val">Latest: <strong>${fmtVal(ind.latest_value)}</strong> · ${fmtDate(ind.latest_date)}</div>
+    `;
+    card.addEventListener('click', () => {
+      const row = document.querySelector(`tr[data-fred-id="${ind.fred_id}"]`);
+      if (row) {
+        const tab = document.querySelector('[data-tab="live"]');
+        tab?.click();
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        row.classList.add('flash-update');
+        setTimeout(() => row.classList.remove('flash-update'), 900);
+      }
+    });
+    grid.appendChild(card);
   });
 }
 
@@ -2251,6 +2634,7 @@ function applyFilters() {
 ['layerFilter','categoryFilter','alertFilter'].forEach(id => {
   document.getElementById(id).addEventListener('change', applyFilters);
 });
+document.getElementById('indSearch')?.addEventListener('input', applyFilters);
 
 // ─── SORT LISTENERS ───────────────────────────────────────────────────────────
 document.querySelectorAll('th.sortable').forEach(th => {
@@ -2371,6 +2755,7 @@ function openModal(ind) {
   document.getElementById('modalDate').textContent = fmtDate(ind.latest_date);
   document.getElementById('modalFredLink').href = `https://fred.stlouisfed.org/series/${ind.fred_id}`;
 
+  if (typeof Chart === 'undefined') return;
   const ctx = document.getElementById('modalChart').getContext('2d');
   if (modalChart) modalChart.destroy();
   const history = ind.history || [];
@@ -3132,7 +3517,7 @@ function renderPlaybook(sorted) {
         // Destroy existing if any
         if (playbookCharts[idx]) { playbookCharts[idx].destroy(); playbookCharts[idx] = null; }
         const canvas = document.getElementById(`playbook-chart-${idx}`);
-        if (!canvas || !window.length) return;
+        if (!canvas || !window.length || typeof Chart === 'undefined') return;
         const labels = window.map(d => d.date.slice(0, 7));
         const values = window.map(d => d.composite);
         const recStart = startDate;
@@ -3167,8 +3552,26 @@ function renderPlaybook(sorted) {
 // ─── LIVE UPDATES ─────────────────────────────────────────────────────────────
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;   // 5 minutes
 let lastGeneratedAt = null;
-let refreshTimer = null;
+let refreshTimer    = null;
+let countdownTimer  = null;
+let nextRefreshAt   = null;   // epoch ms when next auto-refresh fires
+let isRefreshing    = false;
 
+// ── Toast ──────────────────────────────────────────────────────────────────────
+function showToast(msg, type = 'info', durationMs = 3500) {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-dot"></span>${msg}`;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'toastOut 0.22s ease-in forwards';
+    setTimeout(() => el.remove(), 230);
+  }, durationMs);
+}
+
+// ── Flash score on new data ────────────────────────────────────────────────────
 function flashUpdate() {
   const score = document.getElementById('compositeScore');
   score.classList.remove('flash-update');
@@ -3176,16 +3579,47 @@ function flashUpdate() {
   score.classList.add('flash-update');
 }
 
+// ── Live indicator & countdown ─────────────────────────────────────────────────
 function setLiveStatus(active) {
-  const tag = document.getElementById('liveTag');
+  const tag      = document.getElementById('liveTag');
+  const label    = document.getElementById('liveLabel');
+  const countdown = document.getElementById('liveCountdown');
+  if (!tag) return;
   tag.classList.toggle('paused', !active);
-  tag.firstChild.nextSibling.textContent = active ? 'LIVE' : 'PAUSED';
+  if (label) label.textContent = active ? 'LIVE' : 'PAUSED';
+  if (countdown) countdown.textContent = active ? '' : '';
   tag.title = active
-    ? 'Auto-refreshing every 5 minutes'
+    ? 'Auto-refreshing every 5 minutes — click ↻ to refresh now'
     : 'Paused — tab is in background';
 }
 
+function updateCountdown() {
+  const el = document.getElementById('liveCountdown');
+  if (!el || !nextRefreshAt) return;
+  const secsLeft = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+  const m = Math.floor(secsLeft / 60);
+  const s = String(secsLeft % 60).padStart(2, '0');
+  el.textContent = ` ${m}:${s}`;
+}
+
+function startCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  nextRefreshAt = Date.now() + REFRESH_INTERVAL_MS;
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+}
+
+function stopCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const el = document.getElementById('liveCountdown');
+  if (el) el.textContent = '';
+}
+
 async function refresh({ initial = false } = {}) {
+  if (isRefreshing) return;
+  isRefreshing = true;
+  const btn = document.getElementById('refreshNowBtn');
+  if (btn) btn.classList.add('spinning');
   try {
     // Cache-bust so CDN/edge caches don't mask new data
     const bust = `?t=${Date.now()}`;
@@ -3198,8 +3632,12 @@ async function refresh({ initial = false } = {}) {
       fetch(`data/previous.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null)
     ]);
 
-    if (!initial && current.generated_at === lastGeneratedAt) {
+    const isNewData = current.generated_at !== lastGeneratedAt;
+    if (!initial && !isNewData) {
       return;   // unchanged — skip re-render
+    }
+    if (!initial && isNewData) {
+      showToast('New data loaded', 'success');
     }
     lastGeneratedAt = current.generated_at;
 
@@ -3208,10 +3646,11 @@ async function refresh({ initial = false } = {}) {
     renderHeader(current);
     renderHero(current, history);
     renderLayerCards(current, history);
-    renderChart(history);
+    try { renderChart(history); } catch (ce) { console.warn('chart render failed:', ce.message); }
     renderTable(current.indicators || []);
+    renderKeyRisks(current.indicators || []);
     renderEnsemble(current);
-    renderFactorChart(current);
+    try { renderFactorChart(current); } catch (ce) { console.warn('factor chart failed:', ce.message); }
     renderDiffusion(current);
     renderFreshness(current);
     renderRegime(history);
@@ -3245,15 +3684,22 @@ async function refresh({ initial = false } = {}) {
   } catch (err) {
     if (initial) {
       showError(`Failed to load data: ${err.message}. Check that data/current.json exists.`);
+    } else {
+      showToast('Refresh failed — retrying next cycle', 'info');
     }
     console.error('refresh failed:', err);
+  } finally {
+    isRefreshing = false;
+    const btn = document.getElementById('refreshNowBtn');
+    if (btn) btn.classList.remove('spinning');
   }
 }
 
 function startPolling() {
   if (refreshTimer) return;
-  refreshTimer = setInterval(refresh, REFRESH_INTERVAL_MS);
+  refreshTimer = setInterval(() => { refresh(); startCountdown(); }, REFRESH_INTERVAL_MS);
   setLiveStatus(true);
+  startCountdown();
 }
 
 function stopPolling() {
@@ -3261,15 +3707,25 @@ function stopPolling() {
   clearInterval(refreshTimer);
   refreshTimer = null;
   setLiveStatus(false);
+  stopCountdown();
 }
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     stopPolling();
   } else {
-    refresh();          // catch up immediately on return
-    startPolling();
+    refresh();       // catch up immediately on return
+    startPolling();  // restarts interval + countdown
   }
+});
+
+// Manual refresh button
+document.getElementById('refreshNowBtn')?.addEventListener('click', () => {
+  // Reset the polling interval so next auto-refresh is 5 min from now
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+  refresh().then(() => {
+    if (!document.hidden) startPolling();
+  });
 });
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
@@ -3339,6 +3795,7 @@ function setTab(name) {
 // 5Y  = midpoint(2Y, 10Y) — rough estimate
 // 30Y = 10Y + 0.35 — historical avg premium (rough)
 function renderYieldCurve(snap) {
+  if (typeof Chart === 'undefined') return;
   const canvas = document.getElementById('yieldCurveChart');
   const tableEl = document.getElementById('yieldCurveTable');
   if (!canvas || !tableEl) return;
@@ -3964,6 +4421,11 @@ document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
 });
 
 async function renderBacktest() {
+  if (typeof Chart === 'undefined') {
+    document.getElementById('btStats').innerHTML =
+      '<p style="color:var(--muted);font-size:13px">Charts unavailable (Chart.js CDN offline). Data still loads.</p>';
+    return;
+  }
   let data;
   try {
     data = await fetch(`data/backtest.json?t=${Date.now()}`).then(r => r.json());
@@ -4231,6 +4693,7 @@ function renderEnsemble(snap) {
 // ─── FACTOR CONTRIBUTION CHART ────────────────────────────────────────────────
 let factorChartInst = null;
 function renderFactorChart(snap) {
+  if (typeof Chart === 'undefined') return;
   const contribs = snap?.factor_contributions;
   const section  = document.getElementById('factorChartSection');
   if (!contribs || !contribs.length) { if (section) section.style.display = 'none'; return; }
@@ -4341,6 +4804,7 @@ function initPortfolio() {
   let allocChart = null;
 
   function renderAlloc(positions) {
+    if (typeof Chart === 'undefined') return;
     const totals = {};
     positions.forEach(p => {
       const { mv } = calcRow(p);
@@ -4411,8 +4875,8 @@ function initPortfolio() {
       const pnlClass = pnl >= 0 ? 'port-pnl-pos' : 'port-pnl-neg';
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><strong>${p.symbol}</strong></td>
-        <td><span style="background:${ASSET_COLORS[p.assetClass]||'#7a84a8'}22;color:${ASSET_COLORS[p.assetClass]||'#7a84a8'};border-radius:4px;padding:2px 7px;font-size:11px;font-weight:700">${p.assetClass}</span></td>
+        <td><strong>${escHtml(p.symbol)}</strong></td>
+        <td><span style="background:${ASSET_COLORS[p.assetClass]||'#7a84a8'}22;color:${ASSET_COLORS[p.assetClass]||'#7a84a8'};border-radius:4px;padding:2px 7px;font-size:11px;font-weight:700">${escHtml(p.assetClass)}</span></td>
         <td>${Number(p.qty).toLocaleString(undefined,{maximumFractionDigits:4})}</td>
         <td>${fmt$(p.cost)}</td>
         <td>
@@ -4604,8 +5068,8 @@ function updatePortfolioMacro() {
   const colorMap = { HIGH:'var(--red)', VARIES:'var(--yellow)', 'LOW-MED':'var(--green)', MEDIUM:'var(--yellow)', NONE:'var(--muted)', UNKNOWN:'var(--muted)' };
   riskEl.innerHTML = positions.slice(0,8).map(p =>
     `<div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)">
-      <span style="font-weight:700">${p.symbol}</span>
-      <span style="color:${colorMap[riskMap[p.assetClass]]||'var(--muted)'}">Recession risk: ${riskMap[p.assetClass]||'—'}</span>
+      <span style="font-weight:700">${escHtml(p.symbol)}</span>
+      <span style="color:${colorMap[riskMap[p.assetClass]]||'var(--muted)'}">Recession risk: ${escHtml(riskMap[p.assetClass]||'—')}</span>
     </div>`
   ).join('');
 }
@@ -4643,7 +5107,7 @@ function initOptions() {
     const rhoP   = -K*T*expRT*Nd2n / 100;
 
     return {
-      call: { price: callPrice, delta: Nd1,     theta: thetaC, rho: rhoC, prob_itm: Nd1 },
+      call: { price: callPrice, delta: Nd1,     theta: thetaC, rho: rhoC, prob_itm: Nd2 },
       put:  { price: putPrice,  delta: Nd1-1,   theta: thetaP, rho: rhoP, prob_itm: Nd2n },
       gamma, vega, d1, d2
     };
@@ -4705,7 +5169,7 @@ function initOptions() {
     const putPayoffs  = prices.map(p => Math.max(0, K - p) - res.put.price);
 
     const canvas = document.getElementById('optsPayoffChart');
-    if (!canvas) return;
+    if (!canvas || typeof Chart === 'undefined') return;
     const ctx = canvas.getContext('2d');
     if (payoffChart) payoffChart.destroy();
 
@@ -4852,10 +5316,12 @@ function renderFixedIncome() {
   const stl   = get('STLFSI3');
 
   const ffV  = ff?.latest_value ?? null;
-  const t10y = ffV !== null && t10y3?.latest_value !== null
-    ? (ffV + (t10y3?.latest_value ?? 0)) : null;
-  const t2y  = t10y !== null && t10y2?.latest_value !== null
-    ? (t10y - (t10y2?.latest_value ?? 0)) : null;
+  // T10Y3M = 10Y − 3M spread; FEDFUNDS ≈ 3M rate → approx 10Y yield
+  const t10y = ffV !== null && t10y3?.latest_value != null
+    ? (ffV + t10y3.latest_value) : null;
+  // T10Y2Y = 10Y − 2Y spread → approx 2Y yield
+  const t2y  = t10y !== null && t10y2?.latest_value != null
+    ? (t10y - t10y2.latest_value) : null;
 
   const set = (id, val, color) => {
     const el = document.getElementById(id);
@@ -4865,8 +5331,8 @@ function renderFixedIncome() {
   };
 
   set('fi-fedfunds', ffV !== null ? ffV.toFixed(2) + '%' : '—');
-  set('fi-10y', t10y !== null ? t10y.toFixed(2) + '%' : '—');
-  set('fi-2y',  t2y  !== null ? t2y.toFixed(2) + '%'  : '—');
+  set('fi-10y', t10y !== null ? '~' + t10y.toFixed(2) + '%' : '—');
+  set('fi-2y',  t2y  !== null ? '~' + t2y.toFixed(2)  + '%' : '—');
 
   const spread = t10y3?.latest_value ?? null;
   set('fi-t10y3m', spread !== null ? (spread >= 0 ? '+' : '') + spread.toFixed(2) + '%' : '—',
@@ -5104,11 +5570,11 @@ function initWatchlist() {
       card.id = cardId;
       card.innerHTML = `
         <div class="wl-card-header">
-          <span class="wl-ticker">${item.symbol}</span>
+          <span class="wl-ticker">${escHtml(item.symbol)}</span>
           <button class="wl-remove-btn" id="${removeId}" title="Remove from watchlist">×</button>
         </div>
         <textarea class="wl-note-input" id="${noteId}" rows="1"
-          placeholder="Add a note…">${item.note || ''}</textarea>
+          placeholder="Add a note…">${escHtml(item.note || '')}</textarea>
         <div class="tv-wrap tradingview-widget-container" id="${chartId}" style="height:200px"></div>
       `;
       grid.appendChild(card);
@@ -5143,7 +5609,7 @@ function initWatchlist() {
 
     chips.innerHTML = list.map(item => `
       <span style="background:var(--panel-2);border:1px solid var(--border);border-radius:20px;
-                   padding:4px 12px;font-size:12px;font-weight:600;">${item.symbol}</span>
+                   padding:4px 12px;font-size:12px;font-weight:600;">${escHtml(item.symbol)}</span>
     `).join('');
 
     if (!list.length) return;
@@ -5385,6 +5851,368 @@ startPolling();
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
+</script>
+
+<!-- ── AI CHAT PANEL ──────────────────────────────────────────────────────── -->
+<button id="aiChatBtn" title="Ask the AI analyst (Ctrl+Shift+A)" aria-label="Open AI analyst chat">🤖</button>
+<div id="aiChatPanel" role="dialog" aria-modal="true" aria-label="AI Analyst Chat">
+  <div class="ai-chat-header">
+    <div class="ai-chat-header-left">
+      <h4>AI Analyst</h4>
+      <span class="ai-chat-header-sub">Powered by claude-opus-4-7 · data-aware</span>
+    </div>
+    <div class="ai-chat-header-actions">
+      <button class="ai-hdr-btn" id="aiChatSettings" title="API key settings" aria-label="API key settings">⚙</button>
+      <button class="ai-hdr-btn" id="aiChatClear" title="Clear conversation" aria-label="Clear conversation">🗑</button>
+      <button class="ai-hdr-btn" id="aiChatClose" aria-label="Close chat (Esc)" style="font-size:18px">×</button>
+    </div>
+  </div>
+  <div id="aiChatMessages"></div>
+  <div class="ai-suggested" id="aiSuggested"></div>
+  <form class="ai-chat-form" id="aiChatForm">
+    <textarea id="aiChatInput" placeholder="Ask a question… (Enter to send, Shift+Enter for newline)" rows="1" aria-label="Chat message"></textarea>
+    <button type="submit" id="aiChatSend" aria-label="Send message">↑</button>
+  </form>
+  <div class="ai-key-row" id="aiKeyRow" style="display:none">
+    <label for="aiKeyInput">API key:</label>
+    <input type="password" id="aiKeyInput" placeholder="sk-ant-… stored in your browser only" autocomplete="off">
+    <button type="button" class="ai-key-btn" id="aiKeySave">Save</button>
+  </div>
+</div>
+
+<script>
+(function initAiChat() {
+  const LS_KEY = 'rt_anthropic_key';
+  const HISTORY_KEY = 'rt_chat_history';
+  const SUGGESTED = [
+    'What does the current composite score mean?',
+    'Which indicators are flashing the most risk right now?',
+    'What would need to change for the alert to go RED?',
+    'How reliable is the yield-curve indicator historically?'
+  ];
+
+  const btn      = document.getElementById('aiChatBtn');
+  const panel    = document.getElementById('aiChatPanel');
+  const closeBtn = document.getElementById('aiChatClose');
+  const clearBtn = document.getElementById('aiChatClear');
+  const settingsBtn = document.getElementById('aiChatSettings');
+  const msgs     = document.getElementById('aiChatMessages');
+  const suggested= document.getElementById('aiSuggested');
+  const form     = document.getElementById('aiChatForm');
+  const input    = document.getElementById('aiChatInput');
+  const send     = document.getElementById('aiChatSend');
+  const keyRow   = document.getElementById('aiKeyRow');
+  const keyInput = document.getElementById('aiKeyInput');
+  const keySave  = document.getElementById('aiKeySave');
+
+  let history = [];
+  let streaming = false;
+
+  // ── Key management ──────────────────────────────────────────────────────────
+  const getKey  = () => localStorage.getItem(LS_KEY) || '';
+  const setKey  = k  => { localStorage.setItem(LS_KEY, k.trim()); syncKeyUI(); };
+  const clearKey = () => { localStorage.removeItem(LS_KEY); syncKeyUI(); };
+
+  function syncKeyUI() {
+    const k = getKey();
+    keyRow.style.display = k ? 'none' : 'flex';
+    btn.classList.toggle('has-key', !!k);
+  }
+
+  keySave.addEventListener('click', () => {
+    const k = keyInput.value.trim();
+    if (!k) return;
+    setKey(k);
+    keyInput.value = '';
+    addSystemMsg('API key saved — you can now ask questions.');
+    renderSuggested();
+  });
+  settingsBtn.addEventListener('click', () => {
+    keyRow.style.display = keyRow.style.display === 'none' ? 'flex' : 'none';
+    if (keyRow.style.display === 'flex') keyInput.focus();
+  });
+
+  // ── History persistence ──────────────────────────────────────────────────────
+  function saveHistory() {
+    try { sessionStorage.setItem(HISTORY_KEY, JSON.stringify(history)); } catch {}
+  }
+  function loadHistory() {
+    try { return JSON.parse(sessionStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; }
+  }
+
+  // ── Message rendering ────────────────────────────────────────────────────────
+  function addMsg(role, text) {
+    hideSuggested();
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-msg ' + role;
+    const inner = document.createElement('div');
+    inner.className = 'chat-msg-inner';
+    inner.textContent = text;
+    wrap.appendChild(inner);
+    if (role === 'assistant') {
+      const copy = document.createElement('button');
+      copy.className = 'chat-copy-btn';
+      copy.title = 'Copy';
+      copy.textContent = '⎘';
+      copy.addEventListener('click', () => {
+        navigator.clipboard?.writeText(inner.textContent).then(() => {
+          copy.textContent = '✓'; setTimeout(() => { copy.textContent = '⎘'; }, 1500);
+        });
+      });
+      wrap.appendChild(copy);
+    }
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    return inner;
+  }
+
+  function addTypingIndicator() {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-typing';
+    wrap.id = 'chatTyping';
+    wrap.innerHTML = '<span></span><span></span><span></span>';
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+    return wrap;
+  }
+
+  function addSystemMsg(text) {
+    const wrap = document.createElement('div');
+    wrap.className = 'chat-msg system';
+    const inner = document.createElement('div');
+    inner.className = 'chat-msg-inner';
+    inner.textContent = text;
+    wrap.appendChild(inner);
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  // ── Suggested questions ──────────────────────────────────────────────────────
+  function renderSuggested() {
+    suggested.innerHTML = '';
+    if (!getKey() || msgs.children.length > 0) return;
+    const p = document.createElement('p');
+    p.textContent = 'Suggested questions:';
+    suggested.appendChild(p);
+    SUGGESTED.forEach(q => {
+      const b = document.createElement('button');
+      b.className = 'ai-suggest-btn';
+      b.textContent = q;
+      b.addEventListener('click', () => { input.value = q; form.requestSubmit(); });
+      suggested.appendChild(b);
+    });
+  }
+  function hideSuggested() { suggested.innerHTML = ''; }
+
+  // ── Context builder ──────────────────────────────────────────────────────────
+  function buildContext() {
+    const snap = window._snapshotCache;
+    if (!snap) return 'No live data has loaded yet.';
+    const comp = snap.composite || {};
+    const geo  = snap.geopolitical || {};
+    const layers = snap.layers || {};
+
+    const layerLines = Object.entries(layers).map(([k, v]) =>
+      `  ${k}: score=${v.score ?? 'N/A'} alert=${v.alert ?? 'N/A'}`
+    ).join('\n');
+
+    const indLines = (snap.indicators || []).map(i =>
+      `  ${i.name} [${i.fred_id}]: ${i.latest_value ?? 'N/A'} as of ${i.latest_date ?? 'N/A'} — alert: ${i.alert ?? 'N/A'} score: ${i.score ?? 'N/A'}`
+    ).join('\n');
+
+    return [
+      `=== RECESSION TRACKER SNAPSHOT ===`,
+      `As-of date: ${snap.as_of || 'unknown'}`,
+      ``,
+      `COMPOSITE`,
+      `  Score: ${comp.score ?? 'N/A'}/100`,
+      `  Alert: ${comp.alert ?? 'N/A'}`,
+      `  Rating: ${comp.rating ?? 'N/A'}/10`,
+      `  Confidence: ${comp.confidence != null ? (comp.confidence * 100).toFixed(0) + '%' : 'N/A'}`,
+      `  Recession probability (12mo, yield curve probit): ${comp.recession_probability_12mo != null ? (comp.recession_probability_12mo * 100).toFixed(1) + '%' : 'N/A'}`,
+      `  Yield curve spread (10Y-3M): ${comp.yield_curve_spread ?? 'N/A'}%`,
+      `  Yield curve inversion days: ${comp.yield_curve_inversion_days ?? 0}`,
+      `  Ensemble score: ${comp.ensemble_score ?? 'N/A'}`,
+      ``,
+      `GEOPOLITICAL`,
+      `  Score: ${geo.score ?? 'N/A'} Flag: ${geo.flag ?? 'N/A'} Source: ${geo.source ?? 'N/A'}`,
+      `  GPR index: ${geo.gpr?.value ?? 'N/A'} as of ${geo.gpr?.date ?? 'N/A'}`,
+      ``,
+      `LAYERS`,
+      layerLines,
+      ``,
+      `ALL INDICATORS (${(snap.indicators || []).length} total)`,
+      indLines
+    ].join('\n');
+  }
+
+  // ── Streaming API call ───────────────────────────────────────────────────────
+  async function sendMessage(userMsg) {
+    const key = getKey();
+    if (!key) { syncKeyUI(); addSystemMsg('Please enter your Anthropic API key first.'); return; }
+    if (streaming) return;
+
+    streaming = true;
+    history.push({ role: 'user', content: userMsg });
+    saveHistory();
+
+    const typing = addTypingIndicator();
+    send.disabled = true;
+
+    const systemPrompt =
+      `You are a sharp, concise financial analyst embedded in a live recession-tracking dashboard. ` +
+      `Answer questions about recession risk, economic indicators, and the current data. ` +
+      `Be direct and specific. Cite indicator names and values when relevant. ` +
+      `Keep answers focused — 2-4 short paragraphs max unless asked for more detail.\n\n` +
+      buildContext();
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-7',
+          max_tokens: 1024,
+          stream: true,
+          system: systemPrompt,
+          messages: history.slice(-20)
+        })
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error?.message || `HTTP ${res.status}`);
+      }
+
+      typing.remove();
+      const replyEl = addMsg('assistant', '');
+      let fullText = '';
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop() || '';
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') continue;
+          try {
+            const ev = JSON.parse(data);
+            if (ev.type === 'content_block_delta' && ev.delta?.type === 'text_delta') {
+              fullText += ev.delta.text;
+              replyEl.textContent = fullText;
+              msgs.scrollTop = msgs.scrollHeight;
+            }
+          } catch {}
+        }
+      }
+
+      history.push({ role: 'assistant', content: fullText || '(no response)' });
+      if (history.length > 30) history = history.slice(-30);
+      saveHistory();
+
+    } catch (err) {
+      typing.remove();
+      const errEl = addMsg('error', `Error: ${err.message}`);
+      history.pop();
+      if (/401|invalid.*key|unauthorized/i.test(err.message)) {
+        clearKey();
+        addSystemMsg('API key appears invalid — please re-enter it.');
+      }
+    } finally {
+      streaming = false;
+      send.disabled = false;
+      resizeInput();
+      input.focus();
+    }
+  }
+
+  // ── Input auto-resize ────────────────────────────────────────────────────────
+  function resizeInput() {
+    input.style.height = '36px';
+    input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+  }
+  input.addEventListener('input', resizeInput);
+
+  // ── Form submit ──────────────────────────────────────────────────────────────
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
+  });
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q || streaming) return;
+    addMsg('user', q);
+    input.value = '';
+    resizeInput();
+    sendMessage(q);
+  });
+
+  // ── Clear ────────────────────────────────────────────────────────────────────
+  clearBtn.addEventListener('click', () => {
+    history = [];
+    msgs.innerHTML = '';
+    sessionStorage.removeItem(HISTORY_KEY);
+    addSystemMsg('Conversation cleared.');
+    renderSuggested();
+  });
+
+  // ── Open / close ─────────────────────────────────────────────────────────────
+  function openPanel() {
+    panel.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    syncKeyUI();
+
+    // Restore session history
+    if (!msgs.children.length) {
+      const saved = loadHistory();
+      if (saved.length) {
+        history = saved;
+        saved.forEach(m => {
+          if (m.role === 'user') addMsg('user', m.content);
+          else if (m.role === 'assistant') addMsg('assistant', m.content);
+        });
+      } else {
+        addSystemMsg('Ask me anything about the recession data and indicators.');
+        renderSuggested();
+      }
+    }
+    setTimeout(() => input.focus(), 50);
+  }
+  function closePanel() {
+    panel.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+  }
+
+  btn.addEventListener('click', () => panel.classList.contains('open') ? closePanel() : openPanel());
+  closeBtn.addEventListener('click', closePanel);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'A') {
+      e.preventDefault();
+      panel.classList.contains('open') ? closePanel() : openPanel();
+    }
+  });
+
+  // ── Key input: save on Enter ─────────────────────────────────────────────────
+  keyInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); keySave.click(); }
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────────────────
+  syncKeyUI();
+})();
 </script>
 </body>
 </html>
