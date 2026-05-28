@@ -18,6 +18,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   # Gate job: lets manual runs through always, but allows a scheduled run only
@@ -135,3 +136,76 @@ jobs:
             git commit -m "data: refresh snapshot $(date -u +%Y-%m-%d)"
             git push
           fi
+
+  # Open (or update) a GitHub issue when a refresh that should have run fails.
+  # GitHub emails repo watchers on new issues / comments, so a silent failure
+  # becomes a visible alert. De-duplicates onto one open issue to avoid spam.
+  notify-failure:
+    needs: [gate, refresh]
+    if: always() && needs.gate.outputs.proceed == 'true' && needs.refresh.result == 'failure'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update failure alert issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          LABEL="refresh-failure"
+
+          # Ensure the label exists (ignore error if it already does).
+          gh label create "$LABEL" --color B60205 \
+            --description "Automated data refresh failed" 2>/dev/null || true
+
+          # Build the issue body left-aligned so Markdown renders correctly.
+          cat > /tmp/alert-body.md <<EOF
+          The scheduled FRED data refresh failed.
+
+          - **When:** ${TODAY} (07:00 Central scheduled run)
+          - **Failed run:** ${RUN_URL}
+
+          The dashboard keeps showing the last good snapshot and displays a
+          staleness banner until a refresh succeeds.
+
+          **Common causes**
+          1. \`FRED_API_KEY\` secret missing or expired — check the *Check FRED connectivity* step in the failed run.
+          2. FRED API quota exceeded or a temporary outage.
+          3. A series ID was retired — see the *Validate FRED series IDs* step.
+
+          Re-run from the Actions tab once resolved. This issue auto-closes when a later refresh succeeds.
+          EOF
+
+          # Find an existing open alert to comment on instead of opening a new one.
+          EXISTING=$(gh issue list --state open --label "$LABEL" \
+            --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [ -n "$EXISTING" ]; then
+            echo "Commenting on existing alert #${EXISTING}"
+            gh issue comment "$EXISTING" --body "Refresh failed again on ${TODAY}. Run: ${RUN_URL}"
+          else
+            echo "Opening new alert issue"
+            gh issue create --title "⚠ Data refresh failed (${TODAY})" \
+              --label "$LABEL" --body-file /tmp/alert-body.md
+          fi
+
+  # When a refresh succeeds, close any open failure alert so the issue list
+  # reflects current health.
+  resolve-alert:
+    needs: [gate, refresh]
+    if: always() && needs.gate.outputs.proceed == 'true' && needs.refresh.result == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close open failure alerts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for n in $(gh issue list --state open --label "refresh-failure" \
+            --json number --jq '.[].number' 2>/dev/null); do
+            echo "Closing resolved alert #${n}"
+            gh issue close "$n" \
+              --comment "✅ Refresh succeeded on $(date -u +%Y-%m-%d). Closing automatically."
+          done
