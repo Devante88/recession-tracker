@@ -719,6 +719,34 @@
         max-width: 100vw; max-height: 75vh; }
       #aiChatBtn { bottom: 16px; right: 16px; }
     }
+
+    /* ── LIVE COUNTDOWN ──────────────────────────────────────────────────────── */
+    .live-countdown { font-size: 10px; opacity: 0.7; margin-left: 5px;
+                      font-variant-numeric: tabular-nums; letter-spacing: 0; }
+    .refresh-now-btn { background: none; border: 1px solid var(--border); border-radius: 6px;
+                       color: var(--muted); font-size: 15px; padding: 2px 7px; cursor: pointer;
+                       line-height: 1.4; transition: color 0.15s, border-color 0.15s, transform 0.2s; }
+    .refresh-now-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .refresh-now-btn.spinning { animation: spin 0.7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── TOAST ───────────────────────────────────────────────────────────────── */
+    #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 500;
+                      display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast { background: var(--panel-2); border: 1px solid var(--border);
+             border-radius: 10px; padding: 10px 16px; font-size: 13px;
+             color: var(--text); box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+             display: flex; align-items: center; gap: 8px;
+             animation: toastIn 0.22s ease-out; pointer-events: auto; }
+    .toast.success { border-color: rgba(45,220,140,0.3); }
+    .toast.info    { border-color: rgba(102,179,255,0.3); }
+    .toast-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .toast.success .toast-dot { background: var(--green); }
+    .toast.info    .toast-dot { background: var(--accent); }
+    @keyframes toastIn  { from { opacity:0; transform: translateX(16px); }
+                          to   { opacity:1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity:1; transform: translateX(0); }
+                          to   { opacity:0; transform: translateX(16px); } }
   </style>
 </head>
 <body>
@@ -738,14 +766,16 @@
       <div class="as-of">As of <span id="asOf">—</span></div>
       <div class="as-of">Updated <span id="generatedAt">—</span></div>
       <span class="live-tag" id="liveTag" title="Auto-refreshing every 5 minutes">
-        <span class="live-dot"></span>LIVE
+        <span class="live-dot"></span><span id="liveLabel">LIVE</span><span id="liveCountdown" class="live-countdown"></span>
       </span>
+      <button class="refresh-now-btn" id="refreshNowBtn" title="Refresh data now">↻</button>
       <span class="stale-tag" id="staleTag">DATA STALE</span>
     </div>
   </header>
 
   <div class="banner banner-error"  id="errorBanner"></div>
   <div class="banner banner-stale"  id="staleBanner"></div>
+  <div id="toastContainer"></div>
 
   <!-- TAB NAVIGATION -->
   <nav class="tabs">
@@ -3522,8 +3552,26 @@ function renderPlaybook(sorted) {
 // ─── LIVE UPDATES ─────────────────────────────────────────────────────────────
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;   // 5 minutes
 let lastGeneratedAt = null;
-let refreshTimer = null;
+let refreshTimer    = null;
+let countdownTimer  = null;
+let nextRefreshAt   = null;   // epoch ms when next auto-refresh fires
+let isRefreshing    = false;
 
+// ── Toast ──────────────────────────────────────────────────────────────────────
+function showToast(msg, type = 'info', durationMs = 3500) {
+  const container = document.getElementById('toastContainer');
+  if (!container) return;
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-dot"></span>${msg}`;
+  container.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'toastOut 0.22s ease-in forwards';
+    setTimeout(() => el.remove(), 230);
+  }, durationMs);
+}
+
+// ── Flash score on new data ────────────────────────────────────────────────────
 function flashUpdate() {
   const score = document.getElementById('compositeScore');
   score.classList.remove('flash-update');
@@ -3531,16 +3579,47 @@ function flashUpdate() {
   score.classList.add('flash-update');
 }
 
+// ── Live indicator & countdown ─────────────────────────────────────────────────
 function setLiveStatus(active) {
-  const tag = document.getElementById('liveTag');
+  const tag      = document.getElementById('liveTag');
+  const label    = document.getElementById('liveLabel');
+  const countdown = document.getElementById('liveCountdown');
+  if (!tag) return;
   tag.classList.toggle('paused', !active);
-  tag.firstChild.nextSibling.textContent = active ? 'LIVE' : 'PAUSED';
+  if (label) label.textContent = active ? 'LIVE' : 'PAUSED';
+  if (countdown) countdown.textContent = active ? '' : '';
   tag.title = active
-    ? 'Auto-refreshing every 5 minutes'
+    ? 'Auto-refreshing every 5 minutes — click ↻ to refresh now'
     : 'Paused — tab is in background';
 }
 
+function updateCountdown() {
+  const el = document.getElementById('liveCountdown');
+  if (!el || !nextRefreshAt) return;
+  const secsLeft = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+  const m = Math.floor(secsLeft / 60);
+  const s = String(secsLeft % 60).padStart(2, '0');
+  el.textContent = ` ${m}:${s}`;
+}
+
+function startCountdown() {
+  if (countdownTimer) clearInterval(countdownTimer);
+  nextRefreshAt = Date.now() + REFRESH_INTERVAL_MS;
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+}
+
+function stopCountdown() {
+  if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  const el = document.getElementById('liveCountdown');
+  if (el) el.textContent = '';
+}
+
 async function refresh({ initial = false } = {}) {
+  if (isRefreshing) return;
+  isRefreshing = true;
+  const btn = document.getElementById('refreshNowBtn');
+  if (btn) btn.classList.add('spinning');
   try {
     // Cache-bust so CDN/edge caches don't mask new data
     const bust = `?t=${Date.now()}`;
@@ -3553,8 +3632,12 @@ async function refresh({ initial = false } = {}) {
       fetch(`data/previous.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null)
     ]);
 
-    if (!initial && current.generated_at === lastGeneratedAt) {
+    const isNewData = current.generated_at !== lastGeneratedAt;
+    if (!initial && !isNewData) {
       return;   // unchanged — skip re-render
+    }
+    if (!initial && isNewData) {
+      showToast('New data loaded', 'success');
     }
     lastGeneratedAt = current.generated_at;
 
@@ -3601,15 +3684,22 @@ async function refresh({ initial = false } = {}) {
   } catch (err) {
     if (initial) {
       showError(`Failed to load data: ${err.message}. Check that data/current.json exists.`);
+    } else {
+      showToast('Refresh failed — retrying next cycle', 'info');
     }
     console.error('refresh failed:', err);
+  } finally {
+    isRefreshing = false;
+    const btn = document.getElementById('refreshNowBtn');
+    if (btn) btn.classList.remove('spinning');
   }
 }
 
 function startPolling() {
   if (refreshTimer) return;
-  refreshTimer = setInterval(refresh, REFRESH_INTERVAL_MS);
+  refreshTimer = setInterval(() => { refresh(); startCountdown(); }, REFRESH_INTERVAL_MS);
   setLiveStatus(true);
+  startCountdown();
 }
 
 function stopPolling() {
@@ -3617,15 +3707,25 @@ function stopPolling() {
   clearInterval(refreshTimer);
   refreshTimer = null;
   setLiveStatus(false);
+  stopCountdown();
 }
 
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     stopPolling();
   } else {
-    refresh();          // catch up immediately on return
-    startPolling();
+    refresh();       // catch up immediately on return
+    startPolling();  // restarts interval + countdown
   }
+});
+
+// Manual refresh button
+document.getElementById('refreshNowBtn')?.addEventListener('click', () => {
+  // Reset the polling interval so next auto-refresh is 5 min from now
+  if (refreshTimer) { clearInterval(refreshTimer); refreshTimer = null; }
+  refresh().then(() => {
+    if (!document.hidden) startPolling();
+  });
 });
 
 // ─── TABS ─────────────────────────────────────────────────────────────────────
