@@ -2,12 +2,17 @@ name: Refresh FRED Data
 
 on:
   schedule:
-    # Mon–Fri at 12:00 UTC (07:00 ET) — after FRED's morning releases, no weekends
+    # Target: 07:00 America/Chicago (Central), Mon–Fri. GitHub cron is UTC and
+    # does NOT observe daylight saving, so we fire at both candidate UTC hours
+    # and a guard step below skips whichever one isn't actually 07:00 Central.
+    #   12:00 UTC = 07:00 CDT (Mar–Nov, daylight)
+    #   13:00 UTC = 07:00 CST (Nov–Mar, standard)
     - cron: '0 12 * * 1-5'
+    - cron: '0 13 * * 1-5'
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Reason for manual trigger (e.g. major market event)'
+        description: 'Reason for manual trigger (e.g. major announcement affecting the track)'
         required: false
         default: 'Manual weekend / off-schedule refresh'
 
@@ -15,7 +20,36 @@ permissions:
   contents: write
 
 jobs:
+  # Gate job: lets manual runs through always, but allows a scheduled run only
+  # when it is exactly 07:00 in Central time. Because we schedule at both 12:00
+  # and 13:00 UTC, exactly one of the two passes per day year-round (the other
+  # is the DST shadow and is skipped here).
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Decide whether to run
+        id: check
+        run: |
+          if [ "${{ github.event_name }}" != "schedule" ]; then
+            echo "Manual / non-scheduled trigger — proceeding."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          CENTRAL_HOUR=$(TZ='America/Chicago' date +%H)
+          echo "Current Central hour: ${CENTRAL_HOUR}"
+          if [ "$CENTRAL_HOUR" = "07" ]; then
+            echo "It is 07:00 Central — proceeding with refresh."
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Not 07:00 Central (DST shadow run) — skipping this trigger."
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+          fi
+
   refresh:
+    needs: gate
+    if: needs.gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
