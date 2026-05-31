@@ -125,6 +125,18 @@ jobs:
           NOTIFY_SECRET: ${{ secrets.NOTIFY_SECRET }}
         run: node scripts/alert.mjs
 
+      - name: Send email alert on state change
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
+        run: node scripts/email-alert.mjs
+
+      - name: Send weekly summary (Mondays only)
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
+        run: node scripts/weekly-summary.mjs
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"

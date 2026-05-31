@@ -42,15 +42,21 @@ Elevated YELLOW: ${yellowNames.join(', ') || 'none'}
 Healthy GREEN:   ${greenNames.join(', ') || 'none'}
 `.trim();
 
-  const userPrompt = `You are a senior macroeconomist writing the daily recession risk briefing for a live economic dashboard. Write exactly 3 short paragraphs — no headers, no bullet points, no markdown:
+  const userPrompt = `You are a senior macroeconomist writing the daily recession risk briefing for a live economic dashboard.
 
-Paragraph 1 — Overall posture: Interpret the composite score and alert state in plain English. Is recession risk rising, falling, or stable? Put the number in context.
+Return ONLY a JSON object with exactly this structure (no markdown fences, no extra keys):
+{
+  "headline": "One-sentence headline summarizing current recession risk posture",
+  "risks": [
+    "Risk bullet 1: specific indicator or trend driving elevated risk",
+    "Risk bullet 2: second key risk factor",
+    "Risk bullet 3: third key risk factor or watch item"
+  ],
+  "opportunity": "One sentence: what would reduce recession risk or signals of resilience",
+  "summary": "2-3 sentences of plain-English synthesis covering the overall picture and what to watch next"
+}
 
-Paragraph 2 — Key drivers: Name the top 2–3 indicators driving the current reading and explain in plain English what each signals economically.
-
-Paragraph 3 — What to watch: Identify 1–2 specific data points or events that would change the current assessment (higher OR lower risk). Be concrete.
-
-Rules: Under 180 words total. Direct, jargon-free, no hedging about being an AI. Present tense.
+Rules: Direct, jargon-free, present tense. Each risks bullet 15-25 words. Headline under 20 words. Summary under 80 words. No hedging about being an AI.
 
 Data:
 ${dataContext}`;
@@ -64,7 +70,7 @@ ${dataContext}`;
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 400,
+      max_tokens: 600,
       messages: [{ role: 'user', content: userPrompt }]
     })
   });
@@ -75,12 +81,40 @@ ${dataContext}`;
     process.exit(1);
   }
 
-  const json   = await res.json();
-  const text   = json.content[0].text.trim();
-  const output = { generated_at: new Date().toISOString(), score: composite.score, alert: composite.alert, text };
+  const json     = await res.json();
+  const rawText  = json.content[0].text.trim();
+
+  // Parse structured JSON response
+  let structured;
+  try {
+    // Strip markdown code fences if present
+    const cleaned = rawText.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+    structured = JSON.parse(cleaned);
+  } catch (parseErr) {
+    console.error('Failed to parse structured narrative JSON, falling back to plain text:', parseErr.message);
+    // Fallback: wrap plain text in structured format
+    structured = {
+      headline: `Recession Risk: ${composite.alert} (${composite.score}/100)`,
+      risks: [rawText.slice(0, 120)],
+      opportunity: '',
+      summary: rawText
+    };
+  }
+
+  const output = {
+    generated_at: new Date().toISOString(),
+    score: composite.score,
+    alert: composite.alert,
+    // Keep legacy text field for backwards compatibility
+    text: structured.summary || rawText,
+    headline: structured.headline || '',
+    risks: Array.isArray(structured.risks) ? structured.risks : [],
+    opportunity: structured.opportunity || '',
+    summary: structured.summary || ''
+  };
 
   await fs.writeFile(path.join(DATA_DIR, 'narrative.json'), JSON.stringify(output, null, 2));
-  console.log(`Narrative written (${text.split(' ').length} words): ${text.slice(0, 80)}…`);
+  console.log(`Narrative written: ${(output.headline || output.text).slice(0, 80)}…`);
 }
 
 main().catch(err => { console.error(err); process.exit(1); });
