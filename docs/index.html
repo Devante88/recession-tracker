@@ -111,6 +111,9 @@
     .markets-grid .span2 { grid-column: 1 / -1; }
     .tv-wrap { border-radius: 10px; overflow: hidden; background: transparent; }
     .tv-wrap iframe { display: block; }
+    .tv-placeholder { display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%; min-height: 60px; color: #7a84a8; font-size: 13px;
+      letter-spacing: 0.02em; opacity: 0.7; }
     .mkt-context { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
                    gap: 12px; margin-bottom: 20px; }
     .mkt-ctx-card { background: var(--panel-2); border: 1px solid var(--border);
@@ -2048,6 +2051,69 @@
 <script>window.SUPABASE_SUBSCRIBE_URL = '';</script>
 
 <script type="module">
+// ─── LAZY TRADINGVIEW LOADER ────────────────────────────────────────────────
+// Each TradingView widget is injected only once, and only when its container
+// scrolls into (or near) the viewport. Until then a lightweight placeholder is
+// shown. If TradingView is blocked/offline the placeholder simply stays.
+const _tvLoaded = new Set();
+let _tvObserver = null;
+const _tvBuilders = new Map();
+
+function _ensureTvObserver() {
+  if (_tvObserver || typeof IntersectionObserver === 'undefined') return;
+  _tvObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      obs.unobserve(el);
+      _runTvBuilder(el.id);
+    });
+  }, { rootMargin: '300px 0px' });
+}
+
+function _runTvBuilder(containerId) {
+  if (_tvLoaded.has(containerId)) return;
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const builder = _tvBuilders.get(containerId);
+  if (!builder) return;
+  _tvLoaded.add(containerId);
+  _tvBuilders.delete(containerId);
+  el.setAttribute('data-tv-loaded', '1');
+  el.querySelector('.tv-placeholder')?.remove();
+  try { builder(el); } catch (e) { console.warn('TradingView widget failed:', containerId, e); }
+}
+
+// Forget a container's loaded/registered state so it can be rebuilt. Use this
+// for containers whose DOM is recreated (e.g. watchlist cards rebuilt on edit).
+function resetLazyTV(containerId) {
+  _tvLoaded.delete(containerId);
+  _tvBuilders.delete(containerId);
+  const el = document.getElementById(containerId);
+  if (el) { el.removeAttribute('data-tv-loaded'); if (_tvObserver) _tvObserver.unobserve(el); }
+}
+
+// Register a TradingView widget for lazy loading. `builder(el)` injects the
+// actual widget DOM/script. Guards against ever building the same id twice.
+function lazyTV(containerId, builder) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (_tvLoaded.has(containerId) || el.getAttribute('data-tv-loaded') === '1') return;
+  _tvBuilders.set(containerId, builder);
+  if (!el.querySelector('.tv-placeholder')) {
+    const ph = document.createElement('div');
+    ph.className = 'tv-placeholder';
+    ph.textContent = 'Loading market data…';
+    el.appendChild(ph);
+  }
+  // No IntersectionObserver support → load immediately (graceful fallback).
+  if (typeof IntersectionObserver === 'undefined') { _runTvBuilder(containerId); return; }
+  _ensureTvObserver();
+  // If already on-screen at registration time, the observer fires on the next
+  // tick; otherwise it waits until the container scrolls near the viewport.
+  _tvObserver.observe(el);
+}
+
 // ─── CONFIG ─────────────────────────────────────────────────────────────────
 const LAYER_NAMES = {
   financial_lead: 'Financial Leading',
@@ -4232,18 +4298,18 @@ function renderYieldCurve(snap) {
 // ─── MARKETS TAB ──────────────────────────────────────────────────────────────
 function renderMarkets() {
   function tv(containerId, src, config) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    const widget = document.createElement('div');
-    widget.className = 'tradingview-widget-container__widget';
-    widget.style.height = '100%';
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = `https://s3.tradingview.com/external-embedding/${src}.js`;
-    script.async = true;
-    script.textContent = JSON.stringify(config);
-    el.appendChild(widget);
-    el.appendChild(script);
+    lazyTV(containerId, (el) => {
+      const widget = document.createElement('div');
+      widget.className = 'tradingview-widget-container__widget';
+      widget.style.height = '100%';
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = `https://s3.tradingview.com/external-embedding/${src}.js`;
+      script.async = true;
+      script.textContent = JSON.stringify(config);
+      el.appendChild(widget);
+      el.appendChild(script);
+    });
   }
 
   // ── Ticker tape ────────────────────────────────────────────────────────────
@@ -5889,28 +5955,29 @@ function initWatchlist() {
   }
 
   function tvMiniChart(containerId, symbol, theme) {
-    const el = document.getElementById(containerId);
-    if (!el) return;
-    const widget = document.createElement('div');
-    widget.className = 'tradingview-widget-container__widget';
-    widget.style.height = '100%';
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
-    script.async = true;
-    script.textContent = JSON.stringify({
-      symbol,
-      width: '100%',
-      height: 200,
-      locale: 'en',
-      dateRange: '12M',
-      colorTheme: theme || 'dark',
-      isTransparent: true,
-      autosize: true,
-      largeChartUrl: ''
+    resetLazyTV(containerId);
+    lazyTV(containerId, (el) => {
+      const widget = document.createElement('div');
+      widget.className = 'tradingview-widget-container__widget';
+      widget.style.height = '100%';
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js';
+      script.async = true;
+      script.textContent = JSON.stringify({
+        symbol,
+        width: '100%',
+        height: 200,
+        locale: 'en',
+        dateRange: '12M',
+        colorTheme: theme || 'dark',
+        isTransparent: true,
+        autosize: true,
+        largeChartUrl: ''
+      });
+      el.appendChild(widget);
+      el.appendChild(script);
     });
-    el.appendChild(widget);
-    el.appendChild(script);
   }
 
   function renderWatchlist() {
@@ -6005,8 +6072,7 @@ function initWatchlist() {
   }
 
   // ── Screener widget ────────────────────────────────────────────────────────
-  const screenerEl = document.getElementById('tv-screener');
-  if (screenerEl) {
+  lazyTV('tv-screener', (screenerEl) => {
     const sw = document.createElement('div');
     sw.className = 'tradingview-widget-container__widget';
     sw.style.height = '100%';
@@ -6027,7 +6093,7 @@ function initWatchlist() {
     });
     screenerEl.appendChild(sw);
     screenerEl.appendChild(ss);
-  }
+  });
 
   // ── Add ticker ─────────────────────────────────────────────────────────────
   function addTicker() {
