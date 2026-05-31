@@ -208,7 +208,7 @@ function renderHeader(current) {
       document.getElementById('staleTag').style.display = 'inline-block';
       const sb = document.getElementById('staleBanner');
       const noun = missedRefreshes === 1 ? 'weekday refresh appears' : 'weekday refreshes appear';
-      sb.textContent = `⚠ Data is from ${dateStr} (${relativeAge(days)}). ${missedRefreshes} ${noun} to have been missed — the next scheduled run is weekdays at 12:00 UTC (07:00 ET).`;
+      sb.textContent = `⚠ Data is from ${dateStr} (${relativeAge(days)}). ${missedRefreshes} ${noun} to have been missed — the next scheduled run is weekdays at 07:00 Central (12:00 UTC in summer, 13:00 UTC in winter).`;
       sb.style.display = 'block';
     }
   } else if (genEl) {
