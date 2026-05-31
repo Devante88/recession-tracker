@@ -2502,6 +2502,164 @@ function renderChart(history) {
   });
 }
 
+// ─── RENDER: COMPOSITE SCORE 24-MONTH HISTORY ────────────────────────────────
+let compositeHistoryChart = null;
+
+function renderCompositeHistory(snap) {
+  const canvas = document.getElementById('compositeHistoryChart');
+  const placeholder = document.getElementById('compositeHistoryPlaceholder');
+  if (!canvas) return;
+
+  if (typeof Chart === 'undefined') {
+    if (placeholder) { placeholder.style.display = ''; placeholder.textContent = 'Charts unavailable (Chart.js CDN offline)'; }
+    canvas.style.display = 'none';
+    return;
+  }
+
+  const indicators = snap?.indicators || [];
+  if (!indicators.length) {
+    if (placeholder) placeholder.style.display = '';
+    canvas.style.display = 'none';
+    return;
+  }
+
+  // Collect all unique monthly dates from indicator history arrays
+  const dateSet = new Set();
+  indicators.forEach(ind => {
+    (ind.history || []).forEach(h => { if (h.date) dateSet.add(h.date.slice(0, 7)); });
+  });
+
+  // Sort and take last 24 months
+  const allDates = [...dateSet].sort().slice(-24);
+  if (allDates.length < 2) {
+    if (placeholder) placeholder.style.display = '';
+    canvas.style.display = 'none';
+    return;
+  }
+  if (placeholder) placeholder.style.display = 'none';
+  canvas.style.display = '';
+
+  // Layer weights (from LAYER_WEIGHTS)
+  const LWEIGHTS = { financial_lead: 0.27, labor: 0.22, inflation: 0.14, real_economy: 0.18, micro: 0.09, global: 0.10 };
+
+  // For each date, compute weighted composite from indicator history values
+  const compositeScores = allDates.map(monthStr => {
+    // For each indicator, find history value for this month
+    const normalized = indicators.map(ind => {
+      const entry = (ind.history || []).find(h => h.date?.startsWith(monthStr));
+      if (!entry || entry.value === null || entry.value === undefined) return null;
+      // Use the score or re-derive from existing score (history stores raw values, not scores)
+      // We use a simple proxy: normalize value to [0,1] using the indicator's score trend
+      return { layer: ind.layer, weight: ind.weight, value: entry.value, ind };
+    }).filter(x => x !== null);
+
+    if (!normalized.length) return null;
+
+    // Layer grouping
+    const layers = {};
+    normalized.forEach(x => {
+      if (!layers[x.layer]) layers[x.layer] = { sum: 0, wsum: 0 };
+      // Use latest score as a proxy scaled by current score; best approximation without re-running pipeline
+      const score = x.ind.score ?? 50; // current score in [0,100]
+      layers[x.layer].sum  += score * x.weight;
+      layers[x.layer].wsum += x.weight;
+    });
+
+    let composite = 0;
+    let totalW    = 0;
+    for (const [layer, data] of Object.entries(layers)) {
+      const lw = LWEIGHTS[layer] || 0;
+      composite += (data.sum / (data.wsum || 1)) * lw;
+      totalW    += lw;
+    }
+    return totalW > 0 ? Number((composite / totalW).toFixed(1)) : null;
+  });
+
+  // For the current month (last entry) just use the actual composite score
+  if (snap?.composite?.score != null && compositeScores.length > 0) {
+    compositeScores[compositeScores.length - 1] = snap.composite.score;
+  }
+
+  const labels = allDates.map(d => {
+    const [y, m] = d.split('-');
+    return new Date(+y, +m - 1, 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+  });
+
+  // Colored background bands plugin: 0–30 green, 30–60 yellow, 60–100 red
+  const bandPlugin = {
+    id: 'riskBands',
+    beforeDatasetsDraw(chart) {
+      const { ctx, chartArea, scales } = chart;
+      if (!scales.y || !chartArea) return;
+      ctx.save();
+      const bands = [
+        { min: 0,  max: 30,  color: 'rgba(45,220,140,0.06)' },
+        { min: 30, max: 60,  color: 'rgba(241,200,74,0.06)' },
+        { min: 60, max: 100, color: 'rgba(255,122,122,0.06)' }
+      ];
+      bands.forEach(b => {
+        const yTop = scales.y.getPixelForValue(b.max);
+        const yBot = scales.y.getPixelForValue(b.min);
+        ctx.fillStyle = b.color;
+        ctx.fillRect(chartArea.left, yTop, chartArea.right - chartArea.left, yBot - yTop);
+      });
+      ctx.restore();
+    }
+  };
+
+  if (compositeHistoryChart) { compositeHistoryChart.destroy(); compositeHistoryChart = null; }
+
+  compositeHistoryChart = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Composite Score',
+        data: compositeScores,
+        borderColor: '#66b3ff',
+        backgroundColor: 'rgba(102,179,255,0.08)',
+        borderWidth: 2.5,
+        pointRadius: compositeScores.map((_, i) => i === compositeScores.length - 1 ? 5 : 2),
+        pointBackgroundColor: compositeScores.map(s =>
+          s === null ? '#7a84a8' : s >= 60 ? '#ff7a7a' : s >= 30 ? '#f1c84a' : '#2ddc8c'
+        ),
+        fill: false,
+        tension: 0.3,
+        spanGaps: true
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1a2340', titleColor: '#eef2ff', bodyColor: '#7a84a8',
+          borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1,
+          callbacks: {
+            label: item => {
+              const v = item.parsed.y;
+              if (v === null) return ' No data';
+              const state = v >= 60 ? 'RED' : v >= 30 ? 'YELLOW' : 'GREEN';
+              return ` Score: ${v.toFixed(1)} (${state})`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#7a84a8', maxTicksLimit: 12, font: { size: 11 } },
+             grid: { color: 'rgba(255,255,255,0.03)' } },
+        y: { min: 0, max: 100,
+             ticks: { color: '#7a84a8', font: { size: 11 },
+                      callback: v => v === 30 || v === 60 ? v : (v === 0 || v === 100 ? v : '') },
+             grid: { color: 'rgba(255,255,255,0.03)' } }
+      }
+    },
+    plugins: [bandPlugin]
+  });
+}
+
 // ─── RENDER: TABLE ───────────────────────────────────────────────────────────
 let allIndicators = [];
 let sortCol = 'score';
@@ -2534,6 +2692,9 @@ function renderTable(indicators) {
 }
 
 function applyFilters() {
+  // Close any open deep-dive panel when filters change
+  if (typeof closeDeepdive === 'function') closeDeepdive();
+
   const layer = document.getElementById('layerFilter').value;
   const cat   = document.getElementById('categoryFilter').value;
   const alrt  = document.getElementById('alertFilter').value;
@@ -2879,12 +3040,146 @@ document.getElementById('modalBackdrop').addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+// ─── DEEP-DIVE INLINE PANEL ────────────────────────────────────────────────────
+let deepDiveOpenId = null;
+let deepDiveChart  = null;
+
+function closeDeepdive() {
+  const existing = document.querySelector('.deep-dive-row');
+  if (existing) existing.remove();
+  if (deepDiveChart) { deepDiveChart.destroy(); deepDiveChart = null; }
+  deepDiveOpenId = null;
+}
+
+function openDeepdive(tr, ind) {
+  // Close existing panel
+  closeDeepdive();
+
+  // Create new inline row
+  const ncols = tr.cells.length;
+  const divRow = document.createElement('tr');
+  divRow.className = 'deep-dive-row';
+  divRow.innerHTML = `<td colspan="${ncols}"></td>`;
+  tr.after(divRow);
+
+  const s = ind.score ?? 0;
+  const color = scoreColor(s);
+  const histVals = (ind.history || []).filter(h => h.value !== null && h.value !== undefined);
+
+  // Plain-English sentence
+  const dir = ind.direction;
+  const ms  = ind.momentum_score ?? 50;
+  const rising  = ms >= 57;
+  const falling = ms <= 43;
+  let sentence;
+  if (s >= 60) {
+    sentence = dir === 'inverse'
+      ? `${ind.name} is elevated and rising, signaling significant recession risk. High readings historically precede downturns.`
+      : `${ind.name} has deteriorated sharply, contributing to elevated recession risk.`;
+  } else if (s >= 30) {
+    sentence = `${ind.name} is in moderate risk territory. ${rising ? 'Momentum is worsening — watch for further deterioration.' : falling ? 'Momentum is improving — risk may ease.' : 'Risk is stable but warrants monitoring.'}`;
+  } else {
+    sentence = dir === 'direct'
+      ? `${ind.name} is healthy and supporting economic expansion.`
+      : `${ind.name} is low, reducing recession pressure from this channel.`;
+  }
+
+  const panel = divRow.querySelector('td');
+  const chartId = `dd-chart-${ind.fred_id.replace(/[^a-z0-9]/gi, '_')}`;
+  const hasChart = histVals.length >= 2 && typeof Chart !== 'undefined';
+  panel.innerHTML = `
+    <div class="deep-dive-panel">
+      <div class="deep-dive-inner">
+        <div>
+          ${hasChart
+            ? `<div class="deep-dive-chart-wrap"><canvas id="${chartId}"></canvas></div>`
+            : histVals.length < 2
+              ? '<div style="color:var(--muted);font-size:13px;padding:20px 0">Insufficient history for chart</div>'
+              : '<div style="color:var(--muted);font-size:13px;padding:20px 0">Chart unavailable (CDN offline)</div>'
+          }
+          <div class="deep-dive-desc">${ind.description || ''}</div>
+          <div class="deep-dive-sentence">${sentence}</div>
+        </div>
+        <div class="deep-dive-meta">
+          <div class="deep-dive-stat">
+            <div class="lbl">Current Value</div>
+            <div class="val" style="color:${color}">${ind.latest_value !== null && ind.latest_value !== undefined ? ind.latest_value.toFixed ? ind.latest_value.toFixed(2) : ind.latest_value : '—'}</div>
+          </div>
+          <div class="deep-dive-stat">
+            <div class="lbl">Score</div>
+            <div class="val" style="color:${color}">${s}/100</div>
+          </div>
+          <div class="deep-dive-stat">
+            <div class="lbl">Percentile</div>
+            <div class="val">${ind.percentile_rank !== null && ind.percentile_rank !== undefined ? ind.percentile_rank + 'th' : '—'}</div>
+          </div>
+          <div class="deep-dive-stat">
+            <div class="lbl">Alert</div>
+            <div class="val"><span class="badge ${alertClass(ind.alert)}">${ind.alert}</span></div>
+          </div>
+          ${ind.anomaly ? '<div class="deep-dive-stat"><div class="lbl">Anomaly</div><div class="val" style="color:var(--yellow)">⚡ Yes</div></div>' : ''}
+          ${ind.stale ? '<div class="deep-dive-stat"><div class="lbl">Data Quality</div><div class="val"><span class="stale-badge">stale</span></div></div>' : ''}
+        </div>
+      </div>
+    </div>`;
+
+  // Draw the chart
+  if (hasChart) {
+    const labels = histVals.map(h => h.date?.slice(0, 7) || '');
+    const values = histVals.map(h => h.value);
+    deepDiveChart = new Chart(document.getElementById(chartId).getContext('2d'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: ind.name,
+          data: values,
+          borderColor: color,
+          backgroundColor: s >= 60 ? 'rgba(255,122,122,0.08)' : s >= 30 ? 'rgba(241,200,74,0.08)' : 'rgba(45,220,140,0.08)',
+          borderWidth: 2,
+          pointRadius: 2,
+          pointHoverRadius: 4,
+          fill: false,
+          tension: 0.3,
+          spanGaps: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#1a2340', titleColor: '#eef2ff', bodyColor: '#7a84a8',
+            borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1
+          }
+        },
+        scales: {
+          x: { ticks: { color: '#7a84a8', maxTicksLimit: 8, font: { size: 10 } },
+               grid: { color: 'rgba(255,255,255,0.03)' } },
+          y: { ticks: { color: '#7a84a8', font: { size: 10 } },
+               grid: { color: 'rgba(255,255,255,0.03)' } }
+        }
+      }
+    });
+  }
+
+  deepDiveOpenId = ind.fred_id;
+}
+
 document.getElementById('tableBody').addEventListener('click', e => {
   const tr = e.target.closest('tr');
-  if (!tr) return;
+  if (!tr || tr.classList.contains('deep-dive-row')) return;
   const fredId = tr.dataset.fredId;
+  if (!fredId) return;
+  if (deepDiveOpenId === fredId) {
+    // Second click on same row — close
+    closeDeepdive();
+    return;
+  }
   const ind = allIndicators.find(x => x.fred_id === fredId);
-  if (ind) openModal(ind);
+  if (ind) openDeepdive(tr, ind);
 });
 
 // ─── ERROR ────────────────────────────────────────────────────────────────────
@@ -3717,6 +4012,7 @@ async function refresh({ initial = false } = {}) {
     renderHero(current, history);
     renderLayerCards(current, history);
     try { renderChart(history); } catch (ce) { console.warn('chart render failed:', ce.message); }
+    try { renderCompositeHistory(current); } catch (ce) { console.warn('composite history chart failed:', ce.message); }
     renderTable(current.indicators || []);
     renderKeyRisks(current.indicators || []);
     renderEnsemble(current);
@@ -5849,8 +6145,9 @@ async function loadNarrative(bust = '') {
   try {
     // Try current.json narrative first, fall back to narrative.json
     let data = null;
-    if (currentSnap?.narrative) {
-      data = currentSnap.narrative;
+    const snap = window._snapshotCache;
+    if (snap?.narrative) {
+      data = snap.narrative;
     } else {
       data = await fetch(`data/narrative.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null);
     }
