@@ -451,6 +451,9 @@
     .score-bar-wrap { display: flex; align-items: center; gap: 7px; }
     .score-bar { height: 5px; border-radius: 3px; min-width: 3px; }
     .stale-days { font-size: 11px; color: var(--muted); }
+    .stale-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+                   padding: 1px 6px; border-radius: 999px; margin-left: 5px;
+                   background: rgba(122,132,168,0.18); color: var(--muted); vertical-align: middle; }
     .dir-label  { font-size: 11px; }
     .dir-up   { color: var(--green); }
     .dir-down { color: var(--red); }
@@ -550,6 +553,45 @@
                  animation: skel-pulse 1.4s ease-in-out infinite; }
     @keyframes skel-pulse { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
 
+    /* ── AI BRIEFING CARD ───────────────────────────────────────────────────── */
+    .ai-briefing-card { background: linear-gradient(135deg, var(--panel), var(--panel-2));
+                        border: 1px solid rgba(102,179,255,0.2); border-radius: 16px;
+                        padding: 22px 26px; margin-bottom: 20px; position: relative; }
+    .ai-briefing-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .ai-briefing-header h2 { font-size: 20px; font-weight: 800; color: var(--text); flex: 1; }
+    .ai-briefing-headline { font-size: 17px; font-weight: 700; color: var(--text);
+                            line-height: 1.45; margin-bottom: 14px; }
+    .ai-briefing-risks { list-style: none; margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
+    .ai-briefing-risks li { font-size: 13px; color: var(--text); display: flex; gap: 8px; align-items: flex-start;
+                            background: rgba(255,122,122,0.06); border-radius: 8px; padding: 8px 12px; }
+    .ai-briefing-risks li .risk-icon { flex-shrink: 0; }
+    .ai-briefing-opportunity { font-size: 13px; color: var(--text); display: flex; gap: 8px; align-items: flex-start;
+                                background: rgba(45,220,140,0.06); border-radius: 8px; padding: 8px 12px; margin-bottom: 14px; }
+    .ai-briefing-summary { font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .ai-briefing-ts { font-size: 11px; color: var(--muted); margin-top: 12px; }
+    .ai-briefing-stale { font-size: 13px; color: var(--muted); font-style: italic; }
+
+    /* ── COMPOSITE HISTORY CHART ─────────────────────────────────────────────── */
+    .composite-history-card { background: var(--panel); border: 1px solid var(--border);
+                               border-radius: 16px; padding: 22px 26px; margin-bottom: 20px; }
+    .composite-history-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+    .composite-history-wrap { height: 220px; position: relative; margin-top: 16px; }
+
+    /* ── DEEP DIVE PANEL ─────────────────────────────────────────────────────── */
+    .deep-dive-row td { padding: 0 !important; border-bottom: none !important; }
+    .deep-dive-panel { background: var(--panel-2); border: 1px solid rgba(102,179,255,0.15);
+                       border-radius: 12px; padding: 18px 20px; margin: 4px 8px 10px; }
+    .deep-dive-inner { display: grid; grid-template-columns: 1fr 260px; gap: 20px; align-items: start; }
+    @media (max-width: 640px) { .deep-dive-inner { grid-template-columns: 1fr; } }
+    .deep-dive-chart-wrap { height: 160px; position: relative; }
+    .deep-dive-meta { display: flex; flex-direction: column; gap: 10px; }
+    .deep-dive-stat { background: var(--panel-3); border-radius: 8px; padding: 8px 12px; }
+    .deep-dive-stat .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+    .deep-dive-stat .val { font-size: 16px; font-weight: 700; margin-top: 2px; }
+    .deep-dive-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-top: 6px; }
+    .deep-dive-sentence { font-size: 13px; color: var(--text); line-height: 1.6;
+                          background: rgba(102,179,255,0.06); border-radius: 8px; padding: 8px 12px; margin-top: 8px; }
+
     /* ── FOOTER ──────────────────────────────────────────────────────────────── */
     footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border);
              text-align: center; font-size: 12px; color: var(--muted); }
@@ -565,7 +607,12 @@
       .stats-row { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
-      .layers { grid-template-columns: repeat(2,1fr); }
+      .layers { grid-template-columns: 1fr; }
+      /* Hero: ring gauge above, stats below — vertical stack */
+      .hero { grid-template-columns: 1fr; gap: 20px; padding: 20px 16px; }
+      .hero-left { display: flex; flex-direction: column; align-items: center; }
+      .hero-right { width: 100%; }
+      .hero-quick-stats { grid-template-columns: repeat(2, 1fr); }
       .hero-score { font-size: 56px; }
       .meth-weights { grid-template-columns: repeat(3,1fr); }
       .stats-row { grid-template-columns: 1fr; }
@@ -573,6 +620,13 @@
       .bt-stats { grid-template-columns: 1fr 1fr; }
       .narrative-card { padding: 16px; }
       .narrative-text { font-size: 13px; }
+      .ai-briefing-card { padding: 16px; }
+      /* Table: show only Name, Alert, Score on mobile */
+      .tbl-col-layer,
+      .tbl-col-latest,
+      .tbl-col-asof,
+      .tbl-col-threshold,
+      .tbl-col-direction { display: none !important; }
     }
     @media (max-width: 420px) {
       .layers { grid-template-columns: 1fr 1fr; }
@@ -947,20 +1001,34 @@
     <div id="bigFourGrid" style="display:grid;gap:14px;margin-top:8px"></div>
   </section>
 
-  <!-- AI NARRATIVE BRIEFING -->
-  <section class="narrative-card" id="narrativeCard">
-    <div class="narrative-header">
-      <h2>Daily Briefing</h2>
+  <!-- AI BRIEFING CARD (structured) -->
+  <section class="ai-briefing-card" id="aiBriefingCard">
+    <div class="ai-briefing-header">
+      <h2>AI Briefing</h2>
       <span class="ai-badge">AI · Claude</span>
     </div>
-    <div class="narrative-text" id="narrativeText">
+    <div id="aiBriefingContent">
       <div class="narrative-skeleton">
         <div class="skel-line" style="width:95%"></div>
         <div class="skel-line" style="width:88%"></div>
         <div class="skel-line" style="width:72%"></div>
       </div>
     </div>
-    <div class="narrative-ts" id="narrativeTs"></div>
+    <div class="ai-briefing-ts" id="aiBriefingTs"></div>
+  </section>
+
+  <!-- COMPOSITE SCORE — 24-MONTH HISTORY -->
+  <section class="composite-history-card" id="compositeHistoryCard">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+      <div>
+        <h2>Composite Score — 24-Month History</h2>
+        <p class="panel-sub" style="margin-bottom:0">Reconstructed from indicator history arrays · Client-side</p>
+      </div>
+    </div>
+    <div class="composite-history-wrap">
+      <canvas id="compositeHistoryChart"></canvas>
+    </div>
+    <div id="compositeHistoryPlaceholder" style="display:none;text-align:center;padding:40px;color:var(--muted);font-size:13px">History unavailable</div>
   </section>
 
   <!-- LAYER CARDS -->
@@ -1012,11 +1080,11 @@
       <table>
         <thead><tr>
           <th class="sortable" data-col="name">Indicator</th>
-          <th class="sortable" data-col="layer">Layer</th>
-          <th>Latest</th>
-          <th class="sortable" data-col="latest_date">As of</th>
-          <th>Threshold</th>
-          <th>Direction</th>
+          <th class="sortable tbl-col-layer" data-col="layer">Layer</th>
+          <th class="tbl-col-latest">Latest</th>
+          <th class="sortable tbl-col-asof" data-col="latest_date">As of</th>
+          <th class="tbl-col-threshold">Threshold</th>
+          <th class="tbl-col-direction">Direction</th>
           <th class="sortable sort-desc" data-col="score">Score</th>
           <th class="sortable" data-col="alert">Alert</th>
           <th class="hide-sm col-trend">24mo Trend</th>
@@ -2498,6 +2566,8 @@ function applyFilters() {
 
     const anomalyHtml = ind.anomaly
       ? '<span class="anomaly-badge" title="Anomalous move: latest change > 1.5σ of historical changes">⚡ Anomaly</span>' : '';
+    const staleBadgeHtml = ind.stale
+      ? '<span class="stale-badge" title="Quarterly data may be outdated (>120 days)">stale</span>' : '';
 
     const ms = ind.momentum_score ?? 50;
     const momentumArrow = ms >= 57 ? '↑' : ms <= 43 ? '↓' : '→';
@@ -2533,20 +2603,20 @@ function applyFilters() {
     if (ind.alert === 'YELLOW') tr.style.background = 'rgba(241,200,74,0.04)';
     tr.innerHTML = `
       <td>
-        <div class="ind-name">${ind.name}${momentumHtml}${anomalyHtml}</div>
+        <div class="ind-name">${ind.name}${momentumHtml}${anomalyHtml}${staleBadgeHtml}</div>
         ${descHtml}
       </td>
-      <td style="color:var(--muted);font-size:12px;white-space:nowrap">${LAYER_NAMES[ind.layer] || ind.layer}</td>
-      <td style="white-space:nowrap">
+      <td class="tbl-col-layer" style="color:var(--muted);font-size:12px;white-space:nowrap">${LAYER_NAMES[ind.layer] || ind.layer}</td>
+      <td class="tbl-col-latest" style="white-space:nowrap">
         <strong>${fmtVal(ind.latest_value)}</strong>${
           ind.norm_mean !== null && ind.norm_mean !== undefined
             ? `<div style="font-size:10px;color:var(--muted);margin-top:2px">avg ${fmtVal(ind.norm_mean)}</div>`
             : ''
         }
       </td>
-      <td>${fmtDate(ind.latest_date)}${staleHtml}</td>
-      <td style="color:var(--muted);font-size:12px">${thr}</td>
-      <td>${dirHtml}</td>
+      <td class="tbl-col-asof">${fmtDate(ind.latest_date)}${staleHtml}</td>
+      <td class="tbl-col-threshold" style="color:var(--muted);font-size:12px">${thr}</td>
+      <td class="tbl-col-direction">${dirHtml}</td>
       <td>
         <div class="score-bar-wrap">
           <div class="score-bar" style="width:${Math.max(s,2)}px;max-width:80px;background:${scoreColor(s)}"></div>
@@ -5777,21 +5847,59 @@ let lastNarrativeAt = null;
 
 async function loadNarrative(bust = '') {
   try {
-    const data = await fetch(`data/narrative.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null);
-    const el   = document.getElementById('narrativeText');
-    const tsEl = document.getElementById('narrativeTs');
-    if (!el) return;
-    if (!data || !data.text) {
-      el.innerHTML = '<p style="color:var(--muted);font-size:13px">AI briefing will appear here after the first daily data refresh with an <code>ANTHROPIC_API_KEY</code> secret configured.</p>';
-      return;
+    // Try current.json narrative first, fall back to narrative.json
+    let data = null;
+    if (currentSnap?.narrative) {
+      data = currentSnap.narrative;
+    } else {
+      data = await fetch(`data/narrative.json${bust}`).then(r => r.ok ? r.json() : null).catch(() => null);
     }
-    if (data.generated_at === lastNarrativeAt) return;
-    lastNarrativeAt = data.generated_at;
-    el.innerHTML = data.text.split('\n\n').map(p => `<p>${p.trim()}</p>`).join('');
-    if (tsEl) {
-      const d = new Date(data.generated_at);
-      tsEl.textContent = `Generated ${d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })} · Score ${data.score} · ${data.alert}`;
+
+    // Render new structured AI Briefing card
+    const briefingEl = document.getElementById('aiBriefingContent');
+    const briefingTs = document.getElementById('aiBriefingTs');
+
+    if (briefingEl) {
+      if (!data || (!data.headline && !data.text)) {
+        briefingEl.innerHTML = '<p class="ai-briefing-stale">AI briefing generates each weekday morning after data refresh.</p>';
+      } else {
+        // Check if stale (> 7 days)
+        const ageDays = data.generated_at
+          ? (Date.now() - new Date(data.generated_at).getTime()) / 86400000
+          : 999;
+        if (ageDays > 7) {
+          briefingEl.innerHTML = '<p class="ai-briefing-stale">AI briefing generates each weekday morning after data refresh.</p>';
+        } else if (data.headline) {
+          // Structured format
+          const risksHtml = Array.isArray(data.risks) && data.risks.length
+            ? `<ul class="ai-briefing-risks">${data.risks.map(r =>
+                `<li><span class="risk-icon">⚠</span><span>${r}</span></li>`
+              ).join('')}</ul>`
+            : '';
+          const oppHtml = data.opportunity
+            ? `<div class="ai-briefing-opportunity"><span class="risk-icon">✓</span><span>${data.opportunity}</span></div>`
+            : '';
+          const summaryHtml = data.summary
+            ? `<div class="ai-briefing-summary">${data.summary}</div>`
+            : '';
+          briefingEl.innerHTML = `
+            <div class="ai-briefing-headline">${data.headline}</div>
+            ${risksHtml}
+            ${oppHtml}
+            ${summaryHtml}`;
+        } else {
+          // Legacy plain text format
+          briefingEl.innerHTML = `<div class="ai-briefing-summary">${data.text.split('\n\n').map(p => `<p>${p.trim()}</p>`).join('')}</div>`;
+        }
+      }
+      if (briefingTs && data?.generated_at) {
+        const d = new Date(data.generated_at);
+        briefingTs.textContent = `Generated ${d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' })} · Score ${data.score} · ${data.alert}`;
+      }
     }
+
+    if (data?.generated_at === lastNarrativeAt) return;
+    if (data?.generated_at) lastNarrativeAt = data.generated_at;
   } catch {}
 }
 
