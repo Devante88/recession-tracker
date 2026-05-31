@@ -58,7 +58,7 @@ async function main() {
       <title>${escapeXml(`${it.alert} — composite ${it.composite} (as of ${it.date})`)}</title>
       <link>${SITE_URL}/?date=${it.date}</link>
       <guid isPermaLink="false">recession-tracker-${it.date}-${it.alert}</guid>
-      <pubDate>${new Date(it.date + 'T13:00:00Z').toUTCString()}</pubDate>
+      <pubDate>${new Date(it.date + 'T12:00:00Z').toUTCString()}</pubDate>
       <description>${escapeXml(it.change)}</description>
     </item>`).join('');
 
