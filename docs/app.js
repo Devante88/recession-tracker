@@ -156,23 +156,101 @@ function sparklineSvg(values, color) {
   </svg>`;
 }
 
+// Count weekdays (Mon–Fri) strictly between two dates — measures how many
+// scheduled refreshes the snapshot has missed.
+function businessDaysBetween(from, to) {
+  let n = 0;
+  const d = new Date(from);
+  d.setUTCHours(0, 0, 0, 0);
+  const end = new Date(to);
+  end.setUTCHours(0, 0, 0, 0);
+  while (d < end) {
+    d.setUTCDate(d.getUTCDate() + 1);
+    const dow = d.getUTCDay();
+    if (dow !== 0 && dow !== 6) n++;
+  }
+  return n;
+}
+
+function relativeAge(days) {
+  if (days <= 0) return 'today';
+  if (days === 1) return 'yesterday';
+  return `${days} days ago`;
+}
+
 // ─── RENDER: HEADER ──────────────────────────────────────────────────────────
 function renderHeader(current) {
   document.getElementById('asOf').textContent = current.as_of || '—';
   const genAt = current.generated_at ? new Date(current.generated_at) : null;
-  document.getElementById('generatedAt').textContent = genAt
-    ? genAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })
-    : '—';
+  const genEl = document.getElementById('generatedAt');
+
+  // Dynamic indicator count — never goes stale as the series list grows
+  const count = (current.indicators || []).length;
+  const subtitle = document.getElementById('headerSubtitle');
+  if (subtitle && count) {
+    subtitle.textContent = `${count} macro + market + micro + global indicators · FRED data · Updated weekdays`;
+  }
+  const methCount = document.getElementById('methIndicatorCount');
+  if (methCount && count) methCount.textContent = count;
 
   if (genAt) {
     const days = Math.floor((Date.now() - genAt) / 86400000);
-    if (days > 5) {
+    const dateStr = genAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+    if (genEl) {
+      genEl.textContent = `${dateStr} (${relativeAge(days)})`;
+      genEl.style.color = days >= 1 ? 'var(--yellow)' : '';
+    }
+
+    // The feed refreshes every weekday morning, so being more than one
+    // business day behind means a scheduled run was missed.
+    const missedRefreshes = businessDaysBetween(genAt, new Date());
+    if (missedRefreshes >= 1) {
       document.getElementById('staleTag').style.display = 'inline-block';
       const sb = document.getElementById('staleBanner');
-      sb.textContent = `⚠ Data is ${days} days old — next scheduled refresh is daily at 13:00 UTC.`;
+      const noun = missedRefreshes === 1 ? 'weekday refresh appears' : 'weekday refreshes appear';
+      sb.textContent = `⚠ Data is from ${dateStr} (${relativeAge(days)}). ${missedRefreshes} ${noun} to have been missed — the next scheduled run is weekdays at 12:00 UTC (07:00 ET).`;
       sb.style.display = 'block';
     }
+  } else if (genEl) {
+    genEl.textContent = '—';
   }
+}
+
+// ─── RENDER: PLAIN-ENGLISH VERDICT ────────────────────────────────────────────
+function renderVerdict(current, score, alert, color) {
+  const headEl = document.getElementById('heroVerdictHeadline');
+  const detailEl = document.getElementById('heroVerdictDetail');
+  const wrap = document.getElementById('heroVerdict');
+  if (!headEl || !detailEl) return;
+
+  const prob = current.composite?.recession_probability_12mo;
+  const probPct = (prob != null) ? Math.round(prob * 100) : null;
+  const inds = current.indicators || [];
+  const red = inds.filter(i => i.alert === 'RED').length;
+  const inv = current.composite?.yield_curve_inversion_days ?? 0;
+
+  let headline, detail;
+  if (alert === 'GREEN') {
+    headline = 'Low recession risk';
+    detail = `The economy shows no imminent warning signs. Composite risk is ${score}/100.`;
+  } else if (alert === 'YELLOW') {
+    headline = 'Elevated recession risk — watch closely';
+    detail = `Warning signs are building. Composite risk is ${score}/100, with ${red} indicator${red === 1 ? '' : 's'} flashing red.`;
+  } else {
+    headline = 'High recession risk';
+    detail = `Multiple stress signals are active. Composite risk is ${score}/100, with ${red} indicator${red === 1 ? '' : 's'} in the red zone.`;
+  }
+
+  // Append the most decision-relevant fact
+  const facts = [];
+  if (probPct != null) facts.push(`12-month recession probability sits at ${probPct}%`);
+  if (inv > 0) facts.push(`the yield curve has been inverted ${inv} day${inv === 1 ? '' : 's'}`);
+  if (facts.length) detail += ` ${facts.join('; ')}.`;
+
+  headEl.textContent = headline;
+  headEl.style.color = color;
+  detailEl.textContent = detail;
+  if (wrap) wrap.style.borderLeftColor = color;
 }
 
 // ─── RENDER: HERO ─────────────────────────────────────────────────────────────
@@ -192,6 +270,9 @@ function renderHero(current, history) {
   alertEl.className   = `badge ${alertClass(alert)}`;
 
   document.getElementById('ratingBadge').textContent = `${rating}/10`;
+
+  // Plain-English verdict — translates score/alert into a bottom line
+  renderVerdict(current, score, alert, color);
 
   if (confidence !== null) {
     const pct = Math.round(confidence * 100);

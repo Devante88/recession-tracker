@@ -18,20 +18,20 @@
   <header>
     <div class="header-left">
       <h1>Recession Tracker</h1>
-      <p>30 macro + market + micro + global indicators · FRED data · Updated daily</p>
+      <p id="headerSubtitle">Loading indicators · FRED data · Updated weekdays</p>
     </div>
     <div class="header-right">
       <div style="display:flex;gap:6px;align-items:center">
-        <button class="theme-btn" id="themeToggle" title="Toggle dark/light mode">🌙</button>
-        <button class="export-btn print-btn" onclick="window.print()" title="Print / Save PDF">🖨 Print</button>
-        <button class="export-btn permalink-btn" id="permalinkBtn" title="Copy shareable link">🔗 Share</button>
+        <button class="theme-btn" id="themeToggle" title="Toggle dark/light mode" aria-label="Toggle dark or light mode">🌙</button>
+        <button class="export-btn print-btn" onclick="window.print()" title="Print / Save PDF" aria-label="Print or save as PDF">🖨 Print</button>
+        <button class="export-btn permalink-btn" id="permalinkBtn" title="Copy shareable link" aria-label="Copy shareable link to clipboard">🔗 Share</button>
       </div>
       <div class="as-of">As of <span id="asOf">—</span></div>
       <div class="as-of">Updated <span id="generatedAt">—</span></div>
       <span class="live-tag" id="liveTag" title="Auto-refreshing every 5 minutes">
         <span class="live-dot"></span><span id="liveLabel">LIVE</span><span id="liveCountdown" class="live-countdown"></span>
       </span>
-      <button class="refresh-now-btn" id="refreshNowBtn" title="Refresh data now">↻</button>
+      <button class="refresh-now-btn" id="refreshNowBtn" title="Refresh data now" aria-label="Refresh data now">↻</button>
       <span class="stale-tag" id="staleTag">DATA STALE</span>
     </div>
   </header>
@@ -84,6 +84,10 @@
       </div>
     </div>
     <div class="hero-right">
+      <div class="hero-verdict" id="heroVerdict">
+        <div class="hero-verdict-headline" id="heroVerdictHeadline">Assessing conditions…</div>
+        <div class="hero-verdict-detail" id="heroVerdictDetail"></div>
+      </div>
       <div class="risk-bar-label">Risk scale — 0 (no risk) → 100 (maximum risk)</div>
       <div class="risk-bar-outer">
         <div class="risk-bar-fill" id="riskBarFill"></div>
@@ -1129,7 +1133,7 @@
     </button>
     <div class="methodology-body open" id="methBody">
       <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7">
-        The composite score blends 30 FRED indicators across 6 economic layers.
+        The composite score blends <span id="methIndicatorCount">40+</span> FRED indicators across 6 economic layers.
         Each indicator is normalized to a 0–100 risk scale, then weighted and
         aggregated into layer scores, then into a single composite.
         No machine learning. No backtested thresholds. Pure signal monitoring.
@@ -1191,7 +1195,7 @@
   <!-- PUBLIC API + EMBED -->
   <section class="panel">
     <div class="panel-header"><h2>Public API &amp; Embed</h2></div>
-    <p class="panel-sub">All data is published as static JSON and refreshed daily. Free to use; no key required.</p>
+    <p class="panel-sub">All data is published as static JSON and refreshed every weekday morning. Free to use; no key required.</p>
     <div class="meth-grid" style="margin-top:8px">
       <div class="meth-card">
         <h4>JSON endpoints</h4>
