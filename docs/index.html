@@ -5416,36 +5416,38 @@ function initPortfolio() {
 
   // Level 2 chart loader
   function loadL2Chart(symbol) {
+    resetLazyTV('l2ChartWrap');
     const wrap = document.getElementById('l2ChartWrap');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    const w = document.createElement('div');
-    w.className = 'tradingview-widget-container__widget';
-    w.style.height = '100%';
-    const s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.src  = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-    s.async = true;
-    s.textContent = JSON.stringify({
-      autosize: true,
-      symbol: symbol || 'NASDAQ:SPY',
-      interval: '5',
-      timezone: 'America/New_York',
-      theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
-      style: '1',
-      locale: 'en',
-      withdateranges: true,
-      range: '1D',
-      hide_side_toolbar: false,
-      allow_symbol_change: true,
-      watchlist: ['NASDAQ:SPY','NASDAQ:QQQ','AMEX:GLD','CBOT:ZN1!','CBOE:VIX'],
-      studies: ['Volume@tv-basicstudies', 'VWAP@tv-basicstudies'],
-      show_popup_button: true,
-      popup_width: '1000',
-      popup_height: '650'
+    if (wrap) wrap.innerHTML = '';
+    lazyTV('l2ChartWrap', (el) => {
+      const w = document.createElement('div');
+      w.className = 'tradingview-widget-container__widget';
+      w.style.height = '100%';
+      const s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.src  = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+      s.async = true;
+      s.textContent = JSON.stringify({
+        autosize: true,
+        symbol: symbol || 'NASDAQ:SPY',
+        interval: '5',
+        timezone: 'America/New_York',
+        theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+        style: '1',
+        locale: 'en',
+        withdateranges: true,
+        range: '1D',
+        hide_side_toolbar: false,
+        allow_symbol_change: true,
+        watchlist: ['NASDAQ:SPY','NASDAQ:QQQ','AMEX:GLD','CBOT:ZN1!','CBOE:VIX'],
+        studies: ['Volume@tv-basicstudies', 'VWAP@tv-basicstudies'],
+        show_popup_button: true,
+        popup_width: '1000',
+        popup_height: '650'
+      });
+      el.appendChild(w);
+      el.appendChild(s);
     });
-    wrap.appendChild(w);
-    wrap.appendChild(s);
   }
 
   document.getElementById('l2LoadBtn')?.addEventListener('click', () => {
@@ -5693,35 +5695,37 @@ function initOptions() {
 
   // Options chain chart loader
   function loadChain(symbol) {
+    resetLazyTV('optsChainWrap');
     const wrap = document.getElementById('optsChainWrap');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    const w = document.createElement('div');
-    w.className = 'tradingview-widget-container__widget';
-    w.style.height = '100%';
-    const s = document.createElement('script');
-    s.type  = 'text/javascript';
-    s.src   = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-    s.async = true;
-    s.textContent = JSON.stringify({
-      autosize: true,
-      symbol: symbol || 'NASDAQ:SPY',
-      interval: 'D',
-      timezone: 'America/New_York',
-      theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
-      style: '1',
-      locale: 'en',
-      withdateranges: true,
-      range: '3M',
-      hide_side_toolbar: false,
-      allow_symbol_change: true,
-      studies: ['RSI@tv-basicstudies','MACD@tv-basicstudies','Volume@tv-basicstudies'],
-      show_popup_button: true,
-      popup_width: '1000',
-      popup_height: '650'
+    if (wrap) wrap.innerHTML = '';
+    lazyTV('optsChainWrap', (el) => {
+      const w = document.createElement('div');
+      w.className = 'tradingview-widget-container__widget';
+      w.style.height = '100%';
+      const s = document.createElement('script');
+      s.type  = 'text/javascript';
+      s.src   = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+      s.async = true;
+      s.textContent = JSON.stringify({
+        autosize: true,
+        symbol: symbol || 'NASDAQ:SPY',
+        interval: 'D',
+        timezone: 'America/New_York',
+        theme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+        style: '1',
+        locale: 'en',
+        withdateranges: true,
+        range: '3M',
+        hide_side_toolbar: false,
+        allow_symbol_change: true,
+        studies: ['RSI@tv-basicstudies','MACD@tv-basicstudies','Volume@tv-basicstudies'],
+        show_popup_button: true,
+        popup_width: '1000',
+        popup_height: '650'
+      });
+      el.appendChild(w);
+      el.appendChild(s);
     });
-    wrap.appendChild(w);
-    wrap.appendChild(s);
   }
 
   document.getElementById('optsChainLoadBtn')?.addEventListener('click', () => {
@@ -6046,29 +6050,32 @@ function initWatchlist() {
     `).join('');
 
     if (!list.length) return;
+    resetLazyTV('tv-wl-compare');
     tvWrap.innerHTML = '';
-    const widget = document.createElement('div');
-    widget.className = 'tradingview-widget-container__widget';
-    widget.style.height = '100%';
-    const script = document.createElement('script');
-    script.type  = 'text/javascript';
-    script.src   = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
-    script.async = true;
-    script.textContent = JSON.stringify({
-      symbols: list.slice(0, 5).map(item => [item.symbol, `${item.symbol}|12M`]),
-      chartOnly: false,
-      width: '100%',
-      height: 460,
-      locale: 'en',
-      colorTheme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
-      autosize: true,
-      showVolume: false,
-      chartType: 'area',
-      lineWidth: 2,
-      dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M']
+    lazyTV('tv-wl-compare', (el) => {
+      const widget = document.createElement('div');
+      widget.className = 'tradingview-widget-container__widget';
+      widget.style.height = '100%';
+      const script = document.createElement('script');
+      script.type  = 'text/javascript';
+      script.src   = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+      script.async = true;
+      script.textContent = JSON.stringify({
+        symbols: list.slice(0, 5).map(item => [item.symbol, `${item.symbol}|12M`]),
+        chartOnly: false,
+        width: '100%',
+        height: 460,
+        locale: 'en',
+        colorTheme: document.documentElement.dataset.theme === 'light' ? 'light' : 'dark',
+        autosize: true,
+        showVolume: false,
+        chartType: 'area',
+        lineWidth: 2,
+        dateRanges: ['1d|1','1m|30','3m|60','12m|1D','60m|1W','all|1M']
+      });
+      el.appendChild(widget);
+      el.appendChild(script);
     });
-    tvWrap.appendChild(widget);
-    tvWrap.appendChild(script);
   }
 
   // ── Screener widget ────────────────────────────────────────────────────────
