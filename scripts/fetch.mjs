@@ -16,6 +16,63 @@ import { LAYER_WEIGHTS } from '../src/registry.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'docs', 'data');
 
+// How many months at the tail of the 30-year backtest to recompute fresh on
+// every run. Anything older than this essentially never changes (historical
+// FRED revisions beyond ~2 years are negligible), so we reuse the cached value.
+const BACKTEST_RECENT_MONTHS = 36;
+const BACKTEST_TOTAL_MONTHS  = 360;
+const BACKTEST_WINDOW_MONTHS = 60;
+
+// Build the 30-year backtest, reusing cached older entries and only recomputing
+// the most recent BACKTEST_RECENT_MONTHS. Falls back to a full recompute when
+// the cache is missing or malformed. The returned array has the exact same
+// shape and ascending date ordering that buildHistoryFromSeries produces, so
+// downstream consumers (evaluateBacktest, outOfSampleStudy, weightStudy,
+// robustnessStudy) see no contract change.
+async function buildBacktestCached(rawData, registry, cacheFile) {
+  // Always recompute the recent tail fresh.
+  const recent = buildHistoryFromSeries(rawData, registry, {
+    historyMonths: BACKTEST_RECENT_MONTHS,
+    windowMonths: BACKTEST_WINDOW_MONTHS,
+  });
+
+  // The oldest fresh date — cached entries on/after this are superseded.
+  const recentCutoff = recent.length ? recent[0].date : null;
+
+  let cached = null;
+  try {
+    const parsed = JSON.parse(await fs.readFile(cacheFile, 'utf8'));
+    if (Array.isArray(parsed) && parsed.every(e => e && typeof e.date === 'string')) {
+      cached = parsed;
+    }
+  } catch {
+    // Missing or unreadable cache → full recompute below.
+  }
+
+  if (!cached || recentCutoff === null) {
+    console.log('Backtest cache: none usable — full recompute of 30-year backtest');
+    return buildHistoryFromSeries(rawData, registry, {
+      historyMonths: BACKTEST_TOTAL_MONTHS,
+      windowMonths: BACKTEST_WINDOW_MONTHS,
+    });
+  }
+
+  // Reuse only cached entries strictly older than the freshly recomputed tail.
+  const reused = cached.filter(e => e.date < recentCutoff);
+  const byDate = new Map();
+  for (const e of reused) byDate.set(e.date, e);
+  for (const e of recent) byDate.set(e.date, e); // fresh wins on any overlap
+
+  let merged = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+  // Keep the same ~360-month span the full recompute would yield, so the array
+  // length/window the downstream studies see stays stable run-to-run.
+  if (merged.length > BACKTEST_TOTAL_MONTHS) {
+    merged = merged.slice(merged.length - BACKTEST_TOTAL_MONTHS);
+  }
+  console.log(`Backtest cache: reused ${reused.length} cached entries + recomputed ${recent.length} recent → ${merged.length} total`);
+  return merged;
+}
+
 // Compute a spread series from two source series, matched by YYYY-MM.
 function computeSpread(series10y, series3m) {
   const map3m = new Map(series3m.map(p => [p.date.slice(0, 7), p.value]));
@@ -84,8 +141,9 @@ async function main() {
   await fs.writeFile(path.join(DATA_DIR, 'history.json'), JSON.stringify(history, null, 2));
 
   console.log('Building 30-year backtest...');
-  const backtest = buildHistoryFromSeries(rawData, REGISTRY, { historyMonths: 360, windowMonths: 60 });
-  await fs.writeFile(path.join(DATA_DIR, 'backtest.json'), JSON.stringify(backtest));
+  const backtestFile = path.join(DATA_DIR, 'backtest.json');
+  const backtest = await buildBacktestCached(rawData, REGISTRY, backtestFile);
+  await fs.writeFile(backtestFile, JSON.stringify(backtest));
 
   // Model validation: score the backtest replay against NBER recession dates.
   const validation = {
