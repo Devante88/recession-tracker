@@ -74,6 +74,16 @@ export function normalizeIndicator(series, indicator) {
   }
 
   const { threshold, direction } = indicator;
+
+  // Quarterly staleness check: flag if latest data point is > 120 days old
+  let stale = false;
+  if (indicator.frequency === 'quarterly') {
+    const latestDate = series[series.length - 1]?.date;
+    if (latestDate) {
+      const daysDiff = (Date.now() - new Date(latestDate).getTime()) / 86400000;
+      if (daysDiff > 120) stale = true;
+    }
+  }
   let normalized;
 
   let normMean = null;
@@ -119,7 +129,7 @@ export function normalizeIndicator(series, indicator) {
     anomaly = Math.abs(latestChange - cm) > 1.5 * cs;
   }
 
-  return { latest: last, levelScore, momentumScore: momentum, score: blendedScore, series: normalized, percentileRank, anomaly, norm_mean: normMean, norm_std: normStd };
+  return { latest: last, levelScore, momentumScore: momentum, score: blendedScore, series: normalized, percentileRank, anomaly, norm_mean: normMean, norm_std: normStd, stale };
 }
 
 /**
@@ -148,8 +158,10 @@ export function computeLayerScores(indicators) {
   }
   const scores = {};
   for (const [layer, items] of Object.entries(grouped)) {
-    const weightSum = items.reduce((a, b) => a + b.weight, 0) || 1;
-    const weighted  = items.reduce((a, b) => a + (b.score || 0) * b.weight, 0);
+    // Stale quarterly indicators contribute at 50% of their weight
+    const effectiveWeight = item => item.stale ? item.weight * 0.5 : item.weight;
+    const weightSum = items.reduce((a, b) => a + effectiveWeight(b), 0) || 1;
+    const weighted  = items.reduce((a, b) => a + (b.score || 0) * effectiveWeight(b), 0);
     scores[layer] = Number(((weighted / weightSum) * 100).toFixed(1));
   }
   return scores;
@@ -290,6 +302,7 @@ export function buildSnapshot(normalizedIndicators, asOfDate, { gpr = null } = {
         ? Number((x.momentumScore * 100).toFixed(1)) : null,
       percentile_rank: x.percentileRank ?? null,
       anomaly:         x.anomaly ?? false,
+      stale:           x.stale ?? false,
       alert:           alertState((x.score || 0) * 100),
       threshold:       x.threshold,
       direction:       x.direction,
