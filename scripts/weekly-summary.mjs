@@ -16,13 +16,13 @@ async function readJson(file) {
   }
 }
 
-function alertEmoji(state) {
+export function alertEmoji(state) {
   if (state === 'RED')    return '🔴';
   if (state === 'YELLOW') return '🟡';
   return '🟢';
 }
 
-function alertColor(state) {
+export function alertColor(state) {
   if (state === 'RED')    return '#ff7a7a';
   if (state === 'YELLOW') return '#f1c84a';
   return '#2ddc8c';
@@ -37,29 +37,15 @@ const LAYER_NAMES = {
   global:         'Global'
 };
 
-async function main() {
-  // Only run on Mondays
-  if (new Date().getUTCDay() !== 1) {
-    console.log('Not Monday — skipping weekly summary');
-    process.exit(0);
-  }
+// The weekly digest only goes out on Mondays (UTC). Returns true only when the
+// given date falls on a Monday. Defaults to "now".
+export function shouldSendWeekly(date = new Date()) {
+  return date.getUTCDay() === 1;
+}
 
-  const apiKey  = process.env.RESEND_API_KEY;
-  const toEmail = process.env.ALERT_EMAIL;
-
-  if (!apiKey || !toEmail) {
-    console.log('RESEND_API_KEY or ALERT_EMAIL not set — skipping weekly summary');
-    process.exit(0);
-  }
-
-  const current = await readJson(path.join(DATA_DIR, 'current.json'));
-  if (!current) {
-    console.log('No current.json found — skipping weekly summary');
-    process.exit(0);
-  }
-
-  const narrative = await readJson(path.join(DATA_DIR, 'narrative.json'));
-
+// Build the weekly summary email HTML from a current snapshot (and optional
+// narrative). Pure: no I/O, no env access — safe to unit test.
+export function buildWeeklyHtml(current, narrative) {
   const composite = current.composite || {};
   const layers    = current.layers || {};
   const factors   = (current.factor_contributions || []).slice(0, 3);
@@ -175,6 +161,40 @@ async function main() {
 </body>
 </html>`;
 
+  return htmlBody;
+}
+
+async function main() {
+  // Only run on Mondays
+  if (!shouldSendWeekly()) {
+    console.log('Not Monday — skipping weekly summary');
+    process.exit(0);
+  }
+
+  const apiKey  = process.env.RESEND_API_KEY;
+  const toEmail = process.env.ALERT_EMAIL;
+
+  if (!apiKey || !toEmail) {
+    console.log('RESEND_API_KEY or ALERT_EMAIL not set — skipping weekly summary');
+    process.exit(0);
+  }
+
+  const current = await readJson(path.join(DATA_DIR, 'current.json'));
+  if (!current) {
+    console.log('No current.json found — skipping weekly summary');
+    process.exit(0);
+  }
+
+  const narrative = await readJson(path.join(DATA_DIR, 'narrative.json'));
+
+  const composite = current.composite || {};
+  const alert     = composite.alert || 'GREEN';
+  const score     = composite.score ?? '—';
+  const emoji     = alertEmoji(alert);
+  const asOf      = current.as_of || new Date().toISOString().slice(0, 10);
+
+  const htmlBody = buildWeeklyHtml(current, narrative);
+
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -199,4 +219,6 @@ async function main() {
   console.log('Weekly summary email sent:', data.id);
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch(err => { console.error(err); process.exit(1); });
+}

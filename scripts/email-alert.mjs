@@ -16,44 +16,29 @@ async function readJson(file) {
   }
 }
 
-function alertEmoji(state) {
+export function alertEmoji(state) {
   if (state === 'RED')    return '🔴';
   if (state === 'YELLOW') return '🟡';
   return '🟢';
 }
 
-function alertColor(state) {
+export function alertColor(state) {
   if (state === 'RED')    return '#ff7a7a';
   if (state === 'YELLOW') return '#f1c84a';
   return '#2ddc8c';
 }
 
-async function main() {
-  const apiKey = process.env.RESEND_API_KEY;
-  const toEmail = process.env.ALERT_EMAIL;
+// True only when the composite alert state actually differs from the previous
+// snapshot — the gate that decides whether an alert email is worth sending.
+export function stateChanged(current, previous) {
+  return current?.composite?.alert !== previous?.composite?.alert;
+}
 
-  if (!apiKey || !toEmail) {
-    console.log('RESEND_API_KEY or ALERT_EMAIL not set — skipping email alert');
-    process.exit(0);
-  }
-
-  const current  = await readJson(path.join(DATA_DIR, 'current.json'));
-  const previous = await readJson(path.join(DATA_DIR, 'previous.json'));
-
-  if (!current) {
-    console.log('No current.json found — skipping email alert');
-    process.exit(0);
-  }
-
+// Build the alert email HTML from a current snapshot (and optional previous).
+// Pure: no I/O, no env access — safe to unit test.
+export function buildAlertEmailHtml(current, previous) {
   const currentAlert  = current.composite?.alert;
   const previousAlert = previous?.composite?.alert;
-
-  if (currentAlert === previousAlert) {
-    console.log(`No alert state change (${currentAlert}) — skipping email`);
-    process.exit(0);
-  }
-
-  console.log(`Alert state changed: ${previousAlert ?? 'none'} → ${currentAlert}`);
 
   const score    = current.composite?.score ?? '—';
   const ensemble = current.composite?.ensemble_score ?? '—';
@@ -133,6 +118,39 @@ async function main() {
 </body>
 </html>`;
 
+  return htmlBody;
+}
+
+async function main() {
+  const apiKey = process.env.RESEND_API_KEY;
+  const toEmail = process.env.ALERT_EMAIL;
+
+  if (!apiKey || !toEmail) {
+    console.log('RESEND_API_KEY or ALERT_EMAIL not set — skipping email alert');
+    process.exit(0);
+  }
+
+  const current  = await readJson(path.join(DATA_DIR, 'current.json'));
+  const previous = await readJson(path.join(DATA_DIR, 'previous.json'));
+
+  if (!current) {
+    console.log('No current.json found — skipping email alert');
+    process.exit(0);
+  }
+
+  const currentAlert  = current.composite?.alert;
+  const previousAlert = previous?.composite?.alert;
+
+  if (!stateChanged(current, previous)) {
+    console.log(`No alert state change (${currentAlert}) — skipping email`);
+    process.exit(0);
+  }
+
+  console.log(`Alert state changed: ${previousAlert ?? 'none'} → ${currentAlert}`);
+
+  const emoji    = alertEmoji(currentAlert);
+  const htmlBody = buildAlertEmailHtml(current, previous);
+
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -157,4 +175,6 @@ async function main() {
   console.log('Email alert sent:', data.id);
 }
 
-main().catch(err => { console.error(err); process.exit(1); });
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch(err => { console.error(err); process.exit(1); });
+}
