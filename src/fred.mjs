@@ -17,7 +17,13 @@ export async function fetchFredSeries(fredId, apiKey, opts = {}) {
   for (let attempt = 1; attempt <= 3; attempt++) {
     let res;
     try {
-      res = await fetch(url, { headers });
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10_000);
+      try {
+        res = await fetch(url, { headers, signal: controller.signal });
+      } finally {
+        clearTimeout(timer);
+      }
     } catch (netErr) {
       if (attempt < 3) { await new Promise(r => setTimeout(r, attempt * 1500)); continue; }
       throw new Error(`FRED network error for ${fredId}: ${netErr.message}`);
