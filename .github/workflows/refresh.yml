@@ -1,16 +1,12 @@
 name: Refresh FRED Data
 
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/refresh.yml']
   schedule:
     # Target: 07:00 America/Chicago (Central), Mon–Fri. GitHub cron is UTC and
     # does NOT observe daylight saving, so we fire at both candidate UTC hours
     # and a guard step below skips whichever one isn't actually 07:00 Central.
     #   12:00 UTC = 07:00 CDT (Mar–Nov, daylight)
     #   13:00 UTC = 07:00 CST (Nov–Mar, standard)
-    # Note: fetch timeout added (10s/request) so failures resolve in <2 min.
     - cron: '0 12 * * 1-5'
     - cron: '0 13 * * 1-5'
   workflow_dispatch:
@@ -178,22 +174,23 @@ jobs:
             --description "Automated data refresh failed" 2>/dev/null || true
 
           # Build the issue body left-aligned so Markdown renders correctly.
-          cat > /tmp/alert-body.md <<EOF
-          The scheduled FRED data refresh failed.
+          cat > /tmp/alert-body.md <<'EOF'
+The scheduled FRED data refresh failed.
 
-          - **When:** ${TODAY} (07:00 Central scheduled run)
-          - **Failed run:** ${RUN_URL}
+- **When:** REPLACE_TODAY (07:00 Central scheduled run)
+- **Failed run:** REPLACE_RUN_URL
 
-          The dashboard keeps showing the last good snapshot and displays a
-          staleness banner until a refresh succeeds.
+The dashboard keeps showing the last good snapshot and displays a
+staleness banner until a refresh succeeds.
 
-          **Common causes**
-          1. \`FRED_API_KEY\` secret missing or expired — check the *Check FRED connectivity* step in the failed run.
-          2. FRED API quota exceeded or a temporary outage.
-          3. A series ID was retired — see the *Validate FRED series IDs* step.
+**Common causes**
+1. `FRED_API_KEY` secret missing or expired — check the *Check FRED connectivity* step in the failed run.
+2. FRED API quota exceeded or a temporary outage.
+3. A series ID was retired — see the *Validate FRED series IDs* step.
 
-          Re-run from the Actions tab once resolved. This issue auto-closes when a later refresh succeeds.
-          EOF
+Re-run from the Actions tab once resolved. This issue auto-closes when a later refresh succeeds.
+EOF
+          sed -i "s|REPLACE_TODAY|${TODAY}|g; s|REPLACE_RUN_URL|${RUN_URL}|g" /tmp/alert-body.md
 
           # Find an existing open alert to comment on instead of opening a new one.
           EXISTING=$(gh issue list --state open --label "$LABEL" \
@@ -204,8 +201,18 @@ jobs:
             gh issue comment "$EXISTING" --body "Refresh failed again on ${TODAY}. Run: ${RUN_URL}"
           else
             echo "Opening new alert issue"
-            gh issue create --title "⚠ Data refresh failed (${TODAY})" \
-              --label "$LABEL" --body-file /tmp/alert-body.md
+            # Create without --label first (avoids silent failure if label creation above failed),
+            # then add the label in a second step.
+            ISSUE_NUM=$(gh issue create \
+              --title "⚠ Data refresh failed (${TODAY})" \
+              --body-file /tmp/alert-body.md \
+              --json number --jq '.number' 2>/dev/null || echo "")
+            if [ -n "$ISSUE_NUM" ]; then
+              gh issue edit "$ISSUE_NUM" --add-label "$LABEL" 2>/dev/null || true
+              echo "Opened issue #${ISSUE_NUM}"
+            else
+              echo "::warning::Failed to create failure alert issue"
+            fi
           fi
 
   # When a refresh succeeds, close any open failure alert so the issue list
