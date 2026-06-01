@@ -62,32 +62,34 @@ jobs:
       - name: Run tests
         run: node --test tests/*.mjs
 
+      - name: Check FRED API key and connectivity (diagnostic only)
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
+          echo "API key set: $([ -n "$KEY" ] && echo yes || echo 'NO — FRED_API_KEY secret missing')"
+          echo "API key length: ${#KEY}"
+          if [ -z "$KEY" ]; then
+            echo "::warning::FRED_API_KEY secret is not set — fetch will fail. Add it under Settings → Secrets → Actions."
+            exit 0
+          fi
+          STATUS=$(curl -s -o /tmp/fred_probe.json -w "%{http_code}" \
+            -H "User-Agent: recession-tracker/1.0 (github.com/Devante88/recession-tracker)" \
+            "https://api.stlouisfed.org/fred/series/observations?series_id=T10Y3M&api_key=${KEY}&file_type=json&limit=1")
+          echo "FRED probe HTTP status: $STATUS"
+          if [ "$STATUS" = "200" ]; then
+            echo "FRED API reachable and key valid."
+          else
+            echo "::warning::FRED probe returned $STATUS — fetch may fail (transient block or bad key). Response:"
+            cat /tmp/fred_probe.json
+          fi
+
       - name: Validate FRED series IDs still return data
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
           export FRED_API_KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
           node scripts/validate-series.mjs
-
-      - name: Check FRED connectivity
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: |
-          KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
-          echo "API key set: $([ -n "$KEY" ] && echo yes || echo NO — secret missing)"
-          echo "API key length: ${#KEY}"
-          curl -s -o /tmp/fred_probe.json -w "%{http_code}" \
-            -H "User-Agent: recession-tracker/1.0 (github.com/Devante88/recession-tracker)" \
-            "https://api.stlouisfed.org/fred/series/observations?series_id=T10Y3M&api_key=${KEY}&file_type=json&limit=1" \
-            > /tmp/fred_status.txt
-          STATUS=$(cat /tmp/fred_status.txt)
-          echo "FRED probe HTTP status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
-            echo "::error::FRED API returned $STATUS — check FRED_API_KEY secret and API quota"
-            echo "Response body:"
-            cat /tmp/fred_probe.json
-            exit 1
-          fi
 
       - name: Archive prior snapshot for change tracking
         run: |
