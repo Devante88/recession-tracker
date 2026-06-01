@@ -10,6 +10,7 @@ on:
     # and a guard step below skips whichever one isn't actually 07:00 Central.
     #   12:00 UTC = 07:00 CDT (Mar–Nov, daylight)
     #   13:00 UTC = 07:00 CST (Nov–Mar, standard)
+    # Note: fetch timeout added (10s/request) so failures resolve in <2 min.
     - cron: '0 12 * * 1-5'
     - cron: '0 13 * * 1-5'
   workflow_dispatch:
