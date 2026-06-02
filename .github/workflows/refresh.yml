@@ -2,13 +2,13 @@ name: Refresh FRED Data
 
 on:
   schedule:
-    # Target: 07:00 America/Chicago (Central), Mon–Fri. GitHub cron is UTC and
+    # Target: 07:00 America/Chicago (Central), every day. GitHub cron is UTC and
     # does NOT observe daylight saving, so we fire at both candidate UTC hours
     # and a guard step below skips whichever one isn't actually 07:00 Central.
     #   12:00 UTC = 07:00 CDT (Mar–Nov, daylight)
     #   13:00 UTC = 07:00 CST (Nov–Mar, standard)
-    - cron: '0 12 * * 1-5'
-    - cron: '0 13 * * 1-5'
+    - cron: '0 12 * * *'
+    - cron: '0 13 * * *'
   workflow_dispatch:
     inputs:
       reason:
