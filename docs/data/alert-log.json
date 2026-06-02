@@ -1,8 +1,8 @@
 [
   {
-    "date": "2026-05-31",
-    "alert": "GREEN",
-    "score": 29.3,
-    "change": "YELLOW → GREEN"
+    "date": "2024-07-31",
+    "alert": "YELLOW",
+    "score": 53,
+    "change": "Initial reading: YELLOW at 53."
   }
 ]
