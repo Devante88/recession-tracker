@@ -177,24 +177,25 @@ jobs:
             --description "Automated data refresh failed" \
             --repo "$REPO" 2>/dev/null || true
 
-          # Build the issue body left-aligned so Markdown renders correctly.
-          cat > /tmp/alert-body.md <<'EOF'
-The scheduled FRED data refresh failed.
-
-- **When:** REPLACE_TODAY (07:00 Central scheduled run)
-- **Failed run:** REPLACE_RUN_URL
-
-The dashboard keeps showing the last good snapshot and displays a
-staleness banner until a refresh succeeds.
-
-**Common causes**
-1. `FRED_API_KEY` secret missing or expired — check the *Check FRED connectivity* step in the failed run.
-2. FRED API quota exceeded or a temporary outage.
-3. A series ID was retired — see the *Validate FRED series IDs* step.
-
-Re-run from the Actions tab once resolved. This issue auto-closes when a later refresh succeeds.
-EOF
-          sed -i "s|REPLACE_TODAY|${TODAY}|g; s|REPLACE_RUN_URL|${RUN_URL}|g" /tmp/alert-body.md
+          # Build the issue body with printf (one quoted line per arg). This stays
+          # fully indented inside the YAML block scalar and avoids heredoc-terminator
+          # issues, while producing left-aligned Markdown.
+          printf '%s\n' \
+            "The scheduled FRED data refresh failed." \
+            "" \
+            "- **When:** ${TODAY} (07:00 Central scheduled run)" \
+            "- **Failed run:** ${RUN_URL}" \
+            "" \
+            "The dashboard keeps showing the last good snapshot and displays a" \
+            "staleness banner until a refresh succeeds." \
+            "" \
+            "**Common causes**" \
+            "1. \`FRED_API_KEY\` secret missing or expired — check the *Check FRED connectivity* step in the failed run." \
+            "2. FRED API quota exceeded or a temporary outage." \
+            "3. A series ID was retired — see the *Validate FRED series IDs* step." \
+            "" \
+            "Re-run from the Actions tab once resolved. This issue auto-closes when a later refresh succeeds." \
+            > /tmp/alert-body.md
 
           # Find an existing open alert to comment on instead of opening a new one.
           EXISTING=$(gh issue list --state open --label "$LABEL" \
