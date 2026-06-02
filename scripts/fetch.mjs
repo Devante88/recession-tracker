@@ -103,9 +103,11 @@ async function main() {
   console.log(`\nFetch complete: ${successCount} succeeded, ${failureCount} failed`);
 
   const total = successCount + failureCount;
-  // Increased from 25% to 40% to allow FRED rate-limit scenarios to proceed
-  // Real failures (continuously degraded) are caught by freshness check below
-  if (successCount === 0 || failureCount / total > 0.40) {
+  // Increased from 40% to 50% tolerance to handle FRED rate-limit scenarios
+  // and transient API instability during recovery. Real failures (continuously
+  // degraded) are caught by freshness check below. This 50% is temporary and
+  // can be reduced to 40% once stability is confirmed.
+  if (successCount === 0 || failureCount / total > 0.50) {
     console.error(`Too many fetch failures (${failureCount}/${total}) — aborting.`);
     process.exit(1);
   }
@@ -162,7 +164,7 @@ async function main() {
   const oos = outOfSampleStudy(backtest);
   await fs.writeFile(path.join(DATA_DIR, 'oos.json'), JSON.stringify(oos, null, 2));
   if (oos.valid) {
-    console.log(`OOS AUC: train ${oos.auc.train} → test ${oos.auc.test}  |  RED cutoff ${oos.red.train.cutoff}: J ${oos.red.train.youden_j} → ${oos.red.test.youden_j} (gap ${oos.red.generaliz[...]
+    console.log(`OOS AUC: train ${oos.auc.train} → test ${oos.auc.test}  |  RED cutoff ${oos.red.train.cutoff}: J ${oos.red.train.youden_j} → ${oos.red.test.youden_j} (gap ${oos.red.generalization_gap})`);
   } else {
     console.log(`OOS study skipped: ${oos.reason}`);
   }
