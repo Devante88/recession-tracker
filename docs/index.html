@@ -3,6 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+    Content-Security-Policy: constrains where the page may load code, data, and
+    frames from, so an attacker who managed to inject markup can't pull script
+    from an arbitrary origin or exfiltrate to one. Scoped to the origins this
+    dashboard actually uses: self + jsdelivr (Chart.js fallback), TradingView
+    embeds, and the Kalshi recession-market iframe.
+    'unsafe-inline'/'unsafe-eval' are required by the TradingView widgets and
+    the inline Chart.js onerror fallback; object-src 'none' and base-uri 'self'
+    still close off plugin injection and <base>-tag hijacking. Note: a meta-tag
+    CSP cannot set frame-ancestors or X-Content-Type-Options — those need real
+    HTTP headers (custom domain + CDN) for clickjacking / MIME-sniffing defense.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://s3.tradingview.com https://*.tradingview.com;
+    style-src 'self' 'unsafe-inline' https://*.tradingview.com;
+    img-src 'self' data: https:;
+    font-src 'self' data: https://*.tradingview.com;
+    connect-src 'self' https://*.tradingview.com;
+    frame-src 'self' https://*.tradingview.com https://kalshi.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self'">
   <title>Recession Tracker</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1a2340">

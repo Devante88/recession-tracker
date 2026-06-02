@@ -16,9 +16,10 @@ on:
         required: false
         default: 'Manual weekend / off-schedule refresh'
 
+# Least privilege by default: the workflow token is read-only, and each job
+# that needs more (push a commit, file an issue) opts in explicitly below.
 permissions:
-  contents: write
-  issues: write
+  contents: read
 
 jobs:
   # Gate job: lets manual runs through always, but allows a scheduled run only
@@ -27,6 +28,8 @@ jobs:
   # is the DST shadow and is skipped here).
   gate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     outputs:
       proceed: ${{ steps.check.outputs.proceed }}
     steps:
@@ -52,10 +55,16 @@ jobs:
     needs: gate
     if: needs.gate.outputs.proceed == 'true'
     runs-on: ubuntu-latest
+    # Only this job writes — it commits the refreshed snapshot back to main.
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
+      # Actions pinned to immutable commit SHAs (not moving tags) so a
+      # compromised upstream release cannot silently alter what runs here.
+      # Dependabot (.github/dependabot.yml) proposes SHA bumps via PR.
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4.4.0
         with:
           node-version: '20'
 
@@ -139,6 +148,9 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
         run: node scripts/weekly-summary.mjs
+
+      - name: Validate snapshot integrity before publishing
+        run: node scripts/check-snapshot.mjs
 
       - name: Commit and push if changed
         run: |
