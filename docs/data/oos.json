@@ -3,7 +3,7 @@
   "reason": "insufficient recession coverage on both sides of the split",
   "cutoff": "2005-01",
   "train_months": 0,
-  "test_months": 36,
+  "test_months": 37,
   "train_recession_months": 0,
   "test_recession_months": 0
 }

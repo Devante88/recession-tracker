@@ -1327,13 +1327,17 @@ function renderDiffusion(snap) {
 // Daily indicators should refresh within a few days; monthly within ~45 days.
 // We classify each reporting indicator as fresh/stale by its own cadence and
 // surface a single health ratio so silent FRED outages become visible.
+// FRED dates each observation at the start of its period and publishes it weeks
+// later, so a current monthly series reads ~60 days old and a quarterly one
+// ~150 days. These windows allow ~two missed periods before flagging stale —
+// matches src/freshness.mjs slaDays so dashboard and pipeline agree.
 function freshnessSlaDays(freq) {
   switch ((freq || '').toLowerCase()) {
-    case 'daily':   return 5;
-    case 'weekly':  return 12;
-    case 'monthly': return 45;
-    case 'quarterly': return 135;
-    default:        return 45;
+    case 'daily':   return 10;
+    case 'weekly':  return 21;
+    case 'monthly': return 75;
+    case 'quarterly': return 200;
+    default:        return 75;
   }
 }
 

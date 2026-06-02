@@ -7,13 +7,21 @@
 
 // Maximum age (days) of the latest observation before a series is stale,
 // keyed by release cadence. Mirrors the dashboard's freshnessSlaDays.
+//
+// FRED dates an observation at the START of its period (April CPI is dated
+// 2026-04-01) but publishes it weeks later (mid-May). So a perfectly current
+// monthly series is routinely ~60 days "old" by this measure, and a quarterly
+// one ~150 days, purely from period-start dating + normal publication lag.
+// These windows therefore allow roughly two missed periods before flagging:
+// loose enough to tolerate normal lag, tight enough to still catch a genuine
+// silent discontinuation (e.g. a series frozen for many periods).
 export function slaDays(frequency) {
   switch ((frequency || '').toLowerCase()) {
-    case 'daily':     return 5;
-    case 'weekly':    return 12;
-    case 'monthly':   return 45;
-    case 'quarterly': return 135;
-    default:          return 45;
+    case 'daily':     return 10;
+    case 'weekly':    return 21;
+    case 'monthly':   return 75;
+    case 'quarterly': return 200;
+    default:          return 75;
   }
 }
 

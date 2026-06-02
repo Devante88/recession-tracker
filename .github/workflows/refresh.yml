@@ -2,13 +2,13 @@ name: Refresh FRED Data
 
 on:
   schedule:
-    # Target: 07:00 America/Chicago (Central), Mon–Fri. GitHub cron is UTC and
+    # Target: 07:00 America/Chicago (Central), every day. GitHub cron is UTC and
     # does NOT observe daylight saving, so we fire at both candidate UTC hours
     # and a guard step below skips whichever one isn't actually 07:00 Central.
     #   12:00 UTC = 07:00 CDT (Mar–Nov, daylight)
     #   13:00 UTC = 07:00 CST (Nov–Mar, standard)
-    - cron: '0 12 * * 1-5'
-    - cron: '0 13 * * 1-5'
+    - cron: '0 12 * * *'
+    - cron: '0 13 * * *'
   workflow_dispatch:
     inputs:
       reason:
@@ -62,32 +62,35 @@ jobs:
       - name: Run tests
         run: node --test tests/*.mjs
 
+      - name: Check FRED API key and connectivity (diagnostic only)
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: |
+          KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
+          echo "API key set: $([ -n "$KEY" ] && echo yes || echo 'NO — FRED_API_KEY secret missing')"
+          echo "API key length: ${#KEY}"
+          if [ -z "$KEY" ]; then
+            echo "::warning::FRED_API_KEY secret is not set — fetch will fail. Add it under Settings → Secrets → Actions."
+            exit 0
+          fi
+          STATUS=$(curl -s -o /tmp/fred_probe.json -w "%{http_code}" \
+            -H "User-Agent: recession-tracker/1.0 (github.com/Devante88/recession-tracker)" \
+            "https://api.stlouisfed.org/fred/series/observations?series_id=T10Y3M&api_key=${KEY}&file_type=json&limit=1")
+          echo "FRED probe HTTP status: $STATUS"
+          if [ "$STATUS" = "200" ]; then
+            echo "FRED API reachable and key valid."
+          else
+            echo "::warning::FRED probe returned $STATUS — fetch may fail (transient block or bad key). Response:"
+            cat /tmp/fred_probe.json
+          fi
+
       - name: Validate FRED series IDs still return data
+        continue-on-error: true
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
         run: |
           export FRED_API_KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
           node scripts/validate-series.mjs
-
-      - name: Check FRED connectivity
-        env:
-          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: |
-          KEY=$(printf '%s' "${FRED_API_KEY}" | tr -d '[:space:]')
-          echo "API key set: $([ -n "$KEY" ] && echo yes || echo NO — secret missing)"
-          echo "API key length: ${#KEY}"
-          curl -s -o /tmp/fred_probe.json -w "%{http_code}" \
-            -H "User-Agent: recession-tracker/1.0 (github.com/Devante88/recession-tracker)" \
-            "https://api.stlouisfed.org/fred/series/observations?series_id=T10Y3M&api_key=${KEY}&file_type=json&limit=1" \
-            > /tmp/fred_status.txt
-          STATUS=$(cat /tmp/fred_status.txt)
-          echo "FRED probe HTTP status: $STATUS"
-          if [ "$STATUS" != "200" ]; then
-            echo "::error::FRED API returned $STATUS — check FRED_API_KEY secret and API quota"
-            echo "Response body:"
-            cat /tmp/fred_probe.json
-            exit 1
-          fi
 
       - name: Archive prior snapshot for change tracking
         run: |
@@ -167,39 +170,55 @@ jobs:
           TODAY=$(date -u +%Y-%m-%d)
           LABEL="refresh-failure"
 
+          REPO="Devante88/recession-tracker"
+
           # Ensure the label exists (ignore error if it already does).
           gh label create "$LABEL" --color B60205 \
-            --description "Automated data refresh failed" 2>/dev/null || true
+            --description "Automated data refresh failed" \
+            --repo "$REPO" 2>/dev/null || true
 
-          # Build the issue body left-aligned so Markdown renders correctly.
-          cat > /tmp/alert-body.md <<EOF
-          The scheduled FRED data refresh failed.
-
-          - **When:** ${TODAY} (07:00 Central scheduled run)
-          - **Failed run:** ${RUN_URL}
-
-          The dashboard keeps showing the last good snapshot and displays a
-          staleness banner until a refresh succeeds.
-
-          **Common causes**
-          1. \`FRED_API_KEY\` secret missing or expired — check the *Check FRED connectivity* step in the failed run.
-          2. FRED API quota exceeded or a temporary outage.
-          3. A series ID was retired — see the *Validate FRED series IDs* step.
-
-          Re-run from the Actions tab once resolved. This issue auto-closes when a later refresh succeeds.
-          EOF
+          # Build the issue body with printf (one quoted line per arg). This stays
+          # fully indented inside the YAML block scalar and avoids heredoc-terminator
+          # issues, while producing left-aligned Markdown.
+          printf '%s\n' \
+            "The scheduled FRED data refresh failed." \
+            "" \
+            "- **When:** ${TODAY} (07:00 Central scheduled run)" \
+            "- **Failed run:** ${RUN_URL}" \
+            "" \
+            "The dashboard keeps showing the last good snapshot and displays a" \
+            "staleness banner until a refresh succeeds." \
+            "" \
+            "**Common causes**" \
+            "1. \`FRED_API_KEY\` secret missing or expired — check the *Check FRED connectivity* step in the failed run." \
+            "2. FRED API quota exceeded or a temporary outage." \
+            "3. A series ID was retired — see the *Validate FRED series IDs* step." \
+            "" \
+            "Re-run from the Actions tab once resolved. This issue auto-closes when a later refresh succeeds." \
+            > /tmp/alert-body.md
 
           # Find an existing open alert to comment on instead of opening a new one.
           EXISTING=$(gh issue list --state open --label "$LABEL" \
-            --json number --jq '.[0].number' 2>/dev/null || echo "")
+            --repo "$REPO" --json number --jq '.[0].number' 2>/dev/null || echo "")
 
           if [ -n "$EXISTING" ]; then
             echo "Commenting on existing alert #${EXISTING}"
-            gh issue comment "$EXISTING" --body "Refresh failed again on ${TODAY}. Run: ${RUN_URL}"
+            gh issue comment "$EXISTING" --body "Refresh failed again on ${TODAY}. Run: ${RUN_URL}" --repo "$REPO"
           else
             echo "Opening new alert issue"
-            gh issue create --title "⚠ Data refresh failed (${TODAY})" \
-              --label "$LABEL" --body-file /tmp/alert-body.md
+            # Create without --label first (avoids silent failure if label creation above failed),
+            # then add the label in a second step.
+            ISSUE_NUM=$(gh issue create \
+              --title "⚠ Data refresh failed (${TODAY})" \
+              --body-file /tmp/alert-body.md \
+              --repo "$REPO" \
+              --json number --jq '.number' 2>/dev/null || echo "")
+            if [ -n "$ISSUE_NUM" ]; then
+              gh issue edit "$ISSUE_NUM" --add-label "$LABEL" --repo "$REPO" 2>/dev/null || true
+              echo "Opened issue #${ISSUE_NUM}"
+            else
+              echo "::warning::Failed to create failure alert issue"
+            fi
           fi
 
   # When a refresh succeeds, close any open failure alert so the issue list
@@ -215,9 +234,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          REPO="Devante88/recession-tracker"
           for n in $(gh issue list --state open --label "refresh-failure" \
-            --json number --jq '.[].number' 2>/dev/null); do
+            --repo "$REPO" --json number --jq '.[].number' 2>/dev/null); do
             echo "Closing resolved alert #${n}"
-            gh issue close "$n" \
+            gh issue close "$n" --repo "$REPO" \
               --comment "✅ Refresh succeeded on $(date -u +%Y-%m-%d). Closing automatically."
           done

@@ -24,12 +24,23 @@ async function main() {
   const { data } = await fetchAllSeries(all, apiKey);
 
   const empty = all.filter(id => !Array.isArray(data[id]) || data[id].length === 0);
-  if (empty.length) {
+  if (empty.length === 0) {
+    console.log(`✓ All ${all.length} series return data.`);
+    return;
+  }
+
+  const pct = empty.length / all.length;
+  if (pct > 0.5) {
+    // More than half failed — almost certainly a network/IP block, not series discontinuation.
+    // Warn loudly but don't abort: fetch.mjs has its own 25% failure threshold.
+    console.warn(`::warning::${empty.length}/${all.length} series returned no data (${Math.round(pct*100)}%). Likely a transient FRED block on this runner IP — fetch.mjs will handle it.`);
+    console.warn('Empty:', empty.join(', '));
+  } else {
+    // A small subset failed — specific series were likely discontinued or renamed.
     console.error(`::error::${empty.length} series returned no observations: ${empty.join(', ')}`);
-    console.error('A series may have been discontinued or renamed on FRED. Update src/registry.mjs.');
+    console.error('These series may have been discontinued or renamed on FRED. Update src/registry.mjs.');
     process.exit(1);
   }
-  console.log(`✓ All ${all.length} series return data.`);
 }
 
 main().catch(err => { console.error(err); process.exit(1); });

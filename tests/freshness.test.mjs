@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import { slaDays, daysStale, checkSeries, buildFreshnessReport } from '../src/freshness.mjs';
 
 test('slaDays maps cadence to expected windows', () => {
-  assert.equal(slaDays('daily'), 5);
-  assert.equal(slaDays('weekly'), 12);
-  assert.equal(slaDays('monthly'), 45);
-  assert.equal(slaDays('quarterly'), 135);
-  assert.equal(slaDays('unknown'), 45);
+  assert.equal(slaDays('daily'), 10);
+  assert.equal(slaDays('weekly'), 21);
+  assert.equal(slaDays('monthly'), 75);
+  assert.equal(slaDays('quarterly'), 200);
+  assert.equal(slaDays('unknown'), 75);
 });
 
 test('daysStale computes whole-day difference', () => {

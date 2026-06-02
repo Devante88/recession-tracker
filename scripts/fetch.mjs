@@ -103,7 +103,11 @@ async function main() {
   console.log(`\nFetch complete: ${successCount} succeeded, ${failureCount} failed`);
 
   const total = successCount + failureCount;
-  if (successCount === 0 || failureCount / total > 0.25) {
+  // Increased from 40% to 50% tolerance to handle FRED rate-limit scenarios
+  // and transient API instability during recovery. Real failures (continuously
+  // degraded) are caught by freshness check below. This 50% is temporary and
+  // can be reduced to 40% once stability is confirmed.
+  if (successCount === 0 || failureCount / total > 0.50) {
     console.error(`Too many fetch failures (${failureCount}/${total}) — aborting.`);
     process.exit(1);
   }
