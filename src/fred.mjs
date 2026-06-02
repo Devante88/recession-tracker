@@ -76,6 +76,17 @@ export async function fetchFredSeries(fredId, apiKey, opts = {}) {
  * Fetch all series with serial throttling. FRED allows 120 req/min;
  * serial requests with 600ms inter-request delay respects that ceiling.
  * Returns { data, successCount, failureCount }.
+ * 
+ * Retry strategy per series:
+ * - 5 attempts with exponential backoff (1s → 2s → 4s → 8s → 16s)
+ * - 429 rate-limit errors: backoff and retry
+ * - 4xx permanent errors (401, 404, etc): skip (return empty array)
+ * - 5xx transient errors (502, 503, etc): retry with backoff
+ * - Network timeouts (15s per request): retry with backoff
+ * 
+ * Failure tolerance: Job succeeds if <50% of series fail
+ * (increased from 40% for resilience during FRED API instability)
+ * Real data degradation caught by freshness SLA check (15% threshold)
  */
 export async function fetchAllSeries(fredIds, apiKey, { delayMs = 600 } = {}) {
   const data = {};
@@ -95,7 +106,8 @@ export async function fetchAllSeries(fredIds, apiKey, { delayMs = 600 } = {}) {
       console.error(`  ✗ ${id}: ${err.message}`);
     }
     
-    // Throttle between requests to respect rate limits
+    // Throttle between requests to respect FRED's 120 req/min limit (~500ms minimum)
+    // Using 600ms provides safety margin for processing overhead
     if (i < fredIds.length - 1 && delayMs > 0) {
       await new Promise(r => setTimeout(r, delayMs));
     }
