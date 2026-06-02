@@ -1,9 +1,6 @@
 name: Refresh FRED Data
 
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/refresh.yml']  # temporary: fire a live refresh on the freshness-SLA fix
   schedule:
     # Target: 07:00 America/Chicago (Central), every day. GitHub cron is UTC and
     # does NOT observe daylight saving, so we fire at both candidate UTC hours
