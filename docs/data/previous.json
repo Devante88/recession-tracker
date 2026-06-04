@@ -1,161 +1,156 @@
 {
-  "as_of": "2026-05-19",
-  "generated_at": "2026-05-26T17:36:41.165Z",
+  "as_of": "2026-06-02",
+  "generated_at": "2026-06-02T17:42:36.582Z",
   "composite": {
-    "score": 29.3,
-    "alert": "GREEN",
+    "score": 36.9,
+    "alert": "YELLOW",
     "rating": 4,
     "confidence": 1,
-    "recession_probability_12mo": 0.244,
+    "recession_probability_12mo": 0.221,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.58,
-    "ensemble_score": 29
+    "yield_curve_spread": 0.69,
+    "ensemble_score": 23.5
   },
   "geopolitical": {
-    "score": 20.2,
+    "score": 0,
     "flag": "CALM",
-    "source": "GPR",
-    "gpr": {
-      "value": 96.4,
-      "date": "2026-05-01",
-      "score": 20.2,
-      "flag": "CALM"
-    },
+    "source": "market-proxy",
+    "gpr": null,
     "market": {
-      "score": 7.5,
+      "score": 0,
       "flag": "CALM",
       "channels": [
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 16.8,
-          "display": "16.8",
+          "value": 16.05,
+          "display": "16.1",
           "sub_score": 0,
           "firing": false
         },
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 3.45,
-          "display": "3.45%",
+          "value": 2.72,
+          "display": "2.72%",
           "sub_score": 0,
           "firing": false
         },
         {
           "fred_id": "DTWEXBGS",
           "name": "Safe-haven USD",
-          "value": 117,
-          "display": "117.0",
-          "sub_score": 37.5,
+          "value": 118.8783,
+          "display": "118.9",
+          "sub_score": 0,
           "firing": false
         }
       ],
       "firing": []
     },
-    "corroboration": "calm",
-    "note": "Headline = Caldara–Iacoviello GPR index (news-based). Market channels (VIX + credit + USD) shown as corroboration. Separate from the recession composite."
+    "corroboration": null,
+    "note": "Market-transmitted proxy (VIX + credit + safe-haven USD); GPR index not available. Separate from the recession composite."
   },
   "factor_contributions": [
+    {
+      "name": "Sahm Rule (Real-Time)",
+      "fred_id": "SAHMREALTIME",
+      "layer": "labor",
+      "score": 14.9,
+      "contrib": -1.53
+    },
     {
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
-      "score": 6.3,
-      "contrib": -2.565
+      "score": 19.8,
+      "contrib": -1.508
     },
     {
       "name": "Payroll Employment",
       "fred_id": "PAYEMS",
       "layer": "labor",
-      "score": 0.5,
-      "contrib": -1.725
-    },
-    {
-      "name": "CPI All Items YoY",
-      "fred_id": "CPIAUCSL",
-      "layer": "inflation",
-      "score": 1.5,
-      "contrib": -1.357
-    },
-    {
-      "name": "Core CPI YoY",
-      "fred_id": "CPILFESL",
-      "layer": "inflation",
-      "score": 2,
-      "contrib": -1.344
-    },
-    {
-      "name": "Real GDP",
-      "fred_id": "GDPC1",
-      "layer": "real_economy",
-      "score": 0.2,
-      "contrib": -1.234
-    },
-    {
-      "name": "Fed Funds Rate",
-      "fred_id": "FEDFUNDS",
-      "layer": "inflation",
-      "score": 6.9,
-      "contrib": -1.206
-    },
-    {
-      "name": "Sahm Rule (Real-Time)",
-      "fred_id": "SAHMREALTIME",
-      "layer": "labor",
-      "score": 22.5,
-      "contrib": -1.197
-    },
-    {
-      "name": "UMich Consumer Sentiment",
-      "fred_id": "UMCSENT",
-      "layer": "labor",
-      "score": 97.1,
-      "contrib": 1.119
+      "score": 15.1,
+      "contrib": -1.217
     },
     {
       "name": "Unemployment Rate",
       "fred_id": "UNRATE",
       "layer": "labor",
-      "score": 81,
-      "contrib": 1.081
+      "score": 17.8,
+      "contrib": -1.124
+    },
+    {
+      "name": "CPI All Items YoY",
+      "fred_id": "CPIAUCSL",
+      "layer": "inflation",
+      "score": 85,
+      "contrib": 0.98
+    },
+    {
+      "name": "Core CPI YoY",
+      "fred_id": "CPILFESL",
+      "layer": "inflation",
+      "score": 85,
+      "contrib": 0.98
+    },
+    {
+      "name": "PCE Price Index",
+      "fred_id": "PCEPI",
+      "layer": "inflation",
+      "score": 85,
+      "contrib": 0.98
+    },
+    {
+      "name": "Avg Hourly Earnings",
+      "fred_id": "CES0500000003",
+      "layer": "inflation",
+      "score": 85,
+      "contrib": 0.98
     },
     {
       "name": "Chicago Fed NFCI",
       "fred_id": "NFCI",
       "layer": "financial_lead",
-      "score": 14.7,
-      "contrib": -1.036
+      "score": 15,
+      "contrib": -0.873
+    },
+    {
+      "name": "Baa-10Y Credit Spread",
+      "fred_id": "BAA10YM",
+      "layer": "financial_lead",
+      "score": 24.3,
+      "contrib": -0.855
     }
   ],
   "layers": {
     "financial_lead": {
-      "score": 22.8,
+      "score": 22.7,
       "alert": "GREEN",
       "weight": 0.27
     },
     "labor": {
-      "score": 38.2,
+      "score": 36.5,
       "alert": "YELLOW",
       "weight": 0.22
     },
     "inflation": {
-      "score": 22.8,
-      "alert": "GREEN",
+      "score": 74.5,
+      "alert": "RED",
       "weight": 0.14
     },
     "real_economy": {
-      "score": 28.8,
-      "alert": "GREEN",
+      "score": 34.7,
+      "alert": "YELLOW",
       "weight": 0.18
     },
     "micro": {
-      "score": 38.7,
+      "score": 34.6,
       "alert": "YELLOW",
       "weight": 0.09
     },
     "global": {
-      "score": 29.3,
-      "alert": "GREEN",
+      "score": 30,
+      "alert": "YELLOW",
       "weight": 0.1
     }
   },
@@ -166,14 +161,15 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
-      "weight": 0.2172,
-      "latest_value": 0.58,
-      "latest_date": "2026-05-18",
-      "score": 6.3,
-      "level_score": 8.9,
-      "momentum_score": 0,
-      "percentile_rank": 13,
+      "weight": 0.1848,
+      "latest_value": 0.69,
+      "latest_date": "2026-06-01",
+      "score": 19.8,
+      "level_score": 6,
+      "momentum_score": 52,
+      "percentile_rank": 41,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 0,
       "direction": "direct",
@@ -182,100 +178,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": -0.3867
+          "date": "2024-07-31",
+          "value": -1.32
         },
         {
-          "date": "2024-07-01",
-          "value": 0.4223
+          "date": "2024-08-30",
+          "value": -1.3
         },
         {
-          "date": "2024-08-01",
-          "value": -1.839
+          "date": "2024-09-30",
+          "value": -0.92
         },
         {
-          "date": "2024-09-01",
-          "value": -0.0116
+          "date": "2024-10-31",
+          "value": -0.36
         },
         {
-          "date": "2024-10-01",
-          "value": -1.3497
+          "date": "2024-11-29",
+          "value": -0.4
         },
         {
-          "date": "2024-11-01",
-          "value": 1.1303
+          "date": "2024-12-31",
+          "value": 0.21
         },
         {
-          "date": "2024-12-01",
-          "value": -0.7465
+          "date": "2025-01-31",
+          "value": 0.27
         },
         {
-          "date": "2025-01-01",
-          "value": 0.1616
+          "date": "2025-02-28",
+          "value": -0.08
         },
         {
-          "date": "2025-02-01",
-          "value": -1.5587
+          "date": "2025-03-31",
+          "value": -0.09
         },
         {
-          "date": "2025-03-01",
-          "value": -0.5331
+          "date": "2025-04-30",
+          "value": -0.14
         },
         {
-          "date": "2025-04-01",
-          "value": -0.2472
+          "date": "2025-05-30",
+          "value": 0.05
         },
         {
-          "date": "2025-05-01",
-          "value": 0.0845
+          "date": "2025-06-30",
+          "value": -0.17
         },
         {
-          "date": "2025-06-01",
-          "value": 0.3322
+          "date": "2025-07-31",
+          "value": -0.04
         },
         {
-          "date": "2025-07-01",
-          "value": -1.3246
+          "date": "2025-08-29",
+          "value": 0
         },
         {
-          "date": "2025-08-01",
-          "value": -0.2985
+          "date": "2025-09-30",
+          "value": 0.14
         },
         {
-          "date": "2025-09-01",
-          "value": -1.5534
+          "date": "2025-10-31",
+          "value": 0.22
         },
         {
-          "date": "2025-10-01",
-          "value": 0.9672
+          "date": "2025-11-28",
+          "value": 0.14
         },
         {
-          "date": "2025-11-01",
-          "value": -0.7468
+          "date": "2025-12-31",
+          "value": 0.51
         },
         {
-          "date": "2025-12-01",
-          "value": 0.6985
+          "date": "2026-01-30",
+          "value": 0.59
         },
         {
-          "date": "2026-01-01",
-          "value": -1.7417
+          "date": "2026-02-27",
+          "value": 0.3
         },
         {
-          "date": "2026-02-01",
-          "value": -0.3083
+          "date": "2026-03-31",
+          "value": 0.6
         },
         {
-          "date": "2026-03-01",
-          "value": -0.9914
+          "date": "2026-04-30",
+          "value": 0.72
         },
         {
-          "date": "2026-04-01",
-          "value": 0.4535
+          "date": "2026-05-29",
+          "value": 0.76
         },
         {
-          "date": "2026-05-18",
-          "value": 0.58
+          "date": "2026-06-01",
+          "value": 0.69
         }
       ]
     },
@@ -285,14 +281,15 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
-      "weight": 0.1087,
+      "weight": 0.0924,
       "latest_value": 0.42,
-      "latest_date": "2026-05-18",
-      "score": 30,
+      "latest_date": "2026-06-01",
+      "score": 26.9,
       "level_score": 15.7,
-      "momentum_score": 63.3,
-      "percentile_rank": 33,
+      "momentum_score": 52.9,
+      "percentile_rank": 49,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 0,
       "direction": "direct",
@@ -301,99 +298,99 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": -1.1957
+          "date": "2024-07-31",
+          "value": -0.2
         },
         {
-          "date": "2024-07-01",
-          "value": 0.3299
+          "date": "2024-08-30",
+          "value": 0
         },
         {
-          "date": "2024-08-01",
-          "value": -0.499
+          "date": "2024-09-30",
+          "value": 0.15
         },
         {
-          "date": "2024-09-01",
-          "value": 1.104
+          "date": "2024-10-31",
+          "value": 0.12
         },
         {
-          "date": "2024-10-01",
-          "value": -0.9649
+          "date": "2024-11-29",
+          "value": 0.05
         },
         {
-          "date": "2024-11-01",
-          "value": 0.1259
+          "date": "2024-12-31",
+          "value": 0.33
         },
         {
-          "date": "2024-12-01",
-          "value": -1.3394
+          "date": "2025-01-31",
+          "value": 0.36
         },
         {
-          "date": "2025-01-01",
-          "value": 0.4545
+          "date": "2025-02-28",
+          "value": 0.25
         },
         {
-          "date": "2025-02-01",
-          "value": -0.1123
+          "date": "2025-03-31",
+          "value": 0.34
         },
         {
-          "date": "2025-03-01",
-          "value": 0.4721
+          "date": "2025-04-30",
+          "value": 0.57
         },
         {
-          "date": "2025-04-01",
-          "value": -0.3885
+          "date": "2025-05-30",
+          "value": 0.52
         },
         {
-          "date": "2025-05-01",
-          "value": -0.8447
+          "date": "2025-06-30",
+          "value": 0.52
         },
         {
-          "date": "2025-06-01",
-          "value": -0.2054
+          "date": "2025-07-31",
+          "value": 0.43
         },
         {
-          "date": "2025-07-01",
-          "value": -0.4522
+          "date": "2025-08-29",
+          "value": 0.64
         },
         {
-          "date": "2025-08-01",
-          "value": 0.9835
+          "date": "2025-09-30",
+          "value": 0.56
         },
         {
-          "date": "2025-09-01",
-          "value": -0.6484
+          "date": "2025-10-31",
+          "value": 0.51
         },
         {
-          "date": "2025-10-01",
-          "value": 0.314
+          "date": "2025-11-28",
+          "value": 0.55
         },
         {
-          "date": "2025-11-01",
-          "value": -1.5317
+          "date": "2025-12-31",
+          "value": 0.71
         },
         {
-          "date": "2025-12-01",
-          "value": 0.4017
+          "date": "2026-01-30",
+          "value": 0.74
         },
         {
-          "date": "2026-01-01",
-          "value": -0.523
+          "date": "2026-02-27",
+          "value": 0.59
         },
         {
-          "date": "2026-02-01",
-          "value": 0.9204
+          "date": "2026-03-31",
+          "value": 0.51
         },
         {
-          "date": "2026-03-01",
-          "value": -0.5075
+          "date": "2026-04-30",
+          "value": 0.52
         },
         {
-          "date": "2026-04-01",
-          "value": -0.3506
+          "date": "2026-05-29",
+          "value": 0.47
         },
         {
-          "date": "2026-05-18",
+          "date": "2026-06-01",
           "value": 0.42
         }
       ]
@@ -404,15 +401,16 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Corporate spread as a credit-stress proxy. Threshold calibrated to widening regimes.",
-      "weight": 0.145,
-      "latest_value": 2.22,
-      "latest_date": "2026-05-19",
-      "score": 30.1,
-      "level_score": 26.1,
-      "momentum_score": 39.6,
-      "percentile_rank": 40,
+      "weight": 0.1232,
+      "latest_value": 1.62,
+      "latest_date": "2026-05-01",
+      "score": 24.3,
+      "level_score": 13.7,
+      "momentum_score": 49,
+      "percentile_rank": 64,
       "anomaly": false,
-      "alert": "YELLOW",
+      "stale": false,
+      "alert": "GREEN",
       "threshold": 3,
       "direction": "inverse",
       "frequency": "monthly",
@@ -421,99 +419,99 @@
       "history": [
         {
           "date": "2024-06-01",
-          "value": 2.5436
+          "value": 1.51
         },
         {
           "date": "2024-07-01",
-          "value": 2.9972
+          "value": 1.59
         },
         {
           "date": "2024-08-01",
-          "value": 1.7799
+          "value": 1.73
         },
         {
           "date": "2024-09-01",
-          "value": 2.7594
+          "value": 1.7
         },
         {
           "date": "2024-10-01",
-          "value": 2.0476
+          "value": 1.53
         },
         {
           "date": "2024-11-01",
-          "value": 3.3567
+          "value": 1.42
         },
         {
           "date": "2024-12-01",
-          "value": 2.3755
+          "value": 1.41
         },
         {
           "date": "2025-01-01",
-          "value": 2.8358
+          "value": 1.45
         },
         {
           "date": "2025-02-01",
-          "value": 1.9507
+          "value": 1.47
         },
         {
           "date": "2025-03-01",
-          "value": 2.463
+          "value": 1.65
         },
         {
           "date": "2025-04-01",
-          "value": 2.6487
+          "value": 1.9
         },
         {
           "date": "2025-05-01",
-          "value": 2.7901
+          "value": 1.87
         },
         {
           "date": "2025-06-01",
-          "value": 2.9546
+          "value": 1.77
         },
         {
           "date": "2025-07-01",
-          "value": 2.0462
+          "value": 1.71
         },
         {
           "date": "2025-08-01",
-          "value": 2.6149
+          "value": 1.74
         },
         {
           "date": "2025-09-01",
-          "value": 1.9313
+          "value": 1.71
         },
         {
           "date": "2025-10-01",
-          "value": 3.2786
+          "value": 1.68
         },
         {
           "date": "2025-11-01",
-          "value": 2.3674
+          "value": 1.77
         },
         {
           "date": "2025-12-01",
-          "value": 3.1277
+          "value": 1.76
         },
         {
           "date": "2026-01-01",
-          "value": 1.8477
+          "value": 1.67
         },
         {
           "date": "2026-02-01",
-          "value": 2.5866
+          "value": 1.68
         },
         {
           "date": "2026-03-01",
-          "value": 2.2515
+          "value": 1.79
         },
         {
           "date": "2026-04-01",
-          "value": 2.9863
+          "value": 1.71
         },
         {
-          "date": "2026-05-19",
-          "value": 2.22
+          "date": "2026-05-01",
+          "value": 1.62
         }
       ]
     },
@@ -523,14 +521,15 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Broad financial conditions index. Positive = tighter than average.",
-      "weight": 0.1087,
-      "latest_value": -0.4,
-      "latest_date": "2026-05-15",
-      "score": 14.7,
-      "level_score": 0.1,
-      "momentum_score": 48.9,
-      "percentile_rank": 88,
+      "weight": 0.0924,
+      "latest_value": -0.51,
+      "latest_date": "2026-05-22",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 92,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 0.5,
       "direction": "inverse",
@@ -539,100 +538,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 0.2708
+          "date": "2024-06-28",
+          "value": -0.382
         },
         {
-          "date": "2024-07-01",
-          "value": -0.642
+          "date": "2024-07-26",
+          "value": -0.363
         },
         {
-          "date": "2024-08-01",
-          "value": -0.0292
+          "date": "2024-08-30",
+          "value": -0.393
         },
         {
-          "date": "2024-09-01",
-          "value": -0.3369
+          "date": "2024-09-27",
+          "value": -0.429
         },
         {
-          "date": "2024-10-01",
-          "value": 0.2655
+          "date": "2024-10-25",
+          "value": -0.446
         },
         {
-          "date": "2024-11-01",
-          "value": -0.0058
+          "date": "2024-11-29",
+          "value": -0.475
         },
         {
-          "date": "2024-12-01",
-          "value": -0.1631
+          "date": "2024-12-27",
+          "value": -0.484
         },
         {
-          "date": "2025-01-01",
-          "value": -0.2513
+          "date": "2025-01-31",
+          "value": -0.508
         },
         {
-          "date": "2025-02-01",
-          "value": -0.4442
+          "date": "2025-02-28",
+          "value": -0.48
         },
         {
-          "date": "2025-03-01",
-          "value": 0.2105
+          "date": "2025-03-28",
+          "value": -0.411
         },
         {
-          "date": "2025-04-01",
-          "value": -0.1723
+          "date": "2025-04-25",
+          "value": -0.392
         },
         {
-          "date": "2025-05-01",
-          "value": 0.3556
+          "date": "2025-05-30",
+          "value": -0.467
         },
         {
-          "date": "2025-06-01",
-          "value": -0.584
+          "date": "2025-06-27",
+          "value": -0.497
         },
         {
-          "date": "2025-07-01",
-          "value": 0.0038
+          "date": "2025-07-25",
+          "value": -0.519
         },
         {
-          "date": "2025-08-01",
-          "value": -0.5439
+          "date": "2025-08-29",
+          "value": -0.528
         },
         {
-          "date": "2025-09-01",
-          "value": 0.327
+          "date": "2025-09-26",
+          "value": -0.526
         },
         {
-          "date": "2025-10-01",
-          "value": -0.1123
+          "date": "2025-10-31",
+          "value": -0.513
         },
         {
-          "date": "2025-11-01",
-          "value": 0.1137
+          "date": "2025-11-28",
+          "value": -0.509
         },
         {
-          "date": "2025-12-01",
-          "value": -0.3689
+          "date": "2025-12-26",
+          "value": -0.536
         },
         {
-          "date": "2026-01-01",
-          "value": -0.3398
+          "date": "2026-01-30",
+          "value": -0.563
         },
         {
-          "date": "2026-02-01",
-          "value": -0.0494
+          "date": "2026-02-27",
+          "value": -0.507
         },
         {
-          "date": "2026-03-01",
-          "value": -0.0834
+          "date": "2026-03-27",
+          "value": -0.455
         },
         {
-          "date": "2026-04-01",
-          "value": 0.335
+          "date": "2026-04-24",
+          "value": -0.495
         },
         {
-          "date": "2026-05-15",
-          "value": -0.4
+          "date": "2026-05-22",
+          "value": -0.51
         }
       ]
     },
@@ -642,14 +641,15 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
-      "weight": 0.0725,
-      "latest_value": 16.8,
-      "latest_date": "2026-05-18",
-      "score": 21.3,
-      "level_score": 21.2,
-      "momentum_score": 21.4,
-      "percentile_rank": 44,
+      "weight": 0.0616,
+      "latest_value": 16.05,
+      "latest_date": "2026-06-01",
+      "score": 28.3,
+      "level_score": 19.3,
+      "momentum_score": 49.4,
+      "percentile_rank": 56,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 25,
       "direction": "inverse",
@@ -658,100 +658,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 21.4469
+          "date": "2024-07-31",
+          "value": 16.36
         },
         {
-          "date": "2024-07-01",
-          "value": 10.8408
+          "date": "2024-08-30",
+          "value": 15
         },
         {
-          "date": "2024-08-01",
-          "value": 17.4991
+          "date": "2024-09-30",
+          "value": 16.73
         },
         {
-          "date": "2024-09-01",
-          "value": 20.1041
+          "date": "2024-10-31",
+          "value": 23.16
         },
         {
-          "date": "2024-10-01",
-          "value": 21.2868
+          "date": "2024-11-29",
+          "value": 13.51
         },
         {
-          "date": "2024-11-01",
-          "value": 23.1589
+          "date": "2024-12-31",
+          "value": 17.35
         },
         {
-          "date": "2024-12-01",
-          "value": 11.5862
+          "date": "2025-01-31",
+          "value": 16.43
         },
         {
-          "date": "2025-01-01",
-          "value": 19.2858
+          "date": "2025-02-28",
+          "value": 19.63
         },
         {
-          "date": "2025-02-01",
-          "value": 10.957
+          "date": "2025-03-31",
+          "value": 22.28
         },
         {
-          "date": "2025-03-01",
-          "value": 27.8426
+          "date": "2025-04-30",
+          "value": 24.7
         },
         {
-          "date": "2025-04-01",
-          "value": 15.9612
+          "date": "2025-05-30",
+          "value": 18.57
         },
         {
-          "date": "2025-05-01",
-          "value": 25.1496
+          "date": "2025-06-30",
+          "value": 16.73
         },
         {
-          "date": "2025-06-01",
-          "value": 9.3305
+          "date": "2025-07-31",
+          "value": 16.72
         },
         {
-          "date": "2025-07-01",
-          "value": 18.9176
+          "date": "2025-08-29",
+          "value": 15.36
         },
         {
-          "date": "2025-08-01",
-          "value": 15.1413
+          "date": "2025-09-30",
+          "value": 16.28
         },
         {
-          "date": "2025-09-01",
-          "value": 23.9441
+          "date": "2025-10-31",
+          "value": 17.44
         },
         {
-          "date": "2025-10-01",
-          "value": 21.6347
+          "date": "2025-11-28",
+          "value": 16.35
         },
         {
-          "date": "2025-11-01",
-          "value": 16.2468
+          "date": "2025-12-31",
+          "value": 14.95
         },
         {
-          "date": "2025-12-01",
-          "value": 17.0399
+          "date": "2026-01-30",
+          "value": 17.44
         },
         {
-          "date": "2026-01-01",
-          "value": 11.09
+          "date": "2026-02-27",
+          "value": 19.86
         },
         {
-          "date": "2026-02-01",
-          "value": 24.9419
+          "date": "2026-03-31",
+          "value": 25.25
         },
         {
-          "date": "2026-03-01",
-          "value": 16.5942
+          "date": "2026-04-30",
+          "value": 16.89
         },
         {
-          "date": "2026-04-01",
-          "value": 27.2941
+          "date": "2026-05-29",
+          "value": 15.32
         },
         {
-          "date": "2026-05-18",
-          "value": 16.8
+          "date": "2026-06-01",
+          "value": 16.05
         }
       ]
     },
@@ -761,14 +761,15 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
-      "weight": 0.0725,
-      "latest_value": 3.45,
-      "latest_date": "2026-05-18",
-      "score": 18.5,
-      "level_score": 22.4,
-      "momentum_score": 9.5,
-      "percentile_rank": 15,
+      "weight": 0.0616,
+      "latest_value": 2.72,
+      "latest_date": "2026-06-01",
+      "score": 24.7,
+      "level_score": 13.9,
+      "momentum_score": 50,
+      "percentile_rank": 78,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 5,
       "direction": "inverse",
@@ -777,100 +778,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 2.7393
+          "date": "2024-07-31",
+          "value": 3.25
         },
         {
-          "date": "2024-07-01",
-          "value": 4.6014
+          "date": "2024-08-31",
+          "value": 3.17
         },
         {
-          "date": "2024-08-01",
-          "value": 3.4691
+          "date": "2024-09-30",
+          "value": 3.03
         },
         {
-          "date": "2024-09-01",
-          "value": 5.996
+          "date": "2024-10-31",
+          "value": 2.88
         },
         {
-          "date": "2024-10-01",
-          "value": 3.4062
+          "date": "2024-11-30",
+          "value": 2.74
         },
         {
-          "date": "2024-11-01",
-          "value": 4.7932
+          "date": "2024-12-31",
+          "value": 2.92
         },
         {
-          "date": "2024-12-01",
-          "value": 2.4929
+          "date": "2025-01-31",
+          "value": 2.68
         },
         {
-          "date": "2025-01-01",
-          "value": 4.6954
+          "date": "2025-02-28",
+          "value": 2.87
         },
         {
-          "date": "2025-02-01",
-          "value": 4.1192
+          "date": "2025-03-31",
+          "value": 3.55
         },
         {
-          "date": "2025-03-01",
-          "value": 5.1838
+          "date": "2025-04-30",
+          "value": 3.94
         },
         {
-          "date": "2025-04-01",
-          "value": 4.2409
+          "date": "2025-05-31",
+          "value": 3.32
         },
         {
-          "date": "2025-05-01",
-          "value": 3.3565
+          "date": "2025-06-30",
+          "value": 2.96
         },
         {
-          "date": "2025-06-01",
-          "value": 3.971
+          "date": "2025-07-31",
+          "value": 2.86
         },
         {
-          "date": "2025-07-01",
-          "value": 3.457
+          "date": "2025-08-31",
+          "value": 2.84
         },
         {
-          "date": "2025-08-01",
-          "value": 5.7003
+          "date": "2025-09-30",
+          "value": 2.8
         },
         {
-          "date": "2025-09-01",
-          "value": 3.7501
+          "date": "2025-10-31",
+          "value": 2.94
         },
         {
-          "date": "2025-10-01",
-          "value": 5.1508
+          "date": "2025-11-30",
+          "value": 2.92
         },
         {
-          "date": "2025-11-01",
-          "value": 2.359
+          "date": "2025-12-31",
+          "value": 2.81
         },
         {
-          "date": "2025-12-01",
-          "value": 4.6885
+          "date": "2026-01-31",
+          "value": 2.88
         },
         {
-          "date": "2026-01-01",
-          "value": 3.4443
+          "date": "2026-02-28",
+          "value": 3.12
         },
         {
-          "date": "2026-02-01",
-          "value": 5.6647
+          "date": "2026-03-31",
+          "value": 3.28
         },
         {
-          "date": "2026-03-01",
-          "value": 4.0451
+          "date": "2026-04-30",
+          "value": 2.83
         },
         {
-          "date": "2026-04-01",
-          "value": 4.1497
+          "date": "2026-05-31",
+          "value": 2.74
         },
         {
-          "date": "2026-05-18",
-          "value": 3.45
+          "date": "2026-06-01",
+          "value": 2.72
         }
       ]
     },
@@ -880,116 +881,117 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
-      "weight": 0.0705,
-      "latest_value": 2.35,
-      "latest_date": "2026-05-18",
-      "score": 29.7,
-      "level_score": 14.7,
-      "momentum_score": 64.5,
-      "percentile_rank": 48,
+      "weight": 0.0599,
+      "latest_value": 2.4,
+      "latest_date": "2026-06-01",
+      "score": 19.3,
+      "level_score": 6.4,
+      "momentum_score": 49.3,
+      "percentile_rank": 49,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1542,
-      "norm_std": 0.4462,
+      "norm_mean": 2.1488,
+      "norm_std": 0.3751,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 1.5478
+          "date": "2024-07-31",
+          "value": 2.24
         },
         {
-          "date": "2024-07-01",
-          "value": 2.2512
+          "date": "2024-08-30",
+          "value": 2.15
         },
         {
-          "date": "2024-08-01",
-          "value": 1.6834
+          "date": "2024-09-30",
+          "value": 2.18
         },
         {
-          "date": "2024-09-01",
-          "value": 2.9836
+          "date": "2024-10-31",
+          "value": 2.33
         },
         {
-          "date": "2024-10-01",
-          "value": 1.9062
+          "date": "2024-11-29",
+          "value": 2.26
         },
         {
-          "date": "2024-11-01",
-          "value": 2.5953
+          "date": "2024-12-31",
+          "value": 2.34
         },
         {
-          "date": "2024-12-01",
-          "value": 1.3615
+          "date": "2025-01-31",
+          "value": 2.42
         },
         {
-          "date": "2025-01-01",
-          "value": 2.2885
+          "date": "2025-02-28",
+          "value": 2.38
         },
         {
-          "date": "2025-02-01",
-          "value": 1.9878
+          "date": "2025-03-31",
+          "value": 2.38
         },
         {
-          "date": "2025-03-01",
-          "value": 2.6656
+          "date": "2025-04-30",
+          "value": 2.23
         },
         {
-          "date": "2025-04-01",
-          "value": 2.3105
+          "date": "2025-05-30",
+          "value": 2.34
         },
         {
-          "date": "2025-05-01",
-          "value": 1.9006
+          "date": "2025-06-30",
+          "value": 2.29
         },
         {
-          "date": "2025-06-01",
-          "value": 2.0087
+          "date": "2025-07-31",
+          "value": 2.39
         },
         {
-          "date": "2025-07-01",
-          "value": 1.6841
+          "date": "2025-08-29",
+          "value": 2.41
         },
         {
-          "date": "2025-08-01",
-          "value": 2.7735
+          "date": "2025-09-30",
+          "value": 2.36
         },
         {
-          "date": "2025-09-01",
-          "value": 2.0217
+          "date": "2025-10-31",
+          "value": 2.3
         },
         {
-          "date": "2025-10-01",
-          "value": 2.7677
+          "date": "2025-11-28",
+          "value": 2.23
         },
         {
-          "date": "2025-11-01",
-          "value": 1.3724
+          "date": "2025-12-31",
+          "value": 2.25
         },
         {
-          "date": "2025-12-01",
-          "value": 2.3269
+          "date": "2026-01-30",
+          "value": 2.36
         },
         {
-          "date": "2026-01-01",
-          "value": 1.6516
+          "date": "2026-02-27",
+          "value": 2.25
         },
         {
-          "date": "2026-02-01",
-          "value": 2.8206
+          "date": "2026-03-31",
+          "value": 2.3
         },
         {
-          "date": "2026-03-01",
-          "value": 2.1796
+          "date": "2026-04-30",
+          "value": 2.46
         },
         {
-          "date": "2026-04-01",
-          "value": 2.3085
+          "date": "2026-05-29",
+          "value": 2.38
         },
         {
-          "date": "2026-05-18",
-          "value": 2.35
+          "date": "2026-06-01",
+          "value": 2.4
         }
       ]
     },
@@ -999,116 +1001,117 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions.",
-      "weight": 0.0705,
-      "latest_value": 6850000,
-      "latest_date": "2026-05-15",
-      "score": 82.6,
-      "level_score": 88.4,
-      "momentum_score": 68.9,
-      "percentile_rank": 60,
+      "weight": 0.0599,
+      "latest_value": 6704383,
+      "latest_date": "2026-05-27",
+      "score": 16,
+      "level_score": 1.4,
+      "momentum_score": 50,
+      "percentile_rank": 26,
       "anomaly": false,
-      "alert": "RED",
+      "stale": false,
+      "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "weekly",
-      "norm_mean": 7192708.3333,
-      "norm_std": 674733.7116,
+      "norm_mean": 3961129.9935,
+      "norm_std": 2579773.3752,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 8348461.6538
+          "date": "2024-06-26",
+          "value": 7231163
         },
         {
-          "date": "2024-07-01",
-          "value": 6960191.1089
+          "date": "2024-07-31",
+          "value": 7178391
         },
         {
-          "date": "2024-08-01",
-          "value": 8045472.5468
+          "date": "2024-08-28",
+          "value": 7123238
         },
         {
-          "date": "2024-09-01",
-          "value": 6242007.0528
+          "date": "2024-09-25",
+          "value": 7080059
         },
         {
-          "date": "2024-10-01",
-          "value": 7055364.158
+          "date": "2024-10-30",
+          "value": 7013490
         },
         {
-          "date": "2024-11-01",
-          "value": 6908848.9499
+          "date": "2024-11-27",
+          "value": 6905140
         },
         {
-          "date": "2024-12-01",
-          "value": 7647429.5468
+          "date": "2024-12-25",
+          "value": 6885963
         },
         {
-          "date": "2025-01-01",
-          "value": 7879983.5477
+          "date": "2025-01-29",
+          "value": 6818186
         },
         {
-          "date": "2025-02-01",
-          "value": 6801589.9461
+          "date": "2025-02-26",
+          "value": 6766101
         },
         {
-          "date": "2025-03-01",
-          "value": 7244298.2443
+          "date": "2025-03-26",
+          "value": 6740253
         },
         {
-          "date": "2025-04-01",
-          "value": 6063997.917
+          "date": "2025-04-30",
+          "value": 6709277
         },
         {
-          "date": "2025-05-01",
-          "value": 8063067.7495
+          "date": "2025-05-28",
+          "value": 6673244
         },
         {
-          "date": "2025-06-01",
-          "value": 6896170.385
+          "date": "2025-06-25",
+          "value": 6662200
         },
         {
-          "date": "2025-07-01",
-          "value": 8405768.6056
+          "date": "2025-07-30",
+          "value": 6642578
         },
         {
-          "date": "2025-08-01",
-          "value": 6233647.2244
+          "date": "2025-08-27",
+          "value": 6603384
         },
         {
-          "date": "2025-09-01",
-          "value": 7329790.325
+          "date": "2025-09-24",
+          "value": 6608395
         },
         {
-          "date": "2025-10-01",
-          "value": 6318099.5166
+          "date": "2025-10-29",
+          "value": 6587034
         },
         {
-          "date": "2025-11-01",
-          "value": 7841648.1649
+          "date": "2025-11-26",
+          "value": 6552419
         },
         {
-          "date": "2025-12-01",
-          "value": 7544205.9805
+          "date": "2025-12-31",
+          "value": 6640618
         },
         {
-          "date": "2026-01-01",
-          "value": 7439579.6232
+          "date": "2026-01-28",
+          "value": 6587568
         },
         {
-          "date": "2026-02-01",
-          "value": 7053960.3802
+          "date": "2026-02-25",
+          "value": 6613797
         },
         {
-          "date": "2026-03-01",
-          "value": 6262125.2015
+          "date": "2026-03-25",
+          "value": 6657161
         },
         {
-          "date": "2026-04-01",
-          "value": 7579054.1006
+          "date": "2026-04-29",
+          "value": 6699950
         },
         {
-          "date": "2026-05-15",
-          "value": 6850000
+          "date": "2026-05-27",
+          "value": 6704383
         }
       ]
     },
@@ -1118,116 +1121,117 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "M2 money supply; sharp deceleration signals tightening liquidity and recession risk.",
-      "weight": 0.0643,
-      "latest_value": 21800,
-      "latest_date": "2026-05-19",
-      "score": 12.4,
-      "level_score": 1.4,
-      "momentum_score": 37.9,
-      "percentile_rank": 33,
+      "weight": 0.0547,
+      "latest_value": 22804.5,
+      "latest_date": "2026-04-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 25,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 20527.0833,
-      "norm_std": 1201.8631,
+      "norm_mean": 5766.2947,
+      "norm_std": 6172.9083,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 21020.7
+        },
+        {
           "date": "2024-06-01",
-          "value": 22019.2681
+          "value": 21068.4
         },
         {
           "date": "2024-07-01",
-          "value": 20752.2266
+          "value": 21095.3
         },
         {
           "date": "2024-08-01",
-          "value": 21135.9762
+          "value": 21186.8
         },
         {
           "date": "2024-09-01",
-          "value": 19792.7863
+          "value": 21269.5
         },
         {
           "date": "2024-10-01",
-          "value": 19259.043
+          "value": 21331.9
         },
         {
           "date": "2024-11-01",
-          "value": 21001.3803
+          "value": 21452.2
         },
         {
           "date": "2024-12-01",
-          "value": 20331.8188
+          "value": 21485.9
         },
         {
           "date": "2025-01-01",
-          "value": 22504.8832
+          "value": 21548.1
         },
         {
           "date": "2025-02-01",
-          "value": 19146.8284
+          "value": 21613.5
         },
         {
           "date": "2025-03-01",
-          "value": 21054.1028
+          "value": 21693.7
         },
         {
           "date": "2025-04-01",
-          "value": 18301.8926
+          "value": 21775.7
         },
         {
           "date": "2025-05-01",
-          "value": 21996.7468
+          "value": 21834
         },
         {
           "date": "2025-06-01",
-          "value": 20214.0195
+          "value": 21938.8
         },
         {
           "date": "2025-07-01",
-          "value": 22118.6387
+          "value": 22020
         },
         {
           "date": "2025-08-01",
-          "value": 19501.7781
+          "value": 22086.9
         },
         {
           "date": "2025-09-01",
-          "value": 19905.3964
+          "value": 22170.3
         },
         {
           "date": "2025-10-01",
-          "value": 19923.3551
+          "value": 22245.1
         },
         {
           "date": "2025-11-01",
-          "value": 20611.6966
+          "value": 22277.4
         },
         {
           "date": "2025-12-01",
-          "value": 22094.4003
+          "value": 22353.5
         },
         {
           "date": "2026-01-01",
-          "value": 19973.9728
+          "value": 22429.3
         },
         {
           "date": "2026-02-01",
-          "value": 21084.487
+          "value": 22627
         },
         {
           "date": "2026-03-01",
-          "value": 18218.1965
+          "value": 22686.4
         },
         {
           "date": "2026-04-01",
-          "value": 21630.725
-        },
-        {
-          "date": "2026-05-19",
-          "value": 21800
+          "value": 22804.5
         }
       ]
     },
@@ -1237,116 +1241,357 @@
       "layer": "financial_lead",
       "category": "macro",
       "description": "St. Louis Fed Financial Stress Index. Zero = average; above zero = above-average stress.",
-      "weight": 0.07,
-      "latest_value": -0.42,
-      "latest_date": "2026-05-15",
-      "score": 8.7,
-      "level_score": 12.4,
-      "momentum_score": 0,
-      "percentile_rank": 25,
+      "weight": 0.0595,
+      "latest_value": -1.7057,
+      "latest_date": "2022-10-28",
+      "score": 14.8,
+      "level_score": 0.1,
+      "momentum_score": 49.1,
+      "percentile_rank": 32,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "inverse",
       "frequency": "weekly",
-      "norm_mean": -0.0088,
-      "norm_std": 0.8432,
+      "norm_mean": 0,
+      "norm_std": 0.9997,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": -1.2313
+          "date": "2020-11-27",
+          "value": -0.2761
         },
         {
-          "date": "2024-07-01",
-          "value": 1.4394
+          "date": "2020-12-25",
+          "value": -0.2857
         },
         {
-          "date": "2024-08-01",
-          "value": -0.2775
+          "date": "2021-01-29",
+          "value": -0.0744
         },
         {
-          "date": "2024-09-01",
-          "value": 1.102
+          "date": "2021-02-26",
+          "value": -0.3841
         },
         {
-          "date": "2024-10-01",
-          "value": -1.1875
+          "date": "2021-03-26",
+          "value": -0.3759
         },
         {
-          "date": "2024-11-01",
-          "value": -0.0414
+          "date": "2021-04-30",
+          "value": -0.6978
         },
         {
-          "date": "2024-12-01",
-          "value": -0.3922
+          "date": "2021-05-28",
+          "value": -0.6059
         },
         {
-          "date": "2025-01-01",
-          "value": 0.6872
+          "date": "2021-06-25",
+          "value": -0.6913
         },
         {
-          "date": "2025-02-01",
-          "value": 0.7575
+          "date": "2021-07-30",
+          "value": -0.6343
         },
         {
-          "date": "2025-03-01",
-          "value": -0.3556
+          "date": "2021-08-27",
+          "value": -0.6954
         },
         {
-          "date": "2025-04-01",
-          "value": 0.0134
+          "date": "2021-09-24",
+          "value": -0.4876
         },
         {
-          "date": "2025-05-01",
-          "value": -1.2553
+          "date": "2021-10-29",
+          "value": -0.6622
         },
         {
-          "date": "2025-06-01",
-          "value": 1.051
+          "date": "2021-11-26",
+          "value": -0.4323
         },
         {
-          "date": "2025-07-01",
-          "value": -0.3018
+          "date": "2021-12-31",
+          "value": -0.7455
         },
         {
-          "date": "2025-08-01",
-          "value": 1.4921
+          "date": "2022-01-28",
+          "value": -0.2106
         },
         {
-          "date": "2025-09-01",
-          "value": -1.1593
+          "date": "2022-02-25",
+          "value": -0.3192
         },
         {
-          "date": "2025-10-01",
-          "value": 0.2501
+          "date": "2022-03-25",
+          "value": -1.2614
         },
         {
-          "date": "2025-11-01",
-          "value": -1.0798
+          "date": "2022-04-29",
+          "value": -0.6584
         },
         {
-          "date": "2025-12-01",
-          "value": 0.91
+          "date": "2022-05-27",
+          "value": -0.7593
         },
         {
-          "date": "2026-01-01",
-          "value": 0.3611
+          "date": "2022-06-24",
+          "value": -0.831
         },
         {
-          "date": "2026-02-01",
-          "value": 0.4215
+          "date": "2022-07-29",
+          "value": -1.5087
         },
         {
-          "date": "2026-03-01",
-          "value": -0.2392
+          "date": "2022-08-26",
+          "value": -1.5301
         },
         {
-          "date": "2026-04-01",
-          "value": -0.9917
+          "date": "2022-09-30",
+          "value": -1.1795
         },
         {
-          "date": "2026-05-15",
-          "value": -0.42
+          "date": "2022-10-28",
+          "value": -1.7057
+        }
+      ]
+    },
+    {
+      "name": "Conference Board LEI",
+      "fred_id": "USSLIND",
+      "layer": "financial_lead",
+      "category": "macro",
+      "description": "Conference Board US Leading Economic Index. Consecutive monthly declines historically precede recessions by 2–4 quarters.",
+      "weight": 0.08,
+      "latest_value": 1.72,
+      "latest_date": "2020-02-01",
+      "score": 14.9,
+      "level_score": 13.7,
+      "momentum_score": 17.6,
+      "percentile_rank": 35,
+      "anomaly": false,
+      "stale": false,
+      "alert": "GREEN",
+      "threshold": null,
+      "direction": "direct",
+      "frequency": "monthly",
+      "norm_mean": 1.349,
+      "norm_std": 0.8074,
+      "history": [
+        {
+          "date": "2018-03-01",
+          "value": 1.69
+        },
+        {
+          "date": "2018-04-01",
+          "value": 1.59
+        },
+        {
+          "date": "2018-05-01",
+          "value": 1.57
+        },
+        {
+          "date": "2018-06-01",
+          "value": 1.55
+        },
+        {
+          "date": "2018-07-01",
+          "value": 1.36
+        },
+        {
+          "date": "2018-08-01",
+          "value": 1.46
+        },
+        {
+          "date": "2018-09-01",
+          "value": 1.25
+        },
+        {
+          "date": "2018-10-01",
+          "value": 1.31
+        },
+        {
+          "date": "2018-11-01",
+          "value": 1
+        },
+        {
+          "date": "2018-12-01",
+          "value": 0.99
+        },
+        {
+          "date": "2019-01-01",
+          "value": 1
+        },
+        {
+          "date": "2019-02-01",
+          "value": 1.1
+        },
+        {
+          "date": "2019-03-01",
+          "value": 1.2
+        },
+        {
+          "date": "2019-04-01",
+          "value": 1.4
+        },
+        {
+          "date": "2019-05-01",
+          "value": 1.38
+        },
+        {
+          "date": "2019-06-01",
+          "value": 1.11
+        },
+        {
+          "date": "2019-07-01",
+          "value": 1.3
+        },
+        {
+          "date": "2019-08-01",
+          "value": 1.32
+        },
+        {
+          "date": "2019-09-01",
+          "value": 1.5
+        },
+        {
+          "date": "2019-10-01",
+          "value": 1.41
+        },
+        {
+          "date": "2019-11-01",
+          "value": 1.38
+        },
+        {
+          "date": "2019-12-01",
+          "value": 1.48
+        },
+        {
+          "date": "2020-01-01",
+          "value": 1.57
+        },
+        {
+          "date": "2020-02-01",
+          "value": 1.72
+        }
+      ]
+    },
+    {
+      "name": "Economic Policy Uncertainty",
+      "fred_id": "USEPUINDXD",
+      "layer": "financial_lead",
+      "category": "macro",
+      "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
+      "weight": 0.07,
+      "latest_value": 230.5,
+      "latest_date": "2026-06-01",
+      "score": 56.5,
+      "level_score": 70,
+      "momentum_score": 25.2,
+      "percentile_rank": 66,
+      "anomaly": false,
+      "stale": false,
+      "alert": "YELLOW",
+      "threshold": null,
+      "direction": "inverse",
+      "frequency": "daily",
+      "norm_mean": 199.1635,
+      "norm_std": 148.1203,
+      "history": [
+        {
+          "date": "2024-07-31",
+          "value": 53.04
+        },
+        {
+          "date": "2024-08-31",
+          "value": 66.18
+        },
+        {
+          "date": "2024-09-30",
+          "value": 116.24
+        },
+        {
+          "date": "2024-10-31",
+          "value": 107.64
+        },
+        {
+          "date": "2024-11-30",
+          "value": 123.13
+        },
+        {
+          "date": "2024-12-31",
+          "value": 109.44
+        },
+        {
+          "date": "2025-01-31",
+          "value": 495.78
+        },
+        {
+          "date": "2025-02-28",
+          "value": 345.22
+        },
+        {
+          "date": "2025-03-31",
+          "value": 426.16
+        },
+        {
+          "date": "2025-04-30",
+          "value": 433.1
+        },
+        {
+          "date": "2025-05-31",
+          "value": 389.5
+        },
+        {
+          "date": "2025-06-30",
+          "value": 511.44
+        },
+        {
+          "date": "2025-07-31",
+          "value": 378.15
+        },
+        {
+          "date": "2025-08-31",
+          "value": 326.52
+        },
+        {
+          "date": "2025-09-30",
+          "value": 406.64
+        },
+        {
+          "date": "2025-10-31",
+          "value": 439.77
+        },
+        {
+          "date": "2025-11-30",
+          "value": 321.03
+        },
+        {
+          "date": "2025-12-31",
+          "value": 307.63
+        },
+        {
+          "date": "2026-01-31",
+          "value": 239.36
+        },
+        {
+          "date": "2026-02-28",
+          "value": 150.05
+        },
+        {
+          "date": "2026-03-31",
+          "value": 383.38
+        },
+        {
+          "date": "2026-04-30",
+          "value": 386.28
+        },
+        {
+          "date": "2026-05-31",
+          "value": 395.68
+        },
+        {
+          "date": "2026-06-01",
+          "value": 230.5
         }
       ]
     },
@@ -1357,115 +1602,116 @@
       "category": "macro",
       "description": "Headline U3 unemployment. Z-score normalized.",
       "weight": 0.1584,
-      "latest_value": 4.2,
-      "latest_date": "2026-05-19",
-      "score": 81,
-      "level_score": 96,
-      "momentum_score": 46.1,
-      "percentile_rank": 63,
+      "latest_value": 4.3,
+      "latest_date": "2026-04-01",
+      "score": 17.8,
+      "level_score": 3.9,
+      "momentum_score": 50,
+      "percentile_rank": 40,
       "anomaly": false,
-      "alert": "RED",
+      "stale": false,
+      "alert": "GREEN",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 3.7888,
-      "norm_std": 0.518,
+      "norm_mean": 5.6608,
+      "norm_std": 1.7037,
       "history": [
         {
+          "date": "2024-04-01",
+          "value": 3.9
+        },
+        {
+          "date": "2024-05-01",
+          "value": 3.9
+        },
+        {
           "date": "2024-06-01",
-          "value": 3.477
-        },
-        {
-          "date": "2024-07-01",
-          "value": 3.533
-        },
-        {
-          "date": "2024-08-01",
-          "value": 3.5311
-        },
-        {
-          "date": "2024-09-01",
-          "value": 4.5146
-        },
-        {
-          "date": "2024-10-01",
-          "value": 3.618
-        },
-        {
-          "date": "2024-11-01",
-          "value": 4.2573
-        },
-        {
-          "date": "2024-12-01",
-          "value": 2.7937
-        },
-        {
-          "date": "2025-01-01",
           "value": 4.1
         },
         {
+          "date": "2024-07-01",
+          "value": 4.2
+        },
+        {
+          "date": "2024-08-01",
+          "value": 4.2
+        },
+        {
+          "date": "2024-09-01",
+          "value": 4.1
+        },
+        {
+          "date": "2024-10-01",
+          "value": 4.1
+        },
+        {
+          "date": "2024-11-01",
+          "value": 4.2
+        },
+        {
+          "date": "2024-12-01",
+          "value": 4.1
+        },
+        {
+          "date": "2025-01-01",
+          "value": 4
+        },
+        {
           "date": "2025-02-01",
-          "value": 3.3323
+          "value": 4.2
         },
         {
           "date": "2025-03-01",
-          "value": 4.6905
+          "value": 4.2
         },
         {
           "date": "2025-04-01",
-          "value": 3.58
+          "value": 4.2
         },
         {
           "date": "2025-05-01",
-          "value": 3.8935
+          "value": 4.3
         },
         {
           "date": "2025-06-01",
-          "value": 3.1961
+          "value": 4.1
         },
         {
           "date": "2025-07-01",
-          "value": 3.6338
+          "value": 4.3
         },
         {
           "date": "2025-08-01",
-          "value": 4.1332
+          "value": 4.3
         },
         {
           "date": "2025-09-01",
-          "value": 3.9203
-        },
-        {
-          "date": "2025-10-01",
-          "value": 4.2661
+          "value": 4.4
         },
         {
           "date": "2025-11-01",
-          "value": 3.0045
+          "value": 4.5
         },
         {
           "date": "2025-12-01",
-          "value": 3.9484
+          "value": 4.4
         },
         {
           "date": "2026-01-01",
-          "value": 3.1275
+          "value": 4.3
         },
         {
           "date": "2026-02-01",
-          "value": 4.7115
+          "value": 4.4
         },
         {
           "date": "2026-03-01",
-          "value": 3.5531
+          "value": 4.3
         },
         {
           "date": "2026-04-01",
-          "value": 4.2798
-        },
-        {
-          "date": "2026-05-19",
-          "value": 4.2
+          "value": 4.3
         }
       ]
     },
@@ -1476,13 +1722,14 @@
       "category": "macro",
       "description": "Triggers at 0.5 when unemployment 3mo avg rises 0.5pp above its 12mo low. Historically coincident with recession start.",
       "weight": 0.198,
-      "latest_value": 0.23,
-      "latest_date": "2026-05-19",
-      "score": 22.5,
-      "level_score": 10.3,
-      "momentum_score": 50.9,
-      "percentile_rank": 94,
+      "latest_value": 0.13,
+      "latest_date": "2026-04-01",
+      "score": 14.9,
+      "level_score": 4.9,
+      "momentum_score": 38.1,
+      "percentile_rank": 70,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 0.5,
       "direction": "inverse",
@@ -1491,100 +1738,100 @@
       "norm_std": null,
       "history": [
         {
+          "date": "2024-04-01",
+          "value": 0.37
+        },
+        {
+          "date": "2024-05-01",
+          "value": 0.37
+        },
+        {
           "date": "2024-06-01",
-          "value": -0.2302
+          "value": 0.43
         },
         {
           "date": "2024-07-01",
-          "value": 0.1674
+          "value": 0.53
         },
         {
           "date": "2024-08-01",
-          "value": -0.1134
+          "value": 0.57
         },
         {
           "date": "2024-09-01",
-          "value": 0.3865
+          "value": 0.5
         },
         {
           "date": "2024-10-01",
-          "value": 0.0405
+          "value": 0.43
         },
         {
           "date": "2024-11-01",
-          "value": 0.1723
+          "value": 0.43
         },
         {
           "date": "2024-12-01",
-          "value": -0.1181
+          "value": 0.4
         },
         {
           "date": "2025-01-01",
-          "value": 0.0092
+          "value": 0.37
         },
         {
           "date": "2025-02-01",
-          "value": 0.1563
+          "value": 0.27
         },
         {
           "date": "2025-03-01",
-          "value": 0.1424
+          "value": 0.27
         },
         {
           "date": "2025-04-01",
-          "value": 0.2805
+          "value": 0.27
         },
         {
           "date": "2025-05-01",
-          "value": -0.1386
+          "value": 0.27
         },
         {
           "date": "2025-06-01",
-          "value": 0.1294
+          "value": 0.17
         },
         {
           "date": "2025-07-01",
-          "value": -0.177
+          "value": 0.1
         },
         {
           "date": "2025-08-01",
-          "value": 0.3717
+          "value": 0.13
         },
         {
           "date": "2025-09-01",
-          "value": 0.0187
-        },
-        {
-          "date": "2025-10-01",
-          "value": 0.3022
+          "value": 0.23
         },
         {
           "date": "2025-11-01",
-          "value": -0.1684
+          "value": 0.43
         },
         {
           "date": "2025-12-01",
-          "value": 0.0675
+          "value": 0.35
         },
         {
           "date": "2026-01-01",
-          "value": -0.0048
+          "value": 0.3
         },
         {
           "date": "2026-02-01",
-          "value": 0.2173
+          "value": 0.27
         },
         {
           "date": "2026-03-01",
-          "value": 0.2312
+          "value": 0.2
         },
         {
           "date": "2026-04-01",
-          "value": 0.0028
-        },
-        {
-          "date": "2026-05-19",
-          "value": 0.23
+          "value": 0.13
         }
       ]
     },
@@ -1595,13 +1842,14 @@
       "category": "macro",
       "description": "Fast labor deterioration signal. Threshold = sustained recessionary level.",
       "weight": 0.1584,
-      "latest_value": 219000,
-      "latest_date": "2026-05-15",
-      "score": 31.4,
-      "level_score": 25.4,
-      "momentum_score": 45.6,
-      "percentile_rank": 65,
+      "latest_value": 215000,
+      "latest_date": "2026-05-23",
+      "score": 33.2,
+      "level_score": 24.4,
+      "momentum_score": 53.7,
+      "percentile_rank": 19,
       "anomaly": false,
+      "stale": false,
       "alert": "YELLOW",
       "threshold": 300000,
       "direction": "inverse",
@@ -1610,100 +1858,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 187624.4697
+          "date": "2024-06-29",
+          "value": 238000
         },
         {
-          "date": "2024-07-01",
-          "value": 258925.7229
+          "date": "2024-07-27",
+          "value": 248000
         },
         {
-          "date": "2024-08-01",
-          "value": 236127.7655
+          "date": "2024-08-31",
+          "value": 227000
         },
         {
-          "date": "2024-09-01",
-          "value": 263420.1903
+          "date": "2024-09-28",
+          "value": 227000
         },
         {
-          "date": "2024-10-01",
-          "value": 227999.2722
-        },
-        {
-          "date": "2024-11-01",
-          "value": 210434.4731
-        },
-        {
-          "date": "2024-12-01",
-          "value": 231608.1302
-        },
-        {
-          "date": "2025-01-01",
-          "value": 223243.5317
-        },
-        {
-          "date": "2025-02-01",
-          "value": 280448.3581
-        },
-        {
-          "date": "2025-03-01",
-          "value": 218906.4078
-        },
-        {
-          "date": "2025-04-01",
-          "value": 256434.3403
-        },
-        {
-          "date": "2025-05-01",
-          "value": 181442.6454
-        },
-        {
-          "date": "2025-06-01",
-          "value": 256569.2425
-        },
-        {
-          "date": "2025-07-01",
-          "value": 219416.001
-        },
-        {
-          "date": "2025-08-01",
-          "value": 280023.8237
-        },
-        {
-          "date": "2025-09-01",
-          "value": 223421.7807
-        },
-        {
-          "date": "2025-10-01",
-          "value": 230862.6713
-        },
-        {
-          "date": "2025-11-01",
-          "value": 211093.0219
-        },
-        {
-          "date": "2025-12-01",
-          "value": 227735.6009
-        },
-        {
-          "date": "2026-01-01",
-          "value": 264129.1746
-        },
-        {
-          "date": "2026-02-01",
-          "value": 235521.0399
-        },
-        {
-          "date": "2026-03-01",
-          "value": 258998.8376
-        },
-        {
-          "date": "2026-04-01",
-          "value": 187223.4721
-        },
-        {
-          "date": "2026-05-15",
+          "date": "2024-10-26",
           "value": 219000
+        },
+        {
+          "date": "2024-11-30",
+          "value": 222000
+        },
+        {
+          "date": "2024-12-28",
+          "value": 212000
+        },
+        {
+          "date": "2025-01-25",
+          "value": 212000
+        },
+        {
+          "date": "2025-02-22",
+          "value": 241000
+        },
+        {
+          "date": "2025-03-29",
+          "value": 220000
+        },
+        {
+          "date": "2025-04-26",
+          "value": 239000
+        },
+        {
+          "date": "2025-05-31",
+          "value": 244000
+        },
+        {
+          "date": "2025-06-28",
+          "value": 231000
+        },
+        {
+          "date": "2025-07-26",
+          "value": 219000
+        },
+        {
+          "date": "2025-08-30",
+          "value": 236000
+        },
+        {
+          "date": "2025-09-27",
+          "value": 225000
+        },
+        {
+          "date": "2025-10-25",
+          "value": 221000
+        },
+        {
+          "date": "2025-11-29",
+          "value": 216000
+        },
+        {
+          "date": "2025-12-27",
+          "value": 203000
+        },
+        {
+          "date": "2026-01-31",
+          "value": 230000
+        },
+        {
+          "date": "2026-02-28",
+          "value": 214000
+        },
+        {
+          "date": "2026-03-28",
+          "value": 203000
+        },
+        {
+          "date": "2026-04-25",
+          "value": 190000
+        },
+        {
+          "date": "2026-05-23",
+          "value": 215000
         }
       ]
     },
@@ -1714,115 +1962,116 @@
       "category": "macro",
       "description": "Nonfarm payroll trend. Z-score normalized.",
       "weight": 0.1584,
-      "latest_value": 159480,
-      "latest_date": "2026-05-19",
-      "score": 0.5,
-      "level_score": 0.7,
-      "momentum_score": 0,
-      "percentile_rank": 10,
+      "latest_value": 158736,
+      "latest_date": "2026-04-01",
+      "score": 15.1,
+      "level_score": 0.1,
+      "momentum_score": 50,
+      "percentile_rank": 38,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 156366.25,
-      "norm_std": 2515.1695,
+      "norm_mean": 93643.792,
+      "norm_std": 38777.4916,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 157608
+        },
+        {
           "date": "2024-06-01",
-          "value": 156534.3027
+          "value": 157695
         },
         {
           "date": "2024-07-01",
-          "value": 152913.3305
+          "value": 157748
         },
         {
           "date": "2024-08-01",
-          "value": 157160.0146
+          "value": 157757
         },
         {
           "date": "2024-09-01",
-          "value": 154682.7615
+          "value": 157912
         },
         {
           "date": "2024-10-01",
-          "value": 160869.8377
+          "value": 157945
         },
         {
           "date": "2024-11-01",
-          "value": 154285.0974
+          "value": 158079
         },
         {
           "date": "2024-12-01",
-          "value": 157940.6429
+          "value": 158316
         },
         {
           "date": "2025-01-01",
-          "value": 151802.6983
+          "value": 158268
         },
         {
           "date": "2025-02-01",
-          "value": 157908.9428
+          "value": 158310
         },
         {
           "date": "2025-03-01",
-          "value": 155855.6487
+          "value": 158377
         },
         {
           "date": "2025-04-01",
-          "value": 159220.6048
+          "value": 158485
         },
         {
           "date": "2025-05-01",
-          "value": 156047.7875
+          "value": 158498
         },
         {
           "date": "2025-06-01",
-          "value": 154547.2285
+          "value": 158478
         },
         {
           "date": "2025-07-01",
-          "value": 155427.4956
+          "value": 158542
         },
         {
           "date": "2025-08-01",
-          "value": 154792.2924
+          "value": 158472
         },
         {
           "date": "2025-09-01",
-          "value": 159965.2591
+          "value": 158548
         },
         {
           "date": "2025-10-01",
-          "value": 155353.7657
+          "value": 158408
         },
         {
           "date": "2025-11-01",
-          "value": 158669.6196
+          "value": 158449
         },
         {
           "date": "2025-12-01",
-          "value": 151620.1941
+          "value": 158432
         },
         {
           "date": "2026-01-01",
-          "value": 157722.8647
+          "value": 158592
         },
         {
           "date": "2026-02-01",
-          "value": 154268.7224
+          "value": 158436
         },
         {
           "date": "2026-03-01",
-          "value": 160366.8444
+          "value": 158621
         },
         {
           "date": "2026-04-01",
-          "value": 155614.9676
-        },
-        {
-          "date": "2026-05-19",
-          "value": 159480
+          "value": 158736
         }
       ]
     },
@@ -1833,14 +2082,15 @@
       "category": "micro",
       "description": "Worker confidence proxy. Falling quits = labor market cooling.",
       "weight": 0.1188,
-      "latest_value": 2.68,
-      "latest_date": "2026-05-19",
-      "score": 29.7,
-      "level_score": 20.4,
-      "momentum_score": 51.3,
-      "percentile_rank": 92,
+      "latest_value": 1.9,
+      "latest_date": "2026-04-01",
+      "score": 55,
+      "level_score": 55,
+      "momentum_score": 55,
+      "percentile_rank": 60,
       "anomaly": false,
-      "alert": "GREEN",
+      "stale": false,
+      "alert": "YELLOW",
       "threshold": 2,
       "direction": "direct",
       "frequency": "monthly",
@@ -1848,100 +2098,100 @@
       "norm_std": null,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 2.1
+        },
+        {
           "date": "2024-06-01",
-          "value": 2.737
+          "value": 2.1
         },
         {
           "date": "2024-07-01",
-          "value": 3.2579
+          "value": 2.1
         },
         {
           "date": "2024-08-01",
-          "value": 2.2868
+          "value": 2.1
         },
         {
           "date": "2024-09-01",
-          "value": 3.0459
+          "value": 2
         },
         {
           "date": "2024-10-01",
-          "value": 2.6884
+          "value": 2
         },
         {
           "date": "2024-11-01",
-          "value": 3.3614
+          "value": 1.9
         },
         {
           "date": "2024-12-01",
-          "value": 2.9359
+          "value": 1.9
         },
         {
           "date": "2025-01-01",
-          "value": 2.8266
+          "value": 2
         },
         {
           "date": "2025-02-01",
-          "value": 2.7022
+          "value": 2
         },
         {
           "date": "2025-03-01",
-          "value": 2.6243
+          "value": 2.2
         },
         {
           "date": "2025-04-01",
-          "value": 3.2732
+          "value": 2
         },
         {
           "date": "2025-05-01",
-          "value": 2.8583
+          "value": 2.1
         },
         {
           "date": "2025-06-01",
-          "value": 3.338
+          "value": 2.1
         },
         {
           "date": "2025-07-01",
-          "value": 2.347
+          "value": 2
         },
         {
           "date": "2025-08-01",
-          "value": 3.0385
+          "value": 2
         },
         {
           "date": "2025-09-01",
-          "value": 2.4777
+          "value": 1.9
         },
         {
           "date": "2025-10-01",
-          "value": 3.4388
+          "value": 1.9
         },
         {
           "date": "2025-11-01",
-          "value": 2.8535
+          "value": 2
         },
         {
           "date": "2025-12-01",
-          "value": 3.1189
+          "value": 2
         },
         {
           "date": "2026-01-01",
-          "value": 2.55
+          "value": 2
         },
         {
           "date": "2026-02-01",
-          "value": 2.72
+          "value": 1.9
         },
         {
           "date": "2026-03-01",
-          "value": 2.9904
+          "value": 2
         },
         {
           "date": "2026-04-01",
-          "value": 2.9933
-        },
-        {
-          "date": "2026-05-19",
-          "value": 2.68
+          "value": 1.9
         }
       ]
     },
@@ -1952,115 +2202,116 @@
       "category": "macro",
       "description": "University of Michigan Consumer Sentiment Index; forward-looking consumer health.",
       "weight": 0.108,
-      "latest_value": 67.4,
-      "latest_date": "2026-05-19",
-      "score": 97.1,
-      "level_score": 95.9,
-      "momentum_score": 100,
-      "percentile_rank": 81,
+      "latest_value": 49.8,
+      "latest_date": "2026-04-01",
+      "score": 85,
+      "level_score": 100,
+      "momentum_score": 50,
+      "percentile_rank": 67,
       "anomaly": false,
+      "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 74.0583,
-      "norm_std": 8.4669,
+      "norm_mean": 84.5705,
+      "norm_std": 13.5252,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 69.1
+        },
+        {
           "date": "2024-06-01",
-          "value": 68.1749
+          "value": 68.2
         },
         {
           "date": "2024-07-01",
-          "value": 73.3401
+          "value": 66.4
         },
         {
           "date": "2024-08-01",
-          "value": 74.2062
+          "value": 67.9
         },
         {
           "date": "2024-09-01",
-          "value": 86.8491
+          "value": 70.1
         },
         {
           "date": "2024-10-01",
-          "value": 68.179
+          "value": 70.5
         },
         {
           "date": "2024-11-01",
-          "value": 78.4231
+          "value": 71.8
         },
         {
           "date": "2024-12-01",
-          "value": 58.3245
+          "value": 74
         },
         {
           "date": "2025-01-01",
-          "value": 83.3552
+          "value": 71.7
         },
         {
           "date": "2025-02-01",
-          "value": 70.3153
+          "value": 64.7
         },
         {
           "date": "2025-03-01",
-          "value": 88.3954
+          "value": 57
         },
         {
           "date": "2025-04-01",
-          "value": 66.9938
+          "value": 52.2
         },
         {
           "date": "2025-05-01",
-          "value": 73.2919
+          "value": 52.2
         },
         {
           "date": "2025-06-01",
-          "value": 66.2072
+          "value": 60.7
         },
         {
           "date": "2025-07-01",
-          "value": 76.1017
+          "value": 61.7
         },
         {
           "date": "2025-08-01",
-          "value": 82.4368
+          "value": 58.2
         },
         {
           "date": "2025-09-01",
-          "value": 74.5563
+          "value": 55.1
         },
         {
           "date": "2025-10-01",
-          "value": 78.0473
+          "value": 53.6
         },
         {
           "date": "2025-11-01",
-          "value": 59.8636
+          "value": 51
         },
         {
           "date": "2025-12-01",
-          "value": 79.6659
+          "value": 52.9
         },
         {
           "date": "2026-01-01",
-          "value": 67.7775
+          "value": 56.4
         },
         {
           "date": "2026-02-01",
-          "value": 90.6838
+          "value": 56.6
         },
         {
           "date": "2026-03-01",
-          "value": 67.5091
+          "value": 53.3
         },
         {
           "date": "2026-04-01",
-          "value": 78.5286
-        },
-        {
-          "date": "2026-05-19",
-          "value": 67.4
+          "value": 49.8
         }
       ]
     },
@@ -2071,115 +2322,116 @@
       "category": "macro",
       "description": "Civilian labor force participation rate; declining LFPR signals discouraged workers exiting.",
       "weight": 0.1,
-      "latest_value": 62.7,
-      "latest_date": "2026-05-19",
-      "score": 18.6,
-      "level_score": 3.6,
-      "momentum_score": 53.6,
-      "percentile_rank": 40,
+      "latest_value": 61.8,
+      "latest_date": "2026-04-01",
+      "score": 73.7,
+      "level_score": 80.7,
+      "momentum_score": 57.3,
+      "percentile_rank": 60,
       "anomaly": false,
-      "alert": "GREEN",
+      "stale": false,
+      "alert": "RED",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 62.2104,
-      "norm_std": 0.598,
+      "norm_mean": 62.8283,
+      "norm_std": 2.8785,
       "history": [
         {
+          "date": "2024-04-01",
+          "value": 62.6
+        },
+        {
+          "date": "2024-05-01",
+          "value": 62.6
+        },
+        {
           "date": "2024-06-01",
-          "value": 61.7522
+          "value": 62.6
         },
         {
           "date": "2024-07-01",
-          "value": 62.1627
+          "value": 62.7
         },
         {
           "date": "2024-08-01",
-          "value": 62.1797
+          "value": 62.7
         },
         {
           "date": "2024-09-01",
-          "value": 63.1103
+          "value": 62.7
         },
         {
           "date": "2024-10-01",
-          "value": 61.7619
+          "value": 62.5
         },
         {
           "date": "2024-11-01",
-          "value": 62.5073
+          "value": 62.4
         },
         {
           "date": "2024-12-01",
-          "value": 61.0774
+          "value": 62.5
         },
         {
           "date": "2025-01-01",
-          "value": 62.8439
+          "value": 62.6
         },
         {
           "date": "2025-02-01",
-          "value": 61.934
+          "value": 62.5
         },
         {
           "date": "2025-03-01",
-          "value": 63.1887
+          "value": 62.5
         },
         {
           "date": "2025-04-01",
-          "value": 61.7093
+          "value": 62.6
         },
         {
           "date": "2025-05-01",
-          "value": 62.116
+          "value": 62.4
         },
         {
           "date": "2025-06-01",
-          "value": 61.6594
+          "value": 62.3
         },
         {
           "date": "2025-07-01",
-          "value": 62.3111
+          "value": 62.2
         },
         {
           "date": "2025-08-01",
-          "value": 62.8041
+          "value": 62.3
         },
         {
           "date": "2025-09-01",
-          "value": 62.2044
-        },
-        {
-          "date": "2025-10-01",
-          "value": 62.4898
+          "value": 62.5
         },
         {
           "date": "2025-11-01",
-          "value": 61.1755
+          "value": 62.5
         },
         {
           "date": "2025-12-01",
-          "value": 62.5949
+          "value": 62.4
         },
         {
           "date": "2026-01-01",
-          "value": 61.7439
+          "value": 62.1
         },
         {
           "date": "2026-02-01",
-          "value": 63.3607
+          "value": 62
         },
         {
           "date": "2026-03-01",
-          "value": 61.7361
+          "value": 61.9
         },
         {
           "date": "2026-04-01",
-          "value": 62.493
-        },
-        {
-          "date": "2026-05-19",
-          "value": 62.7
+          "value": 61.8
         }
       ]
     },
@@ -2190,115 +2442,116 @@
       "category": "macro",
       "description": "Headline CPI. Z-score normalized over trailing window.",
       "weight": 0.2,
-      "latest_value": 2.76,
-      "latest_date": "2026-05-19",
-      "score": 1.5,
-      "level_score": 2.2,
-      "momentum_score": 0,
-      "percentile_rank": 19,
+      "latest_value": 332.407,
+      "latest_date": "2026-04-01",
+      "score": 85,
+      "level_score": 100,
+      "momentum_score": 50,
+      "percentile_rank": 65,
       "anomaly": false,
-      "alert": "GREEN",
+      "stale": false,
+      "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 3.6315,
-      "norm_std": 0.9192,
+      "norm_mean": 124.7119,
+      "norm_std": 89.966,
       "history": [
         {
+          "date": "2024-04-01",
+          "value": 313.023
+        },
+        {
+          "date": "2024-05-01",
+          "value": 313.175
+        },
+        {
           "date": "2024-06-01",
-          "value": 4.0908
+          "value": 313.044
         },
         {
           "date": "2024-07-01",
-          "value": 4.5771
+          "value": 313.569
         },
         {
           "date": "2024-08-01",
-          "value": 3.3939
+          "value": 314.062
         },
         {
           "date": "2024-09-01",
-          "value": 3.8351
+          "value": 314.732
         },
         {
           "date": "2024-10-01",
-          "value": 2.135
+          "value": 315.631
         },
         {
           "date": "2024-11-01",
-          "value": 4.527
+          "value": 316.528
         },
         {
           "date": "2024-12-01",
-          "value": 3.1838
+          "value": 317.604
         },
         {
           "date": "2025-01-01",
-          "value": 5.3215
+          "value": 318.961
         },
         {
           "date": "2025-02-01",
-          "value": 2.6547
+          "value": 319.679
         },
         {
           "date": "2025-03-01",
-          "value": 3.9026
+          "value": 319.785
         },
         {
           "date": "2025-04-01",
-          "value": 2.3781
+          "value": 320.302
         },
         {
           "date": "2025-05-01",
-          "value": 4.2798
+          "value": 320.62
         },
         {
           "date": "2025-06-01",
-          "value": 4.051
+          "value": 321.435
         },
         {
           "date": "2025-07-01",
-          "value": 4.1641
+          "value": 322.169
         },
         {
           "date": "2025-08-01",
-          "value": 3.6583
+          "value": 323.291
         },
         {
           "date": "2025-09-01",
-          "value": 2.4897
-        },
-        {
-          "date": "2025-10-01",
-          "value": 3.9312
+          "value": 324.245
         },
         {
           "date": "2025-11-01",
-          "value": 3.1284
+          "value": 325.063
         },
         {
           "date": "2025-12-01",
-          "value": 5.3305
+          "value": 326.031
         },
         {
           "date": "2026-01-01",
-          "value": 2.9203
+          "value": 326.588
         },
         {
           "date": "2026-02-01",
-          "value": 4.2786
+          "value": 327.46
         },
         {
           "date": "2026-03-01",
-          "value": 1.9718
+          "value": 330.293
         },
         {
           "date": "2026-04-01",
-          "value": 4.3268
-        },
-        {
-          "date": "2026-05-19",
-          "value": 2.76
+          "value": 332.407
         }
       ]
     },
@@ -2309,115 +2562,116 @@
       "category": "macro",
       "description": "Core CPI (ex food/energy). Z-score normalized.",
       "weight": 0.2,
-      "latest_value": 2.65,
-      "latest_date": "2026-05-19",
-      "score": 2,
-      "level_score": 2.9,
-      "momentum_score": 0,
-      "percentile_rank": 21,
+      "latest_value": 335.423,
+      "latest_date": "2026-04-01",
+      "score": 85,
+      "level_score": 100,
+      "momentum_score": 50,
+      "percentile_rank": 63,
       "anomaly": false,
-      "alert": "GREEN",
+      "stale": false,
+      "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 3.3354,
-      "norm_std": 0.7783,
+      "norm_mean": 142.7741,
+      "norm_std": 89.1583,
       "history": [
         {
+          "date": "2024-04-01",
+          "value": 317.649
+        },
+        {
+          "date": "2024-05-01",
+          "value": 318.095
+        },
+        {
           "date": "2024-06-01",
-          "value": 3.7237
+          "value": 318.39
         },
         {
           "date": "2024-07-01",
-          "value": 4.136
+          "value": 318.94
         },
         {
           "date": "2024-08-01",
-          "value": 3.1329
+          "value": 319.75
         },
         {
           "date": "2024-09-01",
-          "value": 3.5069
+          "value": 320.732
         },
         {
           "date": "2024-10-01",
-          "value": 2.0655
+          "value": 321.731
         },
         {
           "date": "2024-11-01",
-          "value": 4.0935
+          "value": 322.657
         },
         {
           "date": "2024-12-01",
-          "value": 2.9547
+          "value": 323.259
         },
         {
           "date": "2025-01-01",
-          "value": 4.7672
+          "value": 324.638
         },
         {
           "date": "2025-02-01",
-          "value": 2.5061
+          "value": 325.465
         },
         {
           "date": "2025-03-01",
-          "value": 3.5641
+          "value": 325.69
         },
         {
           "date": "2025-04-01",
-          "value": 2.2716
+          "value": 326.467
         },
         {
           "date": "2025-05-01",
-          "value": 3.884
+          "value": 326.893
         },
         {
           "date": "2025-06-01",
-          "value": 3.69
+          "value": 327.658
         },
         {
           "date": "2025-07-01",
-          "value": 3.7858
+          "value": 328.682
         },
         {
           "date": "2025-08-01",
-          "value": 3.357
+          "value": 329.7
         },
         {
           "date": "2025-09-01",
-          "value": 2.3663
-        },
-        {
-          "date": "2025-10-01",
-          "value": 3.5884
+          "value": 330.418
         },
         {
           "date": "2025-11-01",
-          "value": 2.9078
+          "value": 331.043
         },
         {
           "date": "2025-12-01",
-          "value": 4.7748
+          "value": 331.814
         },
         {
           "date": "2026-01-01",
-          "value": 2.7313
+          "value": 332.793
         },
         {
           "date": "2026-02-01",
-          "value": 3.8829
+          "value": 333.512
         },
         {
           "date": "2026-03-01",
-          "value": 1.9271
+          "value": 334.165
         },
         {
           "date": "2026-04-01",
-          "value": 3.9238
-        },
-        {
-          "date": "2026-05-19",
-          "value": 2.65
+          "value": 335.423
         }
       ]
     },
@@ -2428,115 +2682,116 @@
       "category": "macro",
       "description": "Fed's preferred inflation measure. Z-score normalized.",
       "weight": 0.2,
-      "latest_value": 2.44,
-      "latest_date": "2026-05-19",
-      "score": 18.9,
-      "level_score": 4.2,
-      "momentum_score": 53.1,
-      "percentile_rank": 42,
+      "latest_value": 130.902,
+      "latest_date": "2026-04-01",
+      "score": 85,
+      "level_score": 100,
+      "momentum_score": 50,
+      "percentile_rank": 64,
       "anomaly": false,
-      "alert": "GREEN",
+      "stale": false,
+      "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 2.9687,
-      "norm_std": 0.6773,
+      "norm_mean": 61.3214,
+      "norm_std": 33.3098,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 123.348
+        },
+        {
           "date": "2024-06-01",
-          "value": 3.2614
+          "value": 123.539
         },
         {
           "date": "2024-07-01",
-          "value": 2.1365
+          "value": 123.736
         },
         {
           "date": "2024-08-01",
-          "value": 3.064
+          "value": 123.889
         },
         {
           "date": "2024-09-01",
-          "value": 2.3219
+          "value": 124.164
         },
         {
           "date": "2024-10-01",
-          "value": 4.1727
+          "value": 124.494
         },
         {
           "date": "2024-11-01",
-          "value": 2.5997
+          "value": 124.637
         },
         {
           "date": "2024-12-01",
-          "value": 3.6266
+          "value": 124.979
         },
         {
           "date": "2025-01-01",
-          "value": 1.7659
+          "value": 125.417
         },
         {
           "date": "2025-02-01",
-          "value": 3.2234
+          "value": 125.921
         },
         {
           "date": "2025-03-01",
-          "value": 2.6691
+          "value": 125.941
         },
         {
           "date": "2025-04-01",
-          "value": 3.7937
+          "value": 126.15
         },
         {
           "date": "2025-05-01",
-          "value": 3.1148
+          "value": 126.38
         },
         {
           "date": "2025-06-01",
-          "value": 2.6653
+          "value": 126.743
         },
         {
           "date": "2025-07-01",
-          "value": 2.6829
+          "value": 126.96
         },
         {
           "date": "2025-08-01",
-          "value": 2.3497
+          "value": 127.293
         },
         {
           "date": "2025-09-01",
-          "value": 3.8342
+          "value": 127.625
         },
         {
           "date": "2025-10-01",
-          "value": 2.8089
+          "value": 127.871
         },
         {
           "date": "2025-11-01",
-          "value": 3.8432
+          "value": 128.152
         },
         {
           "date": "2025-12-01",
-          "value": 1.8144
+          "value": 128.576
         },
         {
           "date": "2026-01-01",
-          "value": 3.2436
+          "value": 129.002
         },
         {
           "date": "2026-02-01",
-          "value": 2.2034
+          "value": 129.52
         },
         {
           "date": "2026-03-01",
-          "value": 4.004
+          "value": 130.381
         },
         {
           "date": "2026-04-01",
-          "value": 2.9387
-        },
-        {
-          "date": "2026-05-19",
-          "value": 2.44
+          "value": 130.902
         }
       ]
     },
@@ -2547,115 +2802,116 @@
       "category": "macro",
       "description": "Policy rate level. Z-score normalized.",
       "weight": 0.2,
-      "latest_value": 3.75,
-      "latest_date": "2026-05-19",
-      "score": 6.9,
-      "level_score": 0.3,
-      "momentum_score": 22.3,
-      "percentile_rank": 25,
+      "latest_value": 3.63,
+      "latest_date": "2026-05-01",
+      "score": 32.5,
+      "level_score": 25,
+      "momentum_score": 49.8,
+      "percentile_rank": 46,
       "anomaly": false,
-      "alert": "GREEN",
+      "stale": false,
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 4.876,
-      "norm_std": 0.7891,
+      "norm_mean": 4.5982,
+      "norm_std": 3.5313,
       "history": [
         {
           "date": "2024-06-01",
-          "value": 5.4656
+          "value": 5.33
         },
         {
           "date": "2024-07-01",
-          "value": 3.4162
+          "value": 5.33
         },
         {
           "date": "2024-08-01",
-          "value": 5.4259
+          "value": 5.33
         },
         {
           "date": "2024-09-01",
-          "value": 4.2583
+          "value": 5.13
         },
         {
           "date": "2024-10-01",
-          "value": 6.3105
+          "value": 4.83
         },
         {
           "date": "2024-11-01",
-          "value": 4.4352
+          "value": 4.64
         },
         {
           "date": "2024-12-01",
-          "value": 5.085
+          "value": 4.48
         },
         {
           "date": "2025-01-01",
-          "value": 3.9037
+          "value": 4.33
         },
         {
           "date": "2025-02-01",
-          "value": 4.8593
+          "value": 4.33
         },
         {
           "date": "2025-03-01",
-          "value": 5.355
+          "value": 4.33
         },
         {
           "date": "2025-04-01",
-          "value": 5.187
+          "value": 4.33
         },
         {
           "date": "2025-05-01",
-          "value": 5.4352
+          "value": 4.33
         },
         {
           "date": "2025-06-01",
-          "value": 3.7499
+          "value": 4.33
         },
         {
           "date": "2025-07-01",
-          "value": 5.1128
+          "value": 4.33
         },
         {
           "date": "2025-08-01",
-          "value": 4.0154
+          "value": 4.33
         },
         {
           "date": "2025-09-01",
-          "value": 6.3217
+          "value": 4.22
         },
         {
           "date": "2025-10-01",
-          "value": 4.4719
+          "value": 4.09
         },
         {
           "date": "2025-11-01",
-          "value": 5.6089
+          "value": 3.88
         },
         {
           "date": "2025-12-01",
-          "value": 3.5842
+          "value": 3.72
         },
         {
           "date": "2026-01-01",
-          "value": 5.016
+          "value": 3.64
         },
         {
           "date": "2026-02-01",
-          "value": 4.6903
+          "value": 3.64
         },
         {
           "date": "2026-03-01",
-          "value": 5.6441
+          "value": 3.64
         },
         {
           "date": "2026-04-01",
-          "value": 5.278
+          "value": 3.64
         },
         {
-          "date": "2026-05-19",
-          "value": 3.75
+          "date": "2026-05-01",
+          "value": 3.63
         }
       ]
     },
@@ -2666,115 +2922,116 @@
       "category": "micro",
       "description": "Wage pressure signal. Z-score normalized.",
       "weight": 0.2,
-      "latest_value": 35.53,
-      "latest_date": "2026-05-19",
-      "score": 84.4,
-      "level_score": 99.3,
-      "momentum_score": 49.6,
-      "percentile_rank": 65,
+      "latest_value": 37.41,
+      "latest_date": "2026-04-01",
+      "score": 85,
+      "level_score": 100,
+      "momentum_score": 50,
+      "percentile_rank": 70,
       "anomaly": false,
+      "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 34.0808,
-      "norm_std": 1.1574,
+      "norm_mean": 26.8262,
+      "norm_std": 4.8763,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 34.89
+        },
+        {
           "date": "2024-06-01",
-          "value": 33.712
+          "value": 35.01
         },
         {
           "date": "2024-07-01",
-          "value": 34.893
+          "value": 35.08
         },
         {
           "date": "2024-08-01",
-          "value": 34.3429
+          "value": 35.22
         },
         {
           "date": "2024-09-01",
-          "value": 35.1751
+          "value": 35.34
         },
         {
           "date": "2024-10-01",
-          "value": 32.3574
+          "value": 35.46
         },
         {
           "date": "2024-11-01",
-          "value": 34.4628
+          "value": 35.6
         },
         {
           "date": "2024-12-01",
-          "value": 32.6448
+          "value": 35.69
         },
         {
           "date": "2025-01-01",
-          "value": 36.1075
+          "value": 35.84
         },
         {
           "date": "2025-02-01",
-          "value": 33.5969
+          "value": 35.94
         },
         {
           "date": "2025-03-01",
-          "value": 35.1453
+          "value": 36.11
         },
         {
           "date": "2025-04-01",
-          "value": 32.3765
+          "value": 36.12
         },
         {
           "date": "2025-05-01",
-          "value": 34.0075
+          "value": 36.28
         },
         {
           "date": "2025-06-01",
-          "value": 33.8882
+          "value": 36.36
         },
         {
           "date": "2025-07-01",
-          "value": 34.9395
+          "value": 36.47
         },
         {
           "date": "2025-08-01",
-          "value": 34.9613
+          "value": 36.62
         },
         {
           "date": "2025-09-01",
-          "value": 33.1807
+          "value": 36.7
         },
         {
           "date": "2025-10-01",
-          "value": 34.0494
+          "value": 36.85
         },
         {
           "date": "2025-11-01",
-          "value": 32.501
+          "value": 37
         },
         {
           "date": "2025-12-01",
-          "value": 35.7168
+          "value": 37.02
         },
         {
           "date": "2026-01-01",
-          "value": 33.64
+          "value": 37.15
         },
         {
           "date": "2026-02-01",
-          "value": 35.756
+          "value": 37.27
         },
         {
           "date": "2026-03-01",
-          "value": 32.2824
+          "value": 37.35
         },
         {
           "date": "2026-04-01",
-          "value": 34.3054
-        },
-        {
-          "date": "2026-05-19",
-          "value": 35.53
+          "value": 37.41
         }
       ]
     },
@@ -2784,116 +3041,117 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Real output. Z-score on QoQ change.",
-      "weight": 0.1376,
-      "latest_value": 23105,
-      "latest_date": "2026-05-19",
-      "score": 0.2,
-      "level_score": 0.2,
-      "momentum_score": 0,
-      "percentile_rank": 4,
+      "weight": 0.1266,
+      "latest_value": 24152.656,
+      "latest_date": "2026-01-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 35,
       "anomaly": false,
+      "stale": true,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "quarterly",
-      "norm_mean": 22395.1042,
-      "norm_std": 466.8127,
+      "norm_mean": 10367.1916,
+      "norm_std": 6393.1813,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 22504.2244
+          "date": "2020-04-01",
+          "value": 19077.992
+        },
+        {
+          "date": "2020-07-01",
+          "value": 20558.879
+        },
+        {
+          "date": "2020-10-01",
+          "value": 20791.917
+        },
+        {
+          "date": "2021-01-01",
+          "value": 21082.134
+        },
+        {
+          "date": "2021-04-01",
+          "value": 21440.929
+        },
+        {
+          "date": "2021-07-01",
+          "value": 21617.828
+        },
+        {
+          "date": "2021-10-01",
+          "value": 21988.737
+        },
+        {
+          "date": "2022-01-01",
+          "value": 21932.71
+        },
+        {
+          "date": "2022-04-01",
+          "value": 21967.045
+        },
+        {
+          "date": "2022-07-01",
+          "value": 22125.625
+        },
+        {
+          "date": "2022-10-01",
+          "value": 22278.345
+        },
+        {
+          "date": "2023-01-01",
+          "value": 22439.607
+        },
+        {
+          "date": "2023-04-01",
+          "value": 22580.499
+        },
+        {
+          "date": "2023-07-01",
+          "value": 22840.989
+        },
+        {
+          "date": "2023-10-01",
+          "value": 23033.78
+        },
+        {
+          "date": "2024-01-01",
+          "value": 23082.119
+        },
+        {
+          "date": "2024-04-01",
+          "value": 23286.508
         },
         {
           "date": "2024-07-01",
-          "value": 21768.0331
-        },
-        {
-          "date": "2024-08-01",
-          "value": 22486.9947
-        },
-        {
-          "date": "2024-09-01",
-          "value": 22005.7147
+          "value": 23478.57
         },
         {
           "date": "2024-10-01",
-          "value": 23213.6505
-        },
-        {
-          "date": "2024-11-01",
-          "value": 22070.7277
-        },
-        {
-          "date": "2024-12-01",
-          "value": 22744.5065
+          "value": 23586.542
         },
         {
           "date": "2025-01-01",
-          "value": 21551.0994
-        },
-        {
-          "date": "2025-02-01",
-          "value": 22600.0531
-        },
-        {
-          "date": "2025-03-01",
-          "value": 22244.8223
+          "value": 23548.21
         },
         {
           "date": "2025-04-01",
-          "value": 22923.4818
-        },
-        {
-          "date": "2025-05-01",
-          "value": 22413.9404
-        },
-        {
-          "date": "2025-06-01",
-          "value": 22098.057
+          "value": 23770.976
         },
         {
           "date": "2025-07-01",
-          "value": 22199.3427
-        },
-        {
-          "date": "2025-08-01",
-          "value": 22018.3929
-        },
-        {
-          "date": "2025-09-01",
-          "value": 23017.8824
+          "value": 24026.834
         },
         {
           "date": "2025-10-01",
-          "value": 22237.889
-        },
-        {
-          "date": "2025-11-01",
-          "value": 22892.7274
-        },
-        {
-          "date": "2025-12-01",
-          "value": 21547.7834
+          "value": 24055.749
         },
         {
           "date": "2026-01-01",
-          "value": 22590.9642
-        },
-        {
-          "date": "2026-02-01",
-          "value": 21934.4879
-        },
-        {
-          "date": "2026-03-01",
-          "value": 23101.9684
-        },
-        {
-          "date": "2026-04-01",
-          "value": 22315.9319
-        },
-        {
-          "date": "2026-05-19",
-          "value": 23105
+          "value": 24152.656
         }
       ]
     },
@@ -2903,116 +3161,117 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Goods-sector output. Z-score normalized.",
-      "weight": 0.1114,
-      "latest_value": 103.4,
-      "latest_date": "2026-05-19",
-      "score": 14.1,
-      "level_score": 10.7,
-      "momentum_score": 22,
-      "percentile_rank": 35,
+      "weight": 0.1025,
+      "latest_value": 102.4963,
+      "latest_date": "2026-04-01",
+      "score": 15.1,
+      "level_score": 0.2,
+      "momentum_score": 50,
+      "percentile_rank": 33,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 102.0292,
-      "norm_std": 2.5805,
+      "norm_mean": 46.8818,
+      "norm_std": 35.2016,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 100.863
+        },
+        {
           "date": "2024-06-01",
-          "value": 97.2591
+          "value": 100.894
         },
         {
           "date": "2024-07-01",
-          "value": 103.1346
+          "value": 99.9757
         },
         {
           "date": "2024-08-01",
-          "value": 101.2297
+          "value": 100.4309
         },
         {
           "date": "2024-09-01",
-          "value": 105.2375
+          "value": 99.8084
         },
         {
           "date": "2024-10-01",
-          "value": 102.7004
+          "value": 99.4695
         },
         {
           "date": "2024-11-01",
-          "value": 100.4661
+          "value": 99.2925
         },
         {
           "date": "2024-12-01",
-          "value": 101.1406
+          "value": 100.3273
         },
         {
           "date": "2025-01-01",
-          "value": 99.5925
+          "value": 100.0647
         },
         {
           "date": "2025-02-01",
-          "value": 105.8826
+          "value": 101.0993
         },
         {
           "date": "2025-03-01",
-          "value": 101.2794
+          "value": 101.0404
         },
         {
           "date": "2025-04-01",
-          "value": 105.4707
+          "value": 101.1279
         },
         {
           "date": "2025-05-01",
-          "value": 97.2704
+          "value": 100.9655
         },
         {
           "date": "2025-06-01",
-          "value": 103.2296
+          "value": 101.4785
         },
         {
           "date": "2025-07-01",
-          "value": 99.284
+          "value": 101.894
         },
         {
           "date": "2025-08-01",
-          "value": 106.2402
+          "value": 101.6247
         },
         {
           "date": "2025-09-01",
-          "value": 102.0169
+          "value": 101.668
         },
         {
           "date": "2025-10-01",
-          "value": 102.8526
+          "value": 101.2195
         },
         {
           "date": "2025-11-01",
-          "value": 99.7422
+          "value": 101.0344
         },
         {
           "date": "2025-12-01",
-          "value": 100.1752
+          "value": 101.5203
         },
         {
           "date": "2026-01-01",
-          "value": 103.827
+          "value": 101.4737
         },
         {
           "date": "2026-02-01",
-          "value": 102.3279
+          "value": 102.1009
         },
         {
           "date": "2026-03-01",
-          "value": 105.6712
+          "value": 101.806
         },
         {
           "date": "2026-04-01",
-          "value": 98.3574
-        },
-        {
-          "date": "2026-05-19",
-          "value": 103.4
+          "value": 102.4963
         }
       ]
     },
@@ -3022,116 +3281,117 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Consumer demand. Z-score normalized.",
-      "weight": 0.1114,
-      "latest_value": 722000,
-      "latest_date": "2026-05-19",
-      "score": 0.5,
-      "level_score": 0.7,
-      "momentum_score": 0,
-      "percentile_rank": 10,
+      "weight": 0.1025,
+      "latest_value": 757085,
+      "latest_date": "2026-04-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 28,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 698500,
-      "norm_std": 19110.9698,
+      "norm_mean": 385174.3204,
+      "norm_std": 157231.2941,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 692774
+        },
+        {
           "date": "2024-06-01",
-          "value": 672774.8295
+          "value": 692449
         },
         {
           "date": "2024-07-01",
-          "value": 700307.5165
+          "value": 698835
         },
         {
           "date": "2024-08-01",
-          "value": 675699.3217
+          "value": 697039
         },
         {
           "date": "2024-09-01",
-          "value": 713476.2407
+          "value": 703055
         },
         {
           "date": "2024-10-01",
-          "value": 710585.9835
+          "value": 708290
         },
         {
           "date": "2024-11-01",
-          "value": 702504.0436
+          "value": 711853
         },
         {
           "date": "2024-12-01",
-          "value": 697074.9013
+          "value": 717265
         },
         {
           "date": "2025-01-01",
-          "value": 669832.2609
+          "value": 711260
         },
         {
           "date": "2025-02-01",
-          "value": 710567.5234
+          "value": 711575
         },
         {
           "date": "2025-03-01",
-          "value": 688609.5249
+          "value": 723339
         },
         {
           "date": "2025-04-01",
-          "value": 735240.1912
+          "value": 721903
         },
         {
           "date": "2025-05-01",
-          "value": 677315.9799
+          "value": 716101
         },
         {
           "date": "2025-06-01",
-          "value": 708124.2767
+          "value": 723033
         },
         {
           "date": "2025-07-01",
-          "value": 663758.1506
+          "value": 727727
         },
         {
           "date": "2025-08-01",
-          "value": 715627.8792
+          "value": 731700
         },
         {
           "date": "2025-09-01",
-          "value": 698575.9742
+          "value": 732192
         },
         {
           "date": "2025-10-01",
-          "value": 718957.3928
+          "value": 731051
         },
         {
           "date": "2025-11-01",
-          "value": 692627.1316
+          "value": 734718
         },
         {
           "date": "2025-12-01",
-          "value": 680788.9087
+          "value": 734717
         },
         {
           "date": "2026-01-01",
-          "value": 695275.6902
+          "value": 734503
         },
         {
           "date": "2026-02-01",
-          "value": 689970.1552
+          "value": 741278
         },
         {
           "date": "2026-03-01",
-          "value": 730587.1515
+          "value": 753370
         },
         {
           "date": "2026-04-01",
-          "value": 686672.5227
-        },
-        {
-          "date": "2026-05-19",
-          "value": 722000
+          "value": 757085
         }
       ]
     },
@@ -3141,116 +3401,117 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Earned household income. NBER coincident series.",
-      "weight": 0.1114,
-      "latest_value": 15870,
-      "latest_date": "2026-05-19",
-      "score": 8.5,
-      "level_score": 0.6,
-      "momentum_score": 27,
-      "percentile_rank": 25,
+      "weight": 0.1025,
+      "latest_value": 16525.8,
+      "latest_date": "2026-04-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 39,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 15488.125,
-      "norm_std": 297.1779,
+      "norm_mean": 8325.8484,
+      "norm_std": 4153.4295,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 16449
+        },
+        {
           "date": "2024-06-01",
-          "value": 15796.1404
+          "value": 16456.4
         },
         {
           "date": "2024-07-01",
-          "value": 14920.7986
+          "value": 16473.6
         },
         {
           "date": "2024-08-01",
-          "value": 15582.9349
+          "value": 16494.5
         },
         {
           "date": "2024-09-01",
-          "value": 15292.7935
+          "value": 16500.8
         },
         {
           "date": "2024-10-01",
-          "value": 15862.2908
+          "value": 16531.5
         },
         {
           "date": "2024-11-01",
-          "value": 15532.3748
+          "value": 16590.1
         },
         {
           "date": "2024-12-01",
-          "value": 15376.1107
+          "value": 16606.6
         },
         {
           "date": "2025-01-01",
-          "value": 15317.2915
+          "value": 16635.4
         },
         {
           "date": "2025-02-01",
-          "value": 15187.267
+          "value": 16600.6
         },
         {
           "date": "2025-03-01",
-          "value": 15827.4298
+          "value": 16695.4
         },
         {
           "date": "2025-04-01",
-          "value": 15413.1496
+          "value": 16700
         },
         {
           "date": "2025-05-01",
-          "value": 15882.6178
+          "value": 16636.1
         },
         {
           "date": "2025-06-01",
-          "value": 14963.2069
+          "value": 16583.5
         },
         {
           "date": "2025-07-01",
-          "value": 15591.1681
+          "value": 16677.9
         },
         {
           "date": "2025-08-01",
-          "value": 15089.0152
+          "value": 16699.7
         },
         {
           "date": "2025-09-01",
-          "value": 15940.8247
+          "value": 16720.7
         },
         {
           "date": "2025-10-01",
-          "value": 15448.7486
+          "value": 16677
         },
         {
           "date": "2025-11-01",
-          "value": 15646.5466
+          "value": 16685.5
         },
         {
           "date": "2025-12-01",
-          "value": 15179.9112
+          "value": 16651.9
         },
         {
           "date": "2026-01-01",
-          "value": 15272.9667
+          "value": 16670.5
         },
         {
           "date": "2026-02-01",
-          "value": 15575.2929
+          "value": 16607.6
         },
         {
           "date": "2026-03-01",
-          "value": 15525.3336
+          "value": 16599.4
         },
         {
           "date": "2026-04-01",
-          "value": 15875.3295
-        },
-        {
-          "date": "2026-05-19",
-          "value": 15870
+          "value": 16525.8
         }
       ]
     },
@@ -3260,116 +3521,117 @@
       "layer": "real_economy",
       "category": "micro",
       "description": "Rate-sensitive leading housing signal.",
-      "weight": 0.0852,
-      "latest_value": 1388,
-      "latest_date": "2026-05-19",
-      "score": 33.2,
-      "level_score": 41.9,
-      "momentum_score": 12.9,
-      "percentile_rank": 42,
+      "weight": 0.0784,
+      "latest_value": 1465,
+      "latest_date": "2026-04-01",
+      "score": 37.5,
+      "level_score": 41.1,
+      "momentum_score": 29.1,
+      "percentile_rank": 46,
       "anomaly": false,
+      "stale": false,
       "alert": "YELLOW",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 1375.2708,
-      "norm_std": 156.3565,
+      "norm_mean": 1431.0953,
+      "norm_std": 375.9267,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 1329
+        },
+        {
           "date": "2024-06-01",
-          "value": 1189.4882
+          "value": 1318
         },
         {
           "date": "2024-07-01",
-          "value": 1352.5207
+          "value": 1269
         },
         {
           "date": "2024-08-01",
-          "value": 1473.2261
+          "value": 1394
         },
         {
           "date": "2024-09-01",
-          "value": 1435.7009
+          "value": 1357
         },
         {
           "date": "2024-10-01",
-          "value": 1512.4677
+          "value": 1370
         },
         {
           "date": "2024-11-01",
-          "value": 1154.0485
+          "value": 1300
         },
         {
           "date": "2024-12-01",
-          "value": 1424.7421
+          "value": 1494
         },
         {
           "date": "2025-01-01",
-          "value": 1188.156
+          "value": 1353
         },
         {
           "date": "2025-02-01",
-          "value": 1662.5469
+          "value": 1491
         },
         {
           "date": "2025-03-01",
-          "value": 1306.3897
+          "value": 1346
         },
         {
           "date": "2025-04-01",
-          "value": 1535.9705
+          "value": 1400
         },
         {
           "date": "2025-05-01",
-          "value": 1129.0154
+          "value": 1289
         },
         {
           "date": "2025-06-01",
-          "value": 1389.5241
+          "value": 1379
         },
         {
           "date": "2025-07-01",
-          "value": 1335.5549
+          "value": 1432
         },
         {
           "date": "2025-08-01",
-          "value": 1520.8221
+          "value": 1291
         },
         {
           "date": "2025-09-01",
-          "value": 1479.3834
+          "value": 1319
         },
         {
           "date": "2025-10-01",
-          "value": 1273.4448
+          "value": 1273
         },
         {
           "date": "2025-11-01",
-          "value": 1358.6784
+          "value": 1319
         },
         {
           "date": "2025-12-01",
-          "value": 1177.1725
+          "value": 1378
         },
         {
           "date": "2026-01-01",
-          "value": 1599.1974
+          "value": 1385
         },
         {
           "date": "2026-02-01",
-          "value": 1323.5178
+          "value": 1346
         },
         {
           "date": "2026-03-01",
-          "value": 1610.773
+          "value": 1507
         },
         {
           "date": "2026-04-01",
-          "value": 1124.0665
-        },
-        {
-          "date": "2026-05-19",
-          "value": 1388
+          "value": 1465
         }
       ]
     },
@@ -3379,14 +3641,15 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "NY Fed Weekly Economic Index; 10 daily/weekly indicators scaled to match YoY GDP growth.",
-      "weight": 0.0983,
-      "latest_value": 2.1,
-      "latest_date": "2026-05-15",
+      "weight": 0.0904,
+      "latest_value": 3.02,
+      "latest_date": "2026-05-23",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
-      "percentile_rank": 79,
+      "percentile_rank": 89,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 0,
       "direction": "direct",
@@ -3395,100 +3658,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 3.5333
+          "date": "2024-06-29",
+          "value": 2.39
         },
         {
-          "date": "2024-07-01",
-          "value": -0.7387
+          "date": "2024-07-27",
+          "value": 1.71
         },
         {
-          "date": "2024-08-01",
-          "value": 2.1463
+          "date": "2024-08-31",
+          "value": 2.36
         },
         {
-          "date": "2024-09-01",
-          "value": 0.6739
+          "date": "2024-09-28",
+          "value": 2.09
         },
         {
-          "date": "2024-10-01",
-          "value": 3.5303
+          "date": "2024-10-26",
+          "value": 2.13
         },
         {
-          "date": "2024-11-01",
-          "value": 2.2124
+          "date": "2024-11-30",
+          "value": 1.73
         },
         {
-          "date": "2024-12-01",
-          "value": 1.5339
+          "date": "2024-12-28",
+          "value": 2.71
         },
         {
-          "date": "2025-01-01",
-          "value": 1.0669
+          "date": "2025-01-25",
+          "value": 2.79
         },
         {
-          "date": "2025-02-01",
-          "value": 0.2191
+          "date": "2025-02-22",
+          "value": 2.43
         },
         {
-          "date": "2025-03-01",
-          "value": 3.2276
+          "date": "2025-03-29",
+          "value": 2.29
         },
         {
-          "date": "2025-04-01",
-          "value": 1.4784
+          "date": "2025-04-26",
+          "value": 2.33
         },
         {
-          "date": "2025-05-01",
-          "value": 3.9156
+          "date": "2025-05-31",
+          "value": 1.79
         },
         {
-          "date": "2025-06-01",
-          "value": -0.4546
+          "date": "2025-06-28",
+          "value": 2.15
         },
         {
-          "date": "2025-07-01",
-          "value": 2.288
+          "date": "2025-07-26",
+          "value": 2.59
         },
         {
-          "date": "2025-08-01",
-          "value": -0.281
+          "date": "2025-08-30",
+          "value": 2.23
         },
         {
-          "date": "2025-09-01",
-          "value": 3.8083
+          "date": "2025-09-27",
+          "value": 2.37
         },
         {
-          "date": "2025-10-01",
-          "value": 1.7216
+          "date": "2025-10-25",
+          "value": 2.02
         },
         {
-          "date": "2025-11-01",
-          "value": 2.8219
+          "date": "2025-11-29",
+          "value": 2.26
         },
         {
-          "date": "2025-12-01",
-          "value": 0.5184
+          "date": "2025-12-27",
+          "value": 2.51
         },
         {
-          "date": "2026-01-01",
-          "value": 0.7095
+          "date": "2026-01-31",
+          "value": 2.21
         },
         {
-          "date": "2026-02-01",
-          "value": 2.0089
+          "date": "2026-02-28",
+          "value": 2.48
         },
         {
-          "date": "2026-03-01",
-          "value": 1.9021
+          "date": "2026-03-28",
+          "value": 2.86
         },
         {
-          "date": "2026-04-01",
-          "value": 3.8087
+          "date": "2026-04-25",
+          "value": 2.95
         },
         {
-          "date": "2026-05-15",
-          "value": 2.1
+          "date": "2026-05-23",
+          "value": 3.02
         }
       ]
     },
@@ -3498,116 +3761,117 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Personal saving as % of disposable income; higher = more consumer buffer.",
-      "weight": 0.0819,
-      "latest_value": 4.8,
-      "latest_date": "2026-05-19",
-      "score": 84.6,
-      "level_score": 91.8,
-      "momentum_score": 67.9,
-      "percentile_rank": 65,
+      "weight": 0.0753,
+      "latest_value": 2.6,
+      "latest_date": "2026-04-01",
+      "score": 85.1,
+      "level_score": 99.9,
+      "momentum_score": 50.7,
+      "percentile_rank": 59,
       "anomaly": false,
+      "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 5.8771,
-      "norm_std": 1.7881,
+      "norm_mean": 8.3759,
+      "norm_std": 3.4323,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 5.8
+        },
+        {
           "date": "2024-06-01",
-          "value": 5.1669
+          "value": 5.7
         },
         {
           "date": "2024-07-01",
-          "value": 4.2812
+          "value": 5.3
         },
         {
           "date": "2024-08-01",
-          "value": 8.2161
+          "value": 5.2
         },
         {
           "date": "2024-09-01",
-          "value": 5.4981
+          "value": 4.8
         },
         {
           "date": "2024-10-01",
-          "value": 8.2392
+          "value": 5
         },
         {
           "date": "2024-11-01",
-          "value": 2.8648
+          "value": 4.9
         },
         {
           "date": "2024-12-01",
-          "value": 6.6501
+          "value": 4.3
         },
         {
           "date": "2025-01-01",
-          "value": 3.8959
+          "value": 5.1
         },
         {
           "date": "2025-02-01",
-          "value": 8.6636
+          "value": 5.2
         },
         {
           "date": "2025-03-01",
-          "value": 5.8444
+          "value": 5.1
         },
         {
           "date": "2025-04-01",
-          "value": 6.6898
+          "value": 5.5
         },
         {
           "date": "2025-05-01",
-          "value": 4.3078
+          "value": 4.9
         },
         {
           "date": "2025-06-01",
-          "value": 4.7205
+          "value": 4.6
         },
         {
           "date": "2025-07-01",
-          "value": 6.8055
+          "value": 4.5
         },
         {
           "date": "2025-08-01",
-          "value": 6.169
+          "value": 4.4
         },
         {
           "date": "2025-09-01",
-          "value": 8.2857
+          "value": 4.3
         },
         {
           "date": "2025-10-01",
-          "value": 3.6771
+          "value": 3.9
         },
         {
           "date": "2025-11-01",
-          "value": 6.5149
+          "value": 3.8
         },
         {
           "date": "2025-12-01",
-          "value": 3.1231
+          "value": 3.6
         },
         {
           "date": "2026-01-01",
-          "value": 8.6084
+          "value": 4.3
         },
         {
           "date": "2026-02-01",
-          "value": 5.4132
+          "value": 3.6
         },
         {
           "date": "2026-03-01",
-          "value": 8.0839
+          "value": 3.2
         },
         {
           "date": "2026-04-01",
-          "value": 3.798
-        },
-        {
-          "date": "2026-05-19",
-          "value": 4.8
+          "value": 2.6
         }
       ]
     },
@@ -3617,116 +3881,117 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "S&P/Case-Shiller national home price index; housing wealth leads consumer spending 6–12 months.",
-      "weight": 0.0819,
-      "latest_value": 318.5,
-      "latest_date": "2026-05-19",
-      "score": 15.9,
-      "level_score": 0.9,
-      "momentum_score": 50.9,
-      "percentile_rank": 31,
+      "weight": 0.0753,
+      "latest_value": 331.265,
+      "latest_date": "2026-03-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 24,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 285.6979,
-      "norm_std": 28.1169,
+      "norm_mean": 153.5278,
+      "norm_std": 74.0703,
       "history": [
         {
+          "date": "2024-04-01",
+          "value": 319.092
+        },
+        {
+          "date": "2024-05-01",
+          "value": 319.977
+        },
+        {
           "date": "2024-06-01",
-          "value": 266.7331
+          "value": 320.764
         },
         {
           "date": "2024-07-01",
-          "value": 292.5137
+          "value": 321.635
         },
         {
           "date": "2024-08-01",
-          "value": 290.1041
+          "value": 322.5
         },
         {
           "date": "2024-09-01",
-          "value": 323.7432
+          "value": 323.526
         },
         {
           "date": "2024-10-01",
-          "value": 255.569
+          "value": 324.539
         },
         {
           "date": "2024-11-01",
-          "value": 294.8067
+          "value": 325.95
         },
         {
           "date": "2024-12-01",
-          "value": 238.0554
+          "value": 327.56
         },
         {
           "date": "2025-01-01",
-          "value": 324.3291
+          "value": 329.001
         },
         {
           "date": "2025-02-01",
-          "value": 276.158
+          "value": 329.573
         },
         {
           "date": "2025-03-01",
-          "value": 324.9262
+          "value": 329.078
         },
         {
           "date": "2025-04-01",
-          "value": 253.426
+          "value": 328.092
         },
         {
           "date": "2025-05-01",
-          "value": 279.3573
+          "value": 327.486
         },
         {
           "date": "2025-06-01",
-          "value": 267.2741
+          "value": 326.966
         },
         {
           "date": "2025-07-01",
-          "value": 298.8119
+          "value": 326.917
         },
         {
           "date": "2025-08-01",
-          "value": 313.727
+          "value": 327.28
         },
         {
           "date": "2025-09-01",
-          "value": 277.3498
+          "value": 327.759
         },
         {
           "date": "2025-10-01",
-          "value": 290.886
+          "value": 328.831
         },
         {
           "date": "2025-11-01",
-          "value": 238.5779
+          "value": 330.149
         },
         {
           "date": "2025-12-01",
-          "value": 312.2019
+          "value": 331.304
         },
         {
           "date": "2026-01-01",
-          "value": 270.8579
+          "value": 331.851
         },
         {
           "date": "2026-02-01",
-          "value": 336.6805
+          "value": 331.998
         },
         {
           "date": "2026-03-01",
-          "value": 254.5525
-        },
-        {
-          "date": "2026-04-01",
-          "value": 293.0019
-        },
-        {
-          "date": "2026-05-19",
-          "value": 318.5
+          "value": 331.265
         }
       ]
     },
@@ -3736,116 +4001,117 @@
       "layer": "real_economy",
       "category": "macro",
       "description": "Total industry capacity utilization; below 78% signals slowing investment and industrial contraction.",
-      "weight": 0.091,
-      "latest_value": 77.8,
-      "latest_date": "2026-05-19",
-      "score": 91.5,
-      "level_score": 87.8,
-      "momentum_score": 100,
-      "percentile_rank": 65,
+      "weight": 0.0837,
+      "latest_value": 76.1194,
+      "latest_date": "2026-04-01",
+      "score": 82.6,
+      "level_score": 97.1,
+      "momentum_score": 48.8,
+      "percentile_rank": 64,
       "anomaly": false,
+      "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 78.4854,
-      "norm_std": 1.3889,
+      "norm_mean": 79.8261,
+      "norm_std": 4.2148,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 76.7961
+        },
+        {
           "date": "2024-06-01",
-          "value": 77.3319
+          "value": 76.7586
         },
         {
           "date": "2024-07-01",
-          "value": 80.5947
+          "value": 75.9946
         },
         {
           "date": "2024-08-01",
-          "value": 78.0748
+          "value": 76.2697
         },
         {
           "date": "2024-09-01",
-          "value": 80.1827
+          "value": 75.7216
         },
         {
           "date": "2024-10-01",
-          "value": 76.028
+          "value": 75.3852
         },
         {
           "date": "2024-11-01",
-          "value": 79.1692
+          "value": 75.1681
         },
         {
           "date": "2024-12-01",
-          "value": 77.2479
+          "value": 75.8651
         },
         {
           "date": "2025-01-01",
-          "value": 80.6784
+          "value": 75.5781
         },
         {
           "date": "2025-02-01",
-          "value": 78.4911
+          "value": 76.2685
         },
         {
           "date": "2025-03-01",
-          "value": 78.7837
+          "value": 76.1318
         },
         {
           "date": "2025-04-01",
-          "value": 77.3739
+          "value": 76.1048
         },
         {
           "date": "2025-05-01",
-          "value": 77.5957
+          "value": 75.8894
         },
         {
           "date": "2025-06-01",
-          "value": 79.5867
+          "value": 76.181
         },
         {
           "date": "2025-07-01",
-          "value": 78.6398
+          "value": 76.3997
         },
         {
           "date": "2025-08-01",
-          "value": 80.3254
+          "value": 76.1055
         },
         {
           "date": "2025-09-01",
-          "value": 76.525
+          "value": 76.0461
         },
         {
           "date": "2025-10-01",
-          "value": 79.0444
+          "value": 75.6194
         },
         {
           "date": "2025-11-01",
-          "value": 76.546
+          "value": 75.3901
         },
         {
           "date": "2025-12-01",
-          "value": 80.7775
+          "value": 75.6618
         },
         {
           "date": "2026-01-01",
-          "value": 78.1879
+          "value": 75.5658
         },
         {
           "date": "2026-02-01",
-          "value": 79.9248
+          "value": 75.9598
         },
         {
           "date": "2026-03-01",
-          "value": 76.8647
+          "value": 75.6716
         },
         {
           "date": "2026-04-01",
-          "value": 78.0652
-        },
-        {
-          "date": "2026-05-19",
-          "value": 77.8
+          "value": 76.1194
         }
       ]
     },
@@ -3855,116 +4121,237 @@
       "layer": "real_economy",
       "category": "micro",
       "description": "New privately-owned housing units authorized. Leads construction by 1–2 months; sharp declines precede recessions.",
-      "weight": 0.09,
-      "latest_value": 1443,
-      "latest_date": "2026-05-19",
-      "score": 59.4,
-      "level_score": 66.8,
-      "momentum_score": 42.1,
-      "percentile_rank": 54,
-      "anomaly": false,
+      "weight": 0.0828,
+      "latest_value": 1423,
+      "latest_date": "2026-04-01",
+      "score": 38.8,
+      "level_score": 37.3,
+      "momentum_score": 42.2,
+      "percentile_rank": 45,
+      "anomaly": true,
+      "stale": false,
       "alert": "YELLOW",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 1479.2292,
-      "norm_std": 207.8682,
+      "norm_mean": 1374.5779,
+      "norm_std": 373.5205,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 1405
+        },
+        {
           "date": "2024-06-01",
-          "value": 1394.4735
+          "value": 1459
         },
         {
           "date": "2024-07-01",
-          "value": 1291.1373
+          "value": 1448
         },
         {
           "date": "2024-08-01",
-          "value": 1750.216
+          "value": 1492
         },
         {
           "date": "2024-09-01",
-          "value": 1433.1095
+          "value": 1421
         },
         {
           "date": "2024-10-01",
-          "value": 1752.9045
+          "value": 1435
         },
         {
           "date": "2024-11-01",
-          "value": 1125.8906
+          "value": 1512
         },
         {
           "date": "2024-12-01",
-          "value": 1567.5061
+          "value": 1467
         },
         {
           "date": "2025-01-01",
-          "value": 1246.1855
+          "value": 1463
         },
         {
           "date": "2025-02-01",
-          "value": 1802.4143
+          "value": 1446
         },
         {
           "date": "2025-03-01",
-          "value": 1473.5081
+          "value": 1492
         },
         {
           "date": "2025-04-01",
-          "value": 1572.1438
+          "value": 1445
         },
         {
           "date": "2025-05-01",
-          "value": 1294.2415
+          "value": 1416
         },
         {
           "date": "2025-06-01",
-          "value": 1342.3864
+          "value": 1399
         },
         {
           "date": "2025-07-01",
-          "value": 1585.6417
+          "value": 1400
         },
         {
           "date": "2025-08-01",
-          "value": 1511.3827
+          "value": 1347
         },
         {
           "date": "2025-09-01",
-          "value": 1758.3361
+          "value": 1444
         },
         {
           "date": "2025-10-01",
-          "value": 1220.657
+          "value": 1418
         },
         {
           "date": "2025-11-01",
-          "value": 1551.7376
+          "value": 1414
         },
         {
           "date": "2025-12-01",
-          "value": 1156.0245
+          "value": 1482
         },
         {
           "date": "2026-01-01",
-          "value": 1795.9752
+          "value": 1393
         },
         {
           "date": "2026-02-01",
-          "value": 1423.2066
+          "value": 1540
         },
         {
           "date": "2026-03-01",
-          "value": 1734.7868
+          "value": 1363
         },
         {
           "date": "2026-04-01",
-          "value": 1234.762
+          "value": 1423
+        }
+      ]
+    },
+    {
+      "name": "30-Year Fixed Mortgage Rate",
+      "fred_id": "MORTGAGE30US",
+      "layer": "real_economy",
+      "category": "macro",
+      "description": "30-year fixed mortgage rate; rising rates directly reduce housing affordability and construction, leading the real economy by 6–12 months.",
+      "weight": 0.08,
+      "latest_value": 6.53,
+      "latest_date": "2026-05-28",
+      "score": 62.3,
+      "level_score": 64.3,
+      "momentum_score": 57.6,
+      "percentile_rank": 54,
+      "anomaly": false,
+      "stale": false,
+      "alert": "RED",
+      "threshold": null,
+      "direction": "inverse",
+      "frequency": "weekly",
+      "norm_mean": 6.2324,
+      "norm_std": 2.0173,
+      "history": [
+        {
+          "date": "2024-06-27",
+          "value": 6.86
         },
         {
-          "date": "2026-05-19",
-          "value": 1443
+          "date": "2024-07-25",
+          "value": 6.78
+        },
+        {
+          "date": "2024-08-29",
+          "value": 6.35
+        },
+        {
+          "date": "2024-09-26",
+          "value": 6.08
+        },
+        {
+          "date": "2024-10-31",
+          "value": 6.72
+        },
+        {
+          "date": "2024-11-27",
+          "value": 6.81
+        },
+        {
+          "date": "2024-12-26",
+          "value": 6.85
+        },
+        {
+          "date": "2025-01-30",
+          "value": 6.95
+        },
+        {
+          "date": "2025-02-27",
+          "value": 6.76
+        },
+        {
+          "date": "2025-03-27",
+          "value": 6.65
+        },
+        {
+          "date": "2025-04-24",
+          "value": 6.81
+        },
+        {
+          "date": "2025-05-29",
+          "value": 6.89
+        },
+        {
+          "date": "2025-06-26",
+          "value": 6.77
+        },
+        {
+          "date": "2025-07-31",
+          "value": 6.72
+        },
+        {
+          "date": "2025-08-28",
+          "value": 6.56
+        },
+        {
+          "date": "2025-09-25",
+          "value": 6.3
+        },
+        {
+          "date": "2025-10-30",
+          "value": 6.17
+        },
+        {
+          "date": "2025-11-26",
+          "value": 6.23
+        },
+        {
+          "date": "2025-12-31",
+          "value": 6.15
+        },
+        {
+          "date": "2026-01-29",
+          "value": 6.1
+        },
+        {
+          "date": "2026-02-26",
+          "value": 5.98
+        },
+        {
+          "date": "2026-03-26",
+          "value": 6.38
+        },
+        {
+          "date": "2026-04-30",
+          "value": 6.3
+        },
+        {
+          "date": "2026-05-28",
+          "value": 6.53
         }
       ]
     },
@@ -3974,116 +4361,117 @@
       "layer": "micro",
       "category": "micro",
       "description": "Census new orders for nondefense capital goods ex aircraft. Goods-sector demand proxy.",
-      "weight": 0.1765,
-      "latest_value": 498.5,
-      "latest_date": "2026-05-19",
-      "score": 9.2,
-      "level_score": 13.2,
-      "momentum_score": 0,
-      "percentile_rank": 27,
+      "weight": 0.2118,
+      "latest_value": 82426,
+      "latest_date": "2026-04-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 49.9,
+      "percentile_rank": 36,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 488.2188,
-      "norm_std": 21.8212,
+      "norm_mean": 60418.5182,
+      "norm_std": 10176.3347,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 73137
+        },
+        {
           "date": "2024-06-01",
-          "value": 527.795
+          "value": 73544
         },
         {
           "date": "2024-07-01",
-          "value": 460.7479
+          "value": 73430
         },
         {
           "date": "2024-08-01",
-          "value": 492.1536
+          "value": 73738
         },
         {
           "date": "2024-09-01",
-          "value": 457.0522
+          "value": 74487
         },
         {
           "date": "2024-10-01",
-          "value": 503.6992
+          "value": 73440
         },
         {
           "date": "2024-11-01",
-          "value": 498.3482
+          "value": 74311
         },
         {
           "date": "2024-12-01",
-          "value": 497.6833
+          "value": 74595
         },
         {
           "date": "2025-01-01",
-          "value": 486.4811
+          "value": 75971
         },
         {
           "date": "2025-02-01",
-          "value": 457.1205
+          "value": 75561
         },
         {
           "date": "2025-03-01",
-          "value": 496.2092
+          "value": 75781
         },
         {
           "date": "2025-04-01",
-          "value": 475.0162
+          "value": 74631
         },
         {
           "date": "2025-05-01",
-          "value": 529.2122
+          "value": 76049
         },
         {
           "date": "2025-06-01",
-          "value": 467.0993
+          "value": 75608
         },
         {
           "date": "2025-07-01",
-          "value": 501.2939
+          "value": 76154
         },
         {
           "date": "2025-08-01",
-          "value": 445.829
+          "value": 76806
         },
         {
           "date": "2025-09-01",
-          "value": 505.1447
+          "value": 77591
         },
         {
           "date": "2025-10-01",
-          "value": 483.718
+          "value": 77948
         },
         {
           "date": "2025-11-01",
-          "value": 514.9495
+          "value": 78621
         },
         {
           "date": "2025-12-01",
-          "value": 481.8292
+          "value": 79262
         },
         {
           "date": "2026-01-01",
-          "value": 471.5119
+          "value": 78990
         },
         {
           "date": "2026-02-01",
-          "value": 479.191
+          "value": 80235
         },
         {
           "date": "2026-03-01",
-          "value": 476.7428
+          "value": 83329
         },
         {
           "date": "2026-04-01",
-          "value": 521.242
-        },
-        {
-          "date": "2026-05-19",
-          "value": 498.5
+          "value": 82426
         }
       ]
     },
@@ -4093,14 +4481,15 @@
       "layer": "micro",
       "category": "micro",
       "description": "Net % of banks tightening C&I loan standards (Senior Loan Officer Survey).",
-      "weight": 0.1765,
-      "latest_value": 8.4,
-      "latest_date": "2026-05-19",
-      "score": 21.8,
-      "level_score": 8.9,
-      "momentum_score": 51.7,
-      "percentile_rank": 81,
-      "anomaly": true,
+      "weight": 0.2118,
+      "latest_value": 8.1,
+      "latest_date": "2026-04-01",
+      "score": 20.2,
+      "level_score": 8.5,
+      "momentum_score": 47.6,
+      "percentile_rank": 72,
+      "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 20,
       "direction": "inverse",
@@ -4109,100 +4498,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 21.1841
+          "date": "2020-07-01",
+          "value": 71.2
+        },
+        {
+          "date": "2020-10-01",
+          "value": 37.7
+        },
+        {
+          "date": "2021-01-01",
+          "value": 5.5
+        },
+        {
+          "date": "2021-04-01",
+          "value": -15.1
+        },
+        {
+          "date": "2021-07-01",
+          "value": -32.4
+        },
+        {
+          "date": "2021-10-01",
+          "value": -18.2
+        },
+        {
+          "date": "2022-01-01",
+          "value": -14.5
+        },
+        {
+          "date": "2022-04-01",
+          "value": -1.5
+        },
+        {
+          "date": "2022-07-01",
+          "value": 24.2
+        },
+        {
+          "date": "2022-10-01",
+          "value": 39.1
+        },
+        {
+          "date": "2023-01-01",
+          "value": 44.8
+        },
+        {
+          "date": "2023-04-01",
+          "value": 46
+        },
+        {
+          "date": "2023-07-01",
+          "value": 50.8
+        },
+        {
+          "date": "2023-10-01",
+          "value": 33.9
+        },
+        {
+          "date": "2024-01-01",
+          "value": 14.5
+        },
+        {
+          "date": "2024-04-01",
+          "value": 15.6
         },
         {
           "date": "2024-07-01",
-          "value": -0.3887
-        },
-        {
-          "date": "2024-08-01",
-          "value": 0.4485
-        },
-        {
-          "date": "2024-09-01",
-          "value": -2.7392
+          "value": 7.9
         },
         {
           "date": "2024-10-01",
-          "value": 1.9452
-        },
-        {
-          "date": "2024-11-01",
-          "value": 18.5643
-        },
-        {
-          "date": "2024-12-01",
-          "value": 2.713
+          "value": 0
         },
         {
           "date": "2025-01-01",
-          "value": 13.4949
-        },
-        {
-          "date": "2025-02-01",
-          "value": -15.7645
-        },
-        {
-          "date": "2025-03-01",
-          "value": 11.7241
+          "value": 6.2
         },
         {
           "date": "2025-04-01",
-          "value": -5.0513
-        },
-        {
-          "date": "2025-05-01",
-          "value": 25.2493
-        },
-        {
-          "date": "2025-06-01",
-          "value": -1.2895
+          "value": 18.5
         },
         {
           "date": "2025-07-01",
-          "value": 8.8193
-        },
-        {
-          "date": "2025-08-01",
-          "value": -9.8934
-        },
-        {
-          "date": "2025-09-01",
-          "value": 4.2198
+          "value": 9.5
         },
         {
           "date": "2025-10-01",
-          "value": 10.155
-        },
-        {
-          "date": "2025-11-01",
-          "value": 9.9041
-        },
-        {
-          "date": "2025-12-01",
-          "value": 12.8587
+          "value": 6.5
         },
         {
           "date": "2026-01-01",
-          "value": -10.3932
-        },
-        {
-          "date": "2026-02-01",
-          "value": 7.2864
-        },
-        {
-          "date": "2026-03-01",
-          "value": -8.2723
+          "value": 5.3
         },
         {
           "date": "2026-04-01",
-          "value": 24.7181
-        },
-        {
-          "date": "2026-05-19",
-          "value": 8.4
+          "value": 8.1
         }
       ]
     },
@@ -4212,14 +4601,15 @@
       "layer": "micro",
       "category": "micro",
       "description": "Credit card delinquency rate at all commercial banks. Household stress gauge.",
-      "weight": 0.1765,
-      "latest_value": 2.88,
-      "latest_date": "2026-05-19",
-      "score": 45.6,
-      "level_score": 46,
-      "momentum_score": 44.7,
-      "percentile_rank": 73,
+      "weight": 0.2118,
+      "latest_value": 2.92,
+      "latest_date": "2026-01-01",
+      "score": 46.9,
+      "level_score": 47.3,
+      "momentum_score": 46,
+      "percentile_rank": 31,
       "anomaly": false,
+      "stale": true,
       "alert": "YELLOW",
       "threshold": 3,
       "direction": "inverse",
@@ -4228,219 +4618,100 @@
       "norm_std": null,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 2.6831
+          "date": "2020-04-01",
+          "value": 2.45
+        },
+        {
+          "date": "2020-07-01",
+          "value": 1.99
+        },
+        {
+          "date": "2020-10-01",
+          "value": 2.1
+        },
+        {
+          "date": "2021-01-01",
+          "value": 1.88
+        },
+        {
+          "date": "2021-04-01",
+          "value": 1.59
+        },
+        {
+          "date": "2021-07-01",
+          "value": 1.53
+        },
+        {
+          "date": "2021-10-01",
+          "value": 1.57
+        },
+        {
+          "date": "2022-01-01",
+          "value": 1.69
+        },
+        {
+          "date": "2022-04-01",
+          "value": 1.83
+        },
+        {
+          "date": "2022-07-01",
+          "value": 2.05
+        },
+        {
+          "date": "2022-10-01",
+          "value": 2.26
+        },
+        {
+          "date": "2023-01-01",
+          "value": 2.47
+        },
+        {
+          "date": "2023-04-01",
+          "value": 2.75
+        },
+        {
+          "date": "2023-07-01",
+          "value": 2.94
+        },
+        {
+          "date": "2023-10-01",
+          "value": 3.1
+        },
+        {
+          "date": "2024-01-01",
+          "value": 3.17
+        },
+        {
+          "date": "2024-04-01",
+          "value": 3.22
         },
         {
           "date": "2024-07-01",
-          "value": 1.7153
-        },
-        {
-          "date": "2024-08-01",
-          "value": 2.3057
-        },
-        {
-          "date": "2024-09-01",
-          "value": 2.5923
+          "value": 3.2
         },
         {
           "date": "2024-10-01",
-          "value": 2.6632
-        },
-        {
-          "date": "2024-11-01",
-          "value": 2.8785
-        },
-        {
-          "date": "2024-12-01",
-          "value": 1.7518
+          "value": 3.08
         },
         {
           "date": "2025-01-01",
-          "value": 2.5063
-        },
-        {
-          "date": "2025-02-01",
-          "value": 1.7005
-        },
-        {
-          "date": "2025-03-01",
-          "value": 3.305
+          "value": 3.06
         },
         {
           "date": "2025-04-01",
-          "value": 2.1828
-        },
-        {
-          "date": "2025-05-01",
-          "value": 3.0409
-        },
-        {
-          "date": "2025-06-01",
-          "value": 1.5661
+          "value": 3.04
         },
         {
           "date": "2025-07-01",
-          "value": 2.4443
-        },
-        {
-          "date": "2025-08-01",
-          "value": 2.1213
-        },
-        {
-          "date": "2025-09-01",
-          "value": 2.9142
+          "value": 2.98
         },
         {
           "date": "2025-10-01",
-          "value": 2.7368
-        },
-        {
-          "date": "2025-11-01",
-          "value": 2.1873
-        },
-        {
-          "date": "2025-12-01",
-          "value": 2.3008
+          "value": 2.94
         },
         {
           "date": "2026-01-01",
-          "value": 1.705
-        },
-        {
-          "date": "2026-02-01",
-          "value": 3.0404
-        },
-        {
-          "date": "2026-03-01",
-          "value": 2.2327
-        },
-        {
-          "date": "2026-04-01",
-          "value": 3.2532
-        },
-        {
-          "date": "2026-05-19",
-          "value": 2.88
-        }
-      ]
-    },
-    {
-      "name": "Small Business Optimism",
-      "fred_id": "NFIBOPTMI",
-      "layer": "micro",
-      "category": "micro",
-      "description": "NFIB Small Business Optimism Index. Below 95 signals broad small-business contraction.",
-      "weight": 0.1765,
-      "latest_value": 97.3,
-      "latest_date": "2026-05-19",
-      "score": 49.3,
-      "level_score": 47.6,
-      "momentum_score": 53.1,
-      "percentile_rank": 73,
-      "anomaly": false,
-      "alert": "YELLOW",
-      "threshold": 95,
-      "direction": "direct",
-      "frequency": "monthly",
-      "norm_mean": null,
-      "norm_std": null,
-      "history": [
-        {
-          "date": "2024-06-01",
-          "value": 105.432
-        },
-        {
-          "date": "2024-07-01",
-          "value": 90.8281
-        },
-        {
-          "date": "2024-08-01",
-          "value": 100.6326
-        },
-        {
-          "date": "2024-09-01",
-          "value": 95.7102
-        },
-        {
-          "date": "2024-10-01",
-          "value": 105.3484
-        },
-        {
-          "date": "2024-11-01",
-          "value": 101.0076
-        },
-        {
-          "date": "2024-12-01",
-          "value": 98.4911
-        },
-        {
-          "date": "2025-01-01",
-          "value": 97.079
-        },
-        {
-          "date": "2025-02-01",
-          "value": 93.9932
-        },
-        {
-          "date": "2025-03-01",
-          "value": 104.4673
-        },
-        {
-          "date": "2025-04-01",
-          "value": 98.3425
-        },
-        {
-          "date": "2025-05-01",
-          "value": 106.789
-        },
-        {
-          "date": "2025-06-01",
-          "value": 91.7567
-        },
-        {
-          "date": "2025-07-01",
-          "value": 101.1614
-        },
-        {
-          "date": "2025-08-01",
-          "value": 92.3975
-        },
-        {
-          "date": "2025-09-01",
-          "value": 106.3323
-        },
-        {
-          "date": "2025-10-01",
-          "value": 99.3031
-        },
-        {
-          "date": "2025-11-01",
-          "value": 102.9191
-        },
-        {
-          "date": "2025-12-01",
-          "value": 95.198
-        },
-        {
-          "date": "2026-01-01",
-          "value": 95.664
-        },
-        {
-          "date": "2026-02-01",
-          "value": 100.3094
-        },
-        {
-          "date": "2026-03-01",
-          "value": 99.7649
-        },
-        {
-          "date": "2026-04-01",
-          "value": 106.4602
-        },
-        {
-          "date": "2026-05-19",
-          "value": 97.3
+          "value": 2.92
         }
       ]
     },
@@ -4450,14 +4721,15 @@
       "layer": "micro",
       "category": "micro",
       "description": "Employer demand (FRED: thousands). 5,500 = 5.5M openings, near recessionary trough.",
-      "weight": 0.1765,
-      "latest_value": 7580,
-      "latest_date": "2026-05-19",
-      "score": 28.9,
-      "level_score": 18.1,
-      "momentum_score": 54.3,
-      "percentile_rank": 94,
-      "anomaly": false,
+      "weight": 0.2118,
+      "latest_value": 7618,
+      "latest_date": "2026-04-01",
+      "score": 26,
+      "level_score": 17.6,
+      "momentum_score": 45.6,
+      "percentile_rank": 26,
+      "anomaly": true,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 5500,
       "direction": "direct",
@@ -4466,100 +4738,100 @@
       "norm_std": null,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 7782
+        },
+        {
           "date": "2024-06-01",
-          "value": 7712.1171
+          "value": 7416
         },
         {
           "date": "2024-07-01",
-          "value": 10269.2603
+          "value": 7426
         },
         {
           "date": "2024-08-01",
-          "value": 7507.4335
+          "value": 7520
         },
         {
           "date": "2024-09-01",
-          "value": 8826.2134
+          "value": 6943
         },
         {
           "date": "2024-10-01",
-          "value": 6827.3522
+          "value": 7379
         },
         {
           "date": "2024-11-01",
-          "value": 8881.931
+          "value": 7566
         },
         {
           "date": "2024-12-01",
-          "value": 8629.608
+          "value": 7295
         },
         {
           "date": "2025-01-01",
-          "value": 9150.5588
+          "value": 7431
         },
         {
           "date": "2025-02-01",
-          "value": 8544.5883
+          "value": 7242
         },
         {
           "date": "2025-03-01",
-          "value": 7253.9594
+          "value": 6952
         },
         {
           "date": "2025-04-01",
-          "value": 8447.0948
+          "value": 7098
         },
         {
           "date": "2025-05-01",
-          "value": 7626.1583
+          "value": 7310
         },
         {
           "date": "2025-06-01",
-          "value": 10132.682
+          "value": 7204
         },
         {
           "date": "2025-07-01",
-          "value": 7790.8207
+          "value": 7089
         },
         {
           "date": "2025-08-01",
-          "value": 9272.9823
+          "value": 6919
         },
         {
           "date": "2025-09-01",
-          "value": 6524.8157
+          "value": 7169
         },
         {
           "date": "2025-10-01",
-          "value": 8931.8546
+          "value": 7170
         },
         {
           "date": "2025-11-01",
-          "value": 7904.3781
+          "value": 6846
         },
         {
           "date": "2025-12-01",
-          "value": 9755.3475
+          "value": 6550
         },
         {
           "date": "2026-01-01",
-          "value": 8342.5067
+          "value": 7240
         },
         {
           "date": "2026-02-01",
-          "value": 8019.421
+          "value": 6922
         },
         {
           "date": "2026-03-01",
-          "value": 7802.6516
+          "value": 6887
         },
         {
           "date": "2026-04-01",
-          "value": 7714.8732
-        },
-        {
-          "date": "2026-05-19",
-          "value": 7580
+          "value": 7618
         }
       ]
     },
@@ -4569,116 +4841,117 @@
       "layer": "micro",
       "category": "macro",
       "description": "Producer Price Index for all commodities; rising PPI compresses margins and signals cost-push stress.",
-      "weight": 0.1175,
-      "latest_value": 272.4,
-      "latest_date": "2026-05-19",
-      "score": 96.9,
-      "level_score": 95.5,
-      "momentum_score": 100,
-      "percentile_rank": 79,
+      "weight": 0.1528,
+      "latest_value": 283.764,
+      "latest_date": "2026-04-01",
+      "score": 85,
+      "level_score": 100,
+      "momentum_score": 50,
+      "percentile_rank": 67,
       "anomaly": false,
+      "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 258.3,
-      "norm_std": 18.4214,
+      "norm_mean": 80.2491,
+      "norm_std": 72.6045,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 255.313
+        },
+        {
           "date": "2024-06-01",
-          "value": 250.5956
+          "value": 255.914
         },
         {
           "date": "2024-07-01",
-          "value": 238.6789
+          "value": 257.321
         },
         {
           "date": "2024-08-01",
-          "value": 279.1611
+          "value": 255.463
         },
         {
           "date": "2024-09-01",
-          "value": 254.0693
+          "value": 252.682
         },
         {
           "date": "2024-10-01",
-          "value": 284.7888
+          "value": 253.081
         },
         {
           "date": "2024-11-01",
-          "value": 229.011
+          "value": 253.211
         },
         {
           "date": "2024-12-01",
-          "value": 264.8859
+          "value": 253.423
         },
         {
           "date": "2025-01-01",
-          "value": 234.3632
+          "value": 257.36
         },
         {
           "date": "2025-02-01",
-          "value": 284.3916
+          "value": 259.498
         },
         {
           "date": "2025-03-01",
-          "value": 258.557
+          "value": 258.525
         },
         {
           "date": "2025-04-01",
-          "value": 269.0742
+          "value": 258.392
         },
         {
           "date": "2025-05-01",
-          "value": 243.1055
+          "value": 258.678
         },
         {
           "date": "2025-06-01",
-          "value": 244.1728
+          "value": 260.491
         },
         {
           "date": "2025-07-01",
-          "value": 264.2093
+          "value": 262.358
         },
         {
           "date": "2025-08-01",
-          "value": 259.5759
+          "value": 262.11
         },
         {
           "date": "2025-09-01",
-          "value": 284.4596
+          "value": 262.054
         },
         {
           "date": "2025-10-01",
-          "value": 238.0165
+          "value": 260.591
         },
         {
           "date": "2025-11-01",
-          "value": 264.9
+          "value": 261.914
         },
         {
           "date": "2025-12-01",
-          "value": 227.0364
+          "value": 261.333
         },
         {
           "date": "2026-01-01",
-          "value": 282.9803
+          "value": 263.537
         },
         {
           "date": "2026-02-01",
-          "value": 252.7431
+          "value": 269.909
         },
         {
           "date": "2026-03-01",
-          "value": 282.9933
+          "value": 276.42
         },
         {
           "date": "2026-04-01",
-          "value": 238.8756
-        },
-        {
-          "date": "2026-05-19",
-          "value": 272.4
+          "value": 283.764
         }
       ]
     },
@@ -4689,13 +4962,14 @@
       "category": "macro",
       "description": "OECD Composite Leading Indicator for the G7. Below 100 signals below-trend global growth.",
       "weight": 0.255,
-      "latest_value": 99.7,
-      "latest_date": "2026-05-19",
-      "score": 50,
-      "level_score": 50.3,
-      "momentum_score": 49.2,
-      "percentile_rank": 56,
+      "latest_value": 100.82307970350826,
+      "latest_date": "2026-04-01",
+      "score": 49.4,
+      "level_score": 49.2,
+      "momentum_score": 49.9,
+      "percentile_rank": 27,
       "anomaly": false,
+      "stale": false,
       "alert": "YELLOW",
       "threshold": 100,
       "direction": "direct",
@@ -4704,100 +4978,100 @@
       "norm_std": null,
       "history": [
         {
+          "date": "2024-05-01",
+          "value": 99.46149970267972
+        },
+        {
           "date": "2024-06-01",
-          "value": 100.8446
+          "value": 99.48398267433132
         },
         {
           "date": "2024-07-01",
-          "value": 99.7143
+          "value": 99.50915524126177
         },
         {
           "date": "2024-08-01",
-          "value": 100.2186
+          "value": 99.54587050610505
         },
         {
           "date": "2024-09-01",
-          "value": 98.926
+          "value": 99.59912572182373
         },
         {
           "date": "2024-10-01",
-          "value": 100.8902
+          "value": 99.6603411290959
         },
         {
           "date": "2024-11-01",
-          "value": 99.7743
+          "value": 99.71950738763354
         },
         {
           "date": "2024-12-01",
-          "value": 101.2941
+          "value": 99.76161632002758
         },
         {
           "date": "2025-01-01",
-          "value": 99.2477
+          "value": 99.77763068638232
         },
         {
           "date": "2025-02-01",
-          "value": 100.1934
+          "value": 99.77123887259596
         },
         {
           "date": "2025-03-01",
-          "value": 99.2458
+          "value": 99.75290490121216
         },
         {
           "date": "2025-04-01",
-          "value": 100.5986
+          "value": 99.750687584973
         },
         {
           "date": "2025-05-01",
-          "value": 100.4925
+          "value": 99.79415240294514
         },
         {
           "date": "2025-06-01",
-          "value": 100.3146
+          "value": 99.87451345055392
         },
         {
           "date": "2025-07-01",
-          "value": 100.0718
+          "value": 99.97240727633216
         },
         {
           "date": "2025-08-01",
-          "value": 99.1225
+          "value": 100.07801197547388
         },
         {
           "date": "2025-09-01",
-          "value": 100.4528
+          "value": 100.1923741382485
         },
         {
           "date": "2025-10-01",
-          "value": 99.7316
+          "value": 100.31371573548562
         },
         {
           "date": "2025-11-01",
-          "value": 101.3859
+          "value": 100.43861259265572
         },
         {
           "date": "2025-12-01",
-          "value": 99.4189
+          "value": 100.56226002306208
         },
         {
           "date": "2026-01-01",
-          "value": 100.4759
+          "value": 100.67447730784424
         },
         {
           "date": "2026-02-01",
-          "value": 98.8604
+          "value": 100.75491597783513
         },
         {
           "date": "2026-03-01",
-          "value": 100.6611
+          "value": 100.798891197563
         },
         {
           "date": "2026-04-01",
-          "value": 100.0562
-        },
-        {
-          "date": "2026-05-19",
-          "value": 99.7
+          "value": 100.82307970350826
         }
       ]
     },
@@ -4808,13 +5082,14 @@
       "category": "macro",
       "description": "Derived: Euro area 10Y govt yield minus 3M rate. Inversion = EU recession signal.",
       "weight": 0.2125,
-      "latest_value": 0.72,
-      "latest_date": "2026-05-19",
-      "score": 3.7,
-      "level_score": 5.3,
-      "momentum_score": 0,
-      "percentile_rank": 33,
+      "latest_value": 1.1933,
+      "latest_date": "2026-01-01",
+      "score": 15.5,
+      "level_score": 0.8,
+      "momentum_score": 49.6,
+      "percentile_rank": 85,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": 0,
       "direction": "direct",
@@ -4823,100 +5098,100 @@
       "norm_std": null,
       "history": [
         {
+          "date": "2024-02-01",
+          "value": -0.8978
+        },
+        {
+          "date": "2024-03-01",
+          "value": -0.9691
+        },
+        {
+          "date": "2024-04-01",
+          "value": -0.8128
+        },
+        {
+          "date": "2024-05-01",
+          "value": -0.6922
+        },
+        {
           "date": "2024-06-01",
-          "value": 2.1408
+          "value": -0.5595
         },
         {
           "date": "2024-07-01",
-          "value": -0.3492
+          "value": -0.5718
         },
         {
           "date": "2024-08-01",
-          "value": 1.0493
+          "value": -0.6417
         },
         {
           "date": "2024-09-01",
-          "value": -1.4939
+          "value": -0.5995
         },
         {
           "date": "2024-10-01",
-          "value": 0.0686
+          "value": -0.3007
         },
         {
           "date": "2024-11-01",
-          "value": 0.1009
+          "value": -0.0776
         },
         {
           "date": "2024-12-01",
-          "value": 0.9281
+          "value": -0.0037
         },
         {
           "date": "2025-01-01",
-          "value": 0.9909
+          "value": 0.3848
         },
         {
           "date": "2025-02-01",
-          "value": -0.867
+          "value": 0.4637
         },
         {
           "date": "2025-03-01",
-          "value": 0.1522
+          "value": 0.8713
         },
         {
           "date": "2025-04-01",
-          "value": -1.3518
+          "value": 0.849
         },
         {
           "date": "2025-05-01",
-          "value": 1.8212
+          "value": 0.9797
         },
         {
           "date": "2025-06-01",
-          "value": -0.3003
+          "value": 1.1011
         },
         {
           "date": "2025-07-01",
-          "value": 1.6758
+          "value": 1.1872
         },
         {
           "date": "2025-08-01",
-          "value": -1.6426
+          "value": 1.184
         },
         {
           "date": "2025-09-01",
-          "value": 0.3422
+          "value": 1.2058
         },
         {
           "date": "2025-10-01",
-          "value": -0.8439
+          "value": 1.0895
         },
         {
           "date": "2025-11-01",
-          "value": 1.3679
+          "value": 1.0945
         },
         {
           "date": "2025-12-01",
-          "value": 0.6266
+          "value": 1.1989
         },
         {
           "date": "2026-01-01",
-          "value": 0.109
-        },
-        {
-          "date": "2026-02-01",
-          "value": -0.2812
-        },
-        {
-          "date": "2026-03-01",
-          "value": -1.1988
-        },
-        {
-          "date": "2026-04-01",
-          "value": 1.1205
-        },
-        {
-          "date": "2026-05-19",
-          "value": 0.72
+          "value": 1.1933
         }
       ]
     },
@@ -4927,115 +5202,116 @@
       "category": "macro",
       "description": "Euro area harmonized unemployment rate. Z-score normalized.",
       "weight": 0.2125,
-      "latest_value": 6.5,
-      "latest_date": "2026-05-19",
-      "score": 3.5,
-      "level_score": 5,
-      "momentum_score": 0,
-      "percentile_rank": 25,
+      "latest_value": 6.7,
+      "latest_date": "2023-01-01",
+      "score": 15,
+      "level_score": 0,
+      "momentum_score": 50,
+      "percentile_rank": 37,
       "anomaly": false,
+      "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 7.0875,
-      "norm_std": 0.7962,
+      "norm_mean": 9.3918,
+      "norm_std": 1.3981,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 6.9288
+          "date": "2021-02-01",
+          "value": 8.2
         },
         {
-          "date": "2024-07-01",
-          "value": 6.6647
+          "date": "2021-03-01",
+          "value": 8.2
         },
         {
-          "date": "2024-08-01",
-          "value": 6.3228
+          "date": "2021-04-01",
+          "value": 8.2
         },
         {
-          "date": "2024-09-01",
-          "value": 7.9485
+          "date": "2021-05-01",
+          "value": 8
         },
         {
-          "date": "2024-10-01",
-          "value": 6.9593
+          "date": "2021-06-01",
+          "value": 7.8
         },
         {
-          "date": "2024-11-01",
-          "value": 8.2134
+          "date": "2021-07-01",
+          "value": 7.7
         },
         {
-          "date": "2024-12-01",
-          "value": 5.8112
+          "date": "2021-08-01",
+          "value": 7.5
         },
         {
-          "date": "2025-01-01",
-          "value": 7.3957
+          "date": "2021-09-01",
+          "value": 7.4
         },
         {
-          "date": "2025-02-01",
-          "value": 6.0203
+          "date": "2021-10-01",
+          "value": 7.3
         },
         {
-          "date": "2025-03-01",
-          "value": 8.2974
+          "date": "2021-11-01",
+          "value": 7.1
         },
         {
-          "date": "2025-04-01",
-          "value": 7.0316
+          "date": "2021-12-01",
+          "value": 7
         },
         {
-          "date": "2025-05-01",
-          "value": 7.6374
+          "date": "2022-01-01",
+          "value": 6.9
         },
         {
-          "date": "2025-06-01",
-          "value": 6.3315
+          "date": "2022-02-01",
+          "value": 6.8
         },
         {
-          "date": "2025-07-01",
-          "value": 6.571
+          "date": "2022-03-01",
+          "value": 6.8
         },
         {
-          "date": "2025-08-01",
-          "value": 7.2733
+          "date": "2022-04-01",
+          "value": 6.7
         },
         {
-          "date": "2025-09-01",
-          "value": 7.235
+          "date": "2022-05-01",
+          "value": 6.7
         },
         {
-          "date": "2025-10-01",
-          "value": 8.1654
+          "date": "2022-06-01",
+          "value": 6.7
         },
         {
-          "date": "2025-11-01",
-          "value": 6.2456
+          "date": "2022-07-01",
+          "value": 6.7
         },
         {
-          "date": "2025-12-01",
-          "value": 7.3477
+          "date": "2022-08-01",
+          "value": 6.7
         },
         {
-          "date": "2026-01-01",
-          "value": 5.7405
+          "date": "2022-09-01",
+          "value": 6.7
         },
         {
-          "date": "2026-02-01",
-          "value": 8.1969
+          "date": "2022-10-01",
+          "value": 6.6
         },
         {
-          "date": "2026-03-01",
-          "value": 6.8176
+          "date": "2022-11-01",
+          "value": 6.7
         },
         {
-          "date": "2026-04-01",
-          "value": 8.2204
+          "date": "2022-12-01",
+          "value": 6.7
         },
         {
-          "date": "2026-05-19",
-          "value": 6.5
+          "date": "2023-01-01",
+          "value": 6.7
         }
       ]
     },
@@ -5046,115 +5322,116 @@
       "category": "macro",
       "description": "Euro area real GDP, chained 2010 EUR, ECB/Eurostat. Z-score normalized.",
       "weight": 0.17,
-      "latest_value": 2886191,
-      "latest_date": "2026-05-19",
-      "score": 15.4,
-      "level_score": 0.4,
-      "momentum_score": 50.3,
-      "percentile_rank": 31,
+      "latest_value": 2920948,
+      "latest_date": "2026-01-01",
+      "score": 15,
+      "level_score": 0.1,
+      "momentum_score": 50,
+      "percentile_rank": 33,
       "anomaly": false,
+      "stale": true,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "quarterly",
-      "norm_mean": 2752837.3125,
-      "norm_std": 95996.5898,
+      "norm_mean": 2377170.9248,
+      "norm_std": 309070.1373,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 2688023.1237
+          "date": "2020-04-01",
+          "value": 2327598
+        },
+        {
+          "date": "2020-07-01",
+          "value": 2596966.6
+        },
+        {
+          "date": "2020-10-01",
+          "value": 2605657.7
+        },
+        {
+          "date": "2021-01-01",
+          "value": 2625773.7
+        },
+        {
+          "date": "2021-04-01",
+          "value": 2682820.6
+        },
+        {
+          "date": "2021-07-01",
+          "value": 2729901.5
+        },
+        {
+          "date": "2021-10-01",
+          "value": 2751638.4
+        },
+        {
+          "date": "2022-01-01",
+          "value": 2771936.8
+        },
+        {
+          "date": "2022-04-01",
+          "value": 2797523
+        },
+        {
+          "date": "2022-07-01",
+          "value": 2810181.8
+        },
+        {
+          "date": "2022-10-01",
+          "value": 2808699.8
+        },
+        {
+          "date": "2023-01-01",
+          "value": 2822217.8
+        },
+        {
+          "date": "2023-04-01",
+          "value": 2827321.7
+        },
+        {
+          "date": "2023-07-01",
+          "value": 2827184
+        },
+        {
+          "date": "2023-10-01",
+          "value": 2829305
+        },
+        {
+          "date": "2024-01-01",
+          "value": 2837507.3
+        },
+        {
+          "date": "2024-04-01",
+          "value": 2843179.6
         },
         {
           "date": "2024-07-01",
-          "value": 2775492.9883
-        },
-        {
-          "date": "2024-08-01",
-          "value": 2767317.4658
-        },
-        {
-          "date": "2024-09-01",
-          "value": 2881450.2071
+          "value": 2855787.3
         },
         {
           "date": "2024-10-01",
-          "value": 2650144.8425
-        },
-        {
-          "date": "2024-11-01",
-          "value": 2783272.81
-        },
-        {
-          "date": "2024-12-01",
-          "value": 2590723.7717
+          "value": 2866765.7
         },
         {
           "date": "2025-01-01",
-          "value": 2883437.8552
-        },
-        {
-          "date": "2025-02-01",
-          "value": 2720000.2779
-        },
-        {
-          "date": "2025-03-01",
-          "value": 2885463.9621
+          "value": 2883772.4
         },
         {
           "date": "2025-04-01",
-          "value": 2642874.0029
-        },
-        {
-          "date": "2025-05-01",
-          "value": 2730854.9777
-        },
-        {
-          "date": "2025-06-01",
-          "value": 2689858.5276
+          "value": 2887920.9
         },
         {
           "date": "2025-07-01",
-          "value": 2796861.9118
-        },
-        {
-          "date": "2025-08-01",
-          "value": 2847466.6633
-        },
-        {
-          "date": "2025-09-01",
-          "value": 2724043.9243
+          "value": 2896563.9
         },
         {
           "date": "2025-10-01",
-          "value": 2769970.3305
-        },
-        {
-          "date": "2025-11-01",
-          "value": 2592496.5285
-        },
-        {
-          "date": "2025-12-01",
-          "value": 2842292.0196
+          "value": 2902340.4
         },
         {
           "date": "2026-01-01",
-          "value": 2702017.7161
-        },
-        {
-          "date": "2026-02-01",
-          "value": 2925344.5224
-        },
-        {
-          "date": "2026-03-01",
-          "value": 2646695.8554
-        },
-        {
-          "date": "2026-04-01",
-          "value": 2777149.3611
-        },
-        {
-          "date": "2026-05-19",
-          "value": 2886191
+          "value": 2920948
         }
       ]
     },
@@ -5165,115 +5442,116 @@
       "category": "macro",
       "description": "Nominal broad trade-weighted US dollar index. A stronger dollar tightens global financial conditions and pressures EM economies.",
       "weight": 0.15,
-      "latest_value": 117,
-      "latest_date": "2026-05-19",
-      "score": 83,
-      "level_score": 97.7,
-      "momentum_score": 48.6,
-      "percentile_rank": 60,
+      "latest_value": 118.8783,
+      "latest_date": "2026-05-29",
+      "score": 47.1,
+      "level_score": 48.8,
+      "momentum_score": 43,
+      "percentile_rank": 46,
       "anomaly": false,
-      "alert": "RED",
+      "stale": false,
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 110.6354,
-      "norm_std": 6.7925,
+      "norm_mean": 118.9276,
+      "norm_std": 4.1678,
       "history": [
         {
-          "date": "2024-06-01",
-          "value": 113.9404
+          "date": "2024-06-28",
+          "value": 124.2103
         },
         {
-          "date": "2024-07-01",
-          "value": 101.2849
+          "date": "2024-07-31",
+          "value": 123.6373
         },
         {
-          "date": "2024-08-01",
-          "value": 109.0049
+          "date": "2024-08-30",
+          "value": 122.3262
         },
         {
-          "date": "2024-09-01",
-          "value": 112.7537
+          "date": "2024-09-30",
+          "value": 121.2864
         },
         {
-          "date": "2024-10-01",
-          "value": 113.6798
+          "date": "2024-10-31",
+          "value": 124.7988
         },
         {
-          "date": "2024-11-01",
-          "value": 116.4956
+          "date": "2024-11-29",
+          "value": 126.5798
         },
         {
-          "date": "2024-12-01",
-          "value": 101.7623
+          "date": "2024-12-31",
+          "value": 129.2775
         },
         {
-          "date": "2025-01-01",
-          "value": 111.6291
+          "date": "2025-01-31",
+          "value": 128.4828
         },
         {
-          "date": "2025-02-01",
-          "value": 101.0911
+          "date": "2025-02-28",
+          "value": 128.2805
         },
         {
-          "date": "2025-03-01",
-          "value": 122.0728
+          "date": "2025-03-31",
+          "value": 126.7075
         },
         {
-          "date": "2025-04-01",
-          "value": 107.3977
+          "date": "2025-04-30",
+          "value": 122.5921
         },
         {
-          "date": "2025-05-01",
-          "value": 118.6194
+          "date": "2025-05-30",
+          "value": 121.7674
         },
         {
-          "date": "2025-06-01",
-          "value": 99.333
+          "date": "2025-06-30",
+          "value": 119.4088
         },
         {
-          "date": "2025-07-01",
-          "value": 110.8179
+          "date": "2025-07-31",
+          "value": 121.721
         },
         {
-          "date": "2025-08-01",
-          "value": 106.594
+          "date": "2025-08-29",
+          "value": 120.2082
         },
         {
-          "date": "2025-09-01",
-          "value": 116.962
+          "date": "2025-09-30",
+          "value": 120.1368
         },
         {
-          "date": "2025-10-01",
-          "value": 114.6433
+          "date": "2025-10-31",
+          "value": 121.3859
         },
         {
-          "date": "2025-11-01",
-          "value": 107.4574
+          "date": "2025-11-28",
+          "value": 121.0527
         },
         {
-          "date": "2025-12-01",
-          "value": 108.9412
+          "date": "2025-12-31",
+          "value": 119.7456
         },
         {
-          "date": "2026-01-01",
-          "value": 101.1496
+          "date": "2026-01-30",
+          "value": 117.8996
         },
         {
-          "date": "2026-02-01",
-          "value": 118.6123
+          "date": "2026-02-27",
+          "value": 117.8223
         },
         {
-          "date": "2026-03-01",
-          "value": 108.0505
+          "date": "2026-03-31",
+          "value": 121.035
         },
         {
-          "date": "2026-04-01",
-          "value": 121.3959
+          "date": "2026-04-30",
+          "value": 118.671
         },
         {
-          "date": "2026-05-19",
-          "value": 117
+          "date": "2026-05-29",
+          "value": 118.8783
         }
       ]
     }
