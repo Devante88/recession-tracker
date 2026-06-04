@@ -2,11 +2,12 @@ name: Refresh FRED Data
 
 on:
   schedule:
-    # Target: 07:00 America/Chicago (Central), every day. GitHub cron is UTC and
-    # does NOT observe daylight saving, so we fire at both candidate UTC hours
-    # and a guard step below skips whichever one isn't actually 07:00 Central.
-    #   12:00 UTC = 07:00 CDT (Mar–Nov, daylight)
-    #   13:00 UTC = 07:00 CST (Nov–Mar, standard)
+    # Target: ~07:00 America/Chicago (Central), every day. GitHub cron is UTC
+    # and does not observe daylight saving, so we fire at both candidate hours
+    # and a gate below passes any run that arrives 06:00–10:59 Central (the
+    # wide window absorbs GitHub's up-to-4-hour scheduling delay under load).
+    #   12:00 UTC → 07:00 CDT (Mar–Nov, summer) or 06:00 CST (Nov–Mar, winter)
+    #   13:00 UTC → 08:00 CDT (Mar–Nov, summer) or 07:00 CST (Nov–Mar, winter)
     - cron: '0 12 * * *'
     - cron: '0 13 * * *'
   workflow_dispatch:
@@ -22,10 +23,14 @@ permissions:
   contents: read
 
 jobs:
-  # Gate job: lets manual runs through always, but allows a scheduled run only
-  # when it is exactly 07:00 in Central time. Because we schedule at both 12:00
-  # and 13:00 UTC, exactly one of the two passes per day year-round (the other
-  # is the DST shadow and is skipped here).
+  # Gate job: lets manual runs through always, and allows scheduled runs when
+  # the wall-clock time in Central is between 06:00 and 10:59. This window
+  # tolerates up to ~4 hours of GitHub Actions scheduling delay, which the
+  # platform can impose under high load. The two crons (12:00 and 13:00 UTC)
+  # target 07:00 Central but may fire several hours late; a strict == "07"
+  # check causes every delayed run to be silently skipped. Both crons can pass
+  # the window on the same day — that is intentional and harmless: the second
+  # run finds no staged changes and exits with "No changes to commit".
   gate:
     runs-on: ubuntu-latest
     permissions:
@@ -41,13 +46,13 @@ jobs:
             echo "proceed=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          CENTRAL_HOUR=$(TZ='America/Chicago' date +%H)
+          CENTRAL_HOUR=$(TZ='America/Chicago' date +%H | sed 's/^0//')
           echo "Current Central hour: ${CENTRAL_HOUR}"
-          if [ "$CENTRAL_HOUR" = "07" ]; then
-            echo "It is 07:00 Central — proceeding with refresh."
+          if [ "$CENTRAL_HOUR" -ge 6 ] && [ "$CENTRAL_HOUR" -le 10 ]; then
+            echo "Within morning window (06:00–10:59 Central) — proceeding with refresh."
             echo "proceed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "Not 07:00 Central (DST shadow run) — skipping this trigger."
+            echo "Outside morning window (Central hour ${CENTRAL_HOUR}) — skipping."
             echo "proceed=false" >> "$GITHUB_OUTPUT"
           fi
 
