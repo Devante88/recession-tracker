@@ -1,6 +1,6 @@
 {
   "as_of": "2026-06-05",
-  "generated_at": "2026-06-05T14:19:48.106Z",
+  "generated_at": "2026-06-05T15:59:08.278Z",
   "composite": {
     "score": 37.3,
     "alert": "YELLOW",
@@ -9,7 +9,7 @@
     "recession_probability_12mo": 0.221,
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.69,
-    "ensemble_score": 23.6
+    "ensemble_score": 22.7
   },
   "geopolitical": {
     "score": 0,
@@ -31,8 +31,8 @@
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.75,
-          "display": "2.75%",
+          "value": 2.74,
+          "display": "2.74%",
           "sub_score": 0,
           "firing": false
         },
@@ -62,8 +62,8 @@
       "name": "Sahm Rule (Real-Time)",
       "fred_id": "SAHMREALTIME",
       "layer": "labor",
-      "score": 14.9,
-      "contrib": -1.53
+      "score": 14.8,
+      "contrib": -1.533
     },
     {
       "name": "Payroll Employment",
@@ -762,11 +762,11 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.75,
-      "latest_date": "2026-06-03",
-      "score": 25,
-      "level_score": 14.2,
-      "momentum_score": 50.1,
+      "latest_value": 2.74,
+      "latest_date": "2026-06-04",
+      "score": 24.9,
+      "level_score": 14.1,
+      "momentum_score": 50.2,
       "percentile_rank": 79,
       "anomaly": false,
       "stale": false,
@@ -870,8 +870,8 @@
           "value": 2.74
         },
         {
-          "date": "2026-06-03",
-          "value": 2.75
+          "date": "2026-06-04",
+          "value": 2.74
         }
       ]
     },
@@ -1722,11 +1722,11 @@
       "category": "macro",
       "description": "Triggers at 0.5 when unemployment 3mo avg rises 0.5pp above its 12mo low. Historically coincident with recession start.",
       "weight": 0.198,
-      "latest_value": 0.13,
-      "latest_date": "2026-04-01",
-      "score": 14.9,
-      "level_score": 4.9,
-      "momentum_score": 38.1,
+      "latest_value": 0.1,
+      "latest_date": "2026-05-01",
+      "score": 14.8,
+      "level_score": 3.9,
+      "momentum_score": 40.2,
       "percentile_rank": 70,
       "anomaly": false,
       "stale": false,
@@ -1737,10 +1737,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-04-01",
-          "value": 0.37
-        },
         {
           "date": "2024-05-01",
           "value": 0.37
@@ -1832,6 +1828,10 @@
         {
           "date": "2026-04-01",
           "value": 0.13
+        },
+        {
+          "date": "2026-05-01",
+          "value": 0.1
         }
       ]
     },
