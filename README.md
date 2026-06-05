@@ -1,5 +1,7 @@
 # Recession Tracker
 
+**[→ Live Dashboard](https://devante88.github.io/recession-tracker/)**
+
 A macro + micro recession monitoring dashboard. Pulls 24 indicators from FRED on a scheduled cadence, scores each into a 0-100 risk score, aggregates into 5 layers and 1 composite, and publishes a dashboard via GitHub Pages.
 
 ## 🎯 Features
