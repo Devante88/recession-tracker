@@ -1,38 +1,38 @@
 {
-  "as_of": "2026-06-07",
-  "generated_at": "2026-06-07T14:56:07.940Z",
+  "as_of": "2026-06-08",
+  "generated_at": "2026-06-08T15:23:34.427Z",
   "composite": {
-    "score": 37.3,
+    "score": 37.6,
     "alert": "YELLOW",
     "rating": 4,
     "confidence": 1,
     "recession_probability_12mo": 0.206,
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.77,
-    "ensemble_score": 22.2
+    "ensemble_score": 22.3
   },
   "geopolitical": {
-    "score": 0,
+    "score": 7.2,
     "flag": "CALM",
     "source": "market-proxy",
     "gpr": null,
     "market": {
-      "score": 0,
+      "score": 7.2,
       "flag": "CALM",
       "channels": [
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 15.4,
-          "display": "15.4",
-          "sub_score": 0,
+          "value": 21.51,
+          "display": "21.5",
+          "sub_score": 16,
           "firing": false
         },
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.74,
-          "display": "2.74%",
+          "value": 2.76,
+          "display": "2.76%",
           "sub_score": 0,
           "firing": false
         },
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 23.9,
+      "score": 25.1,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -642,15 +642,15 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 15.4,
-      "latest_date": "2026-06-04",
-      "score": 26.9,
-      "level_score": 17.7,
-      "momentum_score": 48.4,
-      "percentile_rank": 53,
-      "anomaly": false,
+      "latest_value": 21.51,
+      "latest_date": "2026-06-05",
+      "score": 45.8,
+      "level_score": 36.4,
+      "momentum_score": 67.8,
+      "percentile_rank": 78,
+      "anomaly": true,
       "stale": false,
-      "alert": "GREEN",
+      "alert": "YELLOW",
       "threshold": 25,
       "direction": "inverse",
       "frequency": "daily",
@@ -750,8 +750,8 @@
           "value": 15.32
         },
         {
-          "date": "2026-06-04",
-          "value": 15.4
+          "date": "2026-06-05",
+          "value": 21.51
         }
       ]
     },
@@ -762,11 +762,11 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.74,
-      "latest_date": "2026-06-04",
-      "score": 24.9,
-      "level_score": 14.1,
-      "momentum_score": 50.2,
+      "latest_value": 2.76,
+      "latest_date": "2026-06-05",
+      "score": 25.1,
+      "level_score": 14.3,
+      "momentum_score": 50.5,
       "percentile_rank": 79,
       "anomaly": false,
       "stale": false,
@@ -870,8 +870,8 @@
           "value": 2.74
         },
         {
-          "date": "2026-06-04",
-          "value": 2.74
+          "date": "2026-06-05",
+          "value": 2.76
         }
       ]
     },
@@ -1482,11 +1482,11 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 262.64,
-      "latest_date": "2026-06-04",
-      "score": 76.1,
-      "level_score": 84.6,
-      "momentum_score": 56.2,
+      "latest_value": 286,
+      "latest_date": "2026-06-07",
+      "score": 76.4,
+      "level_score": 91.1,
+      "momentum_score": 41.9,
       "percentile_rank": 73,
       "anomaly": false,
       "stale": false,
@@ -1494,8 +1494,8 @@
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 199.4201,
-      "norm_std": 148.258,
+      "norm_mean": 199.5683,
+      "norm_std": 148.2976,
       "history": [
         {
           "date": "2024-07-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-05-31",
-          "value": 408.12
+          "value": 400.02
         },
         {
-          "date": "2026-06-04",
-          "value": 262.64
+          "date": "2026-06-07",
+          "value": 286
         }
       ]
     },
