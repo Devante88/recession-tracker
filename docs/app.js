@@ -207,8 +207,8 @@ function renderHeader(current) {
     if (missedRefreshes >= 1) {
       document.getElementById('staleTag').style.display = 'inline-block';
       const sb = document.getElementById('staleBanner');
-      const noun = missedRefreshes === 1 ? 'weekday refresh appears' : 'weekday refreshes appear';
-      sb.textContent = `⚠ Data is from ${dateStr} (${relativeAge(days)}). ${missedRefreshes} ${noun} to have been missed — the next scheduled run is weekdays at 07:00 Central (12:00 UTC in summer, 13:00 UTC in winter).`;
+      const noun = missedRefreshes === 1 ? 'daily refresh appears' : 'daily refreshes appear';
+      sb.textContent = `⚠ Data is from ${dateStr} (${relativeAge(days)}). ${missedRefreshes} ${noun} to have been missed — the next scheduled run is every day at 07:00 Central (12:00 UTC in summer, 13:00 UTC in winter).`;
       sb.style.display = 'block';
     }
   } else if (genEl) {
@@ -2892,7 +2892,8 @@ async function renderBacktest() {
   }
   let data;
   try {
-    data = await fetch(`data/backtest.json?t=${Date.now()}`).then(r => r.json());
+    data = await fetch(`data/backtest.json?t=${Date.now()}`)
+      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
   } catch (err) {
     document.getElementById('btStats').innerHTML =
       `<p style="color:var(--red)">Failed to load backtest: ${err.message}</p>`;

@@ -7,7 +7,7 @@ A macro + micro recession monitoring dashboard. Pulls 24 indicators from FRED on
 ## 🎯 Features
 
 - **24 Economic Indicators** across 5 research layers (financial, labor, inflation, real economy, micro, global)
-- **Automated Data Fetching** via GitHub Actions (twice weekly, 7am CT Mon-Fri)
+- **Automated Data Fetching** via GitHub Actions (daily, 7am CT including weekends)
 - **Real-time Risk Scoring** with composite index (0-100)
 - **Historical Backtesting** against NBER recession dates (30-year rolling window)
 - **Out-of-Sample Validation** to measure forecast accuracy
@@ -176,7 +176,7 @@ Edit `src/registry.mjs`:
 
 ## 🔄 Workflow Schedule
 
-**Runs**: Mon–Fri at 7:00 AM Central Time (12:00 UTC in daylight, 13:00 UTC in standard)
+**Runs**: Daily at 7:00 AM Central Time (12:00 UTC in daylight, 13:00 UTC in standard)
 
 **Steps**:
 1. Validate all FRED series still return data (catches discontinuations early)

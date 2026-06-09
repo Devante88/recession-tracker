@@ -23,15 +23,15 @@ async function main() {
   const yellowNames = indicators.filter(i => i.alert === 'YELLOW').slice(0, 4).map(i => i.name);
   const greenNames  = indicators.filter(i => i.alert === 'GREEN') .slice(0, 3).map(i => i.name);
 
-  const probPct = snapshot.recession_probability_12mo != null
-    ? (snapshot.recession_probability_12mo * 100).toFixed(1) + '%'
+  const probPct = composite.recession_probability_12mo != null
+    ? (composite.recession_probability_12mo * 100).toFixed(1) + '%'
     : 'N/A';
 
   const dataContext = `
 Date: ${snapshot.generated_at?.slice(0, 10)}
 Composite score: ${composite.score}/100  |  Alert: ${composite.alert}  |  Rating: ${composite.rating}/10
 12-month recession probability (Estrella-Mishkin): ${probPct}
-Yield curve 10Y-3M: ${snapshot.yield_curve_spread?.toFixed(2) ?? 'N/A'}%  |  Days inverted: ${snapshot.yield_curve_inversion_days ?? 0}
+Yield curve 10Y-3M: ${composite.yield_curve_spread?.toFixed(2) ?? 'N/A'}%  |  Days inverted: ${composite.yield_curve_inversion_days ?? 0}
 Data confidence: ${composite.confidence != null ? Math.round(composite.confidence * 100) + '%' : 'N/A'}
 
 Layer scores (0=no risk, 100=max risk):
