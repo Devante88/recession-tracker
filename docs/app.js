@@ -3782,7 +3782,7 @@ function renderFixedIncome() {
   const tips  = get('T10YIE');
   const hy    = get('BAMLH0A0HYM2');
   const baa   = get('BAA10YM');
-  const stl   = get('STLFSI3');
+  const stl   = get('STLFSI4') ?? get('STLFSI3');
 
   const ffV  = ff?.latest_value ?? null;
   // T10Y3M = 10Y − 3M spread; FEDFUNDS ≈ 3M rate → approx 10Y yield
@@ -4264,14 +4264,14 @@ async function loadNarrative(bust = '') {
 
     if (briefingEl) {
       if (!data || (!data.headline && !data.text)) {
-        briefingEl.innerHTML = '<p class="ai-briefing-stale">AI briefing generates each weekday morning after data refresh.</p>';
+        briefingEl.innerHTML = '<p class="ai-briefing-stale">AI briefing generates each morning after data refresh.</p>';
       } else {
         // Check if stale (> 7 days)
         const ageDays = data.generated_at
           ? (Date.now() - new Date(data.generated_at).getTime()) / 86400000
           : 999;
         if (ageDays > 7) {
-          briefingEl.innerHTML = '<p class="ai-briefing-stale">AI briefing generates each weekday morning after data refresh.</p>';
+          briefingEl.innerHTML = '<p class="ai-briefing-stale">AI briefing generates each morning after data refresh.</p>';
         } else if (data.headline) {
           // Structured format
           const risksHtml = Array.isArray(data.risks) && data.risks.length

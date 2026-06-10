@@ -10,6 +10,11 @@ on:
 permissions:
   contents: read
 
+# GitHub forces JS actions onto Node 24 from 2026-06-16; opt in early so the
+# cutover is exercised before the deadline.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test:
     runs-on: ubuntu-latest

@@ -13,7 +13,7 @@
 
 export const REGISTRY = [
   // ─── Financial leading indicators ─────────────────────────────────────
-  // Weights rescaled after adding USSLIND (0.08) and USEPUINDXD (0.07);
+  // Weights rescaled after adding CFNAI (0.08) and USEPUINDXD (0.07);
   // existing indicators scaled by 0.85 to keep within-layer sum at 1.0.
   { name: "Yield Curve 10Y-3M",    fred_id: "T10Y3M",        layer: "financial_lead", frequency: "daily",   direction: "direct",  weight: 0.1848, threshold: 0.0,  category: "macro", description: "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months." },
   { name: "Yield Curve 10Y-2Y",    fred_id: "T10Y2Y",        layer: "financial_lead", frequency: "daily",   direction: "direct",  weight: 0.0924, threshold: 0.0,  category: "macro", description: "Spread between 10Y and 2Y Treasury yields. Classic recession signal." },
@@ -24,8 +24,8 @@ export const REGISTRY = [
   { name: "10Y TIPS Breakeven",    fred_id: "T10YIE",        layer: "financial_lead", frequency: "daily",   direction: "direct",  weight: 0.0599, threshold: null, category: "macro", description: "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears." },
   { name: "Fed Balance Sheet",     fred_id: "WALCL",         layer: "financial_lead", frequency: "weekly",  direction: "direct",  weight: 0.0599, threshold: null, category: "macro", description: "Federal Reserve total assets; QT (shrinking) tightens financial conditions." },
   { name: "M2 Money Supply",       fred_id: "M2SL",          layer: "financial_lead", frequency: "monthly", direction: "direct",  weight: 0.0547, threshold: null, category: "macro", description: "M2 money supply; sharp deceleration signals tightening liquidity and recession risk." },
-  { name: "St. Louis Financial Stress", fred_id: "STLFSI3",  layer: "financial_lead", frequency: "weekly",  direction: "inverse", weight: 0.0595, threshold: null, category: "macro", description: "St. Louis Fed Financial Stress Index. Zero = average; above zero = above-average stress." },
-  { name: "Conference Board LEI",  fred_id: "USSLIND",       layer: "financial_lead", frequency: "monthly", direction: "direct",  weight: 0.0800, threshold: null, category: "macro", description: "Conference Board US Leading Economic Index. Consecutive monthly declines historically precede recessions by 2–4 quarters." },
+  { name: "St. Louis Financial Stress", fred_id: "STLFSI4",  layer: "financial_lead", frequency: "weekly",  direction: "inverse", weight: 0.0595, threshold: null, category: "macro", description: "St. Louis Fed Financial Stress Index (v4; replaces discontinued STLFSI3). Zero = average; above zero = above-average stress." },
+  { name: "Chicago Fed Activity Index", fred_id: "CFNAI",    layer: "financial_lead", frequency: "monthly", direction: "direct",  weight: 0.0800, threshold: null, category: "macro", description: "Chicago Fed National Activity Index (replaces discontinued USSLIND). Weighted average of 85 indicators; sustained readings below zero signal below-trend growth, below -0.7 historically coincides with recession." },
   { name: "Economic Policy Uncertainty", fred_id: "USEPUINDXD", layer: "financial_lead", frequency: "daily", direction: "inverse", weight: 0.0700, threshold: null, category: "macro", description: "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns." },
 
   // ─── Labor ─────────────────────────────────────────────────────────────

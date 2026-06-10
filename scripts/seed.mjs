@@ -91,8 +91,10 @@ const SEED = {
   TCU:     { latest: 77.8,  mean: 78.5,  std: 1.4  },
 
   // ── New indicators (upgrade) ─────────────────────────────────────────────────
-  // St. Louis Financial Stress Index: 0 = average; negative = below-average stress
-  STLFSI3:  { latest: -0.42,  mean:  0.00,  std: 0.85 },
+  // St. Louis Financial Stress Index (v4): 0 = average; negative = below-average stress
+  STLFSI4:  { latest: -0.42,  mean:  0.00,  std: 0.85 },
+  // Chicago Fed National Activity Index: constructed mean 0 / std 1; negative = below-trend growth
+  CFNAI:    { latest: -0.15,  mean:  0.00,  std: 1.00 },
   // Building permits, SAAR thousands; broad decline leads recessions 2-3 months
   PERMIT:   { latest:  1443,  mean:  1480,  std: 210  },
   // Nominal broad trade-weighted dollar index; strong USD = global financial tightening

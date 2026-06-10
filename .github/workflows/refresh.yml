@@ -22,6 +22,12 @@ on:
 permissions:
   contents: read
 
+# GitHub forces JS actions onto Node 24 from 2026-06-16; opt in early so the
+# cutover is exercised before the deadline (the pinned checkout/setup-node
+# SHAs run fine on Node 24; Dependabot will bump them to v5+ over time).
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   # Gate job: lets manual runs through always, and allows scheduled runs when
   # the wall-clock time in Central is between 06:00 and 10:59. This window
