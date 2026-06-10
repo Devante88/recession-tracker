@@ -19,6 +19,10 @@ async function main() {
   );
 
   const { composite, layers, indicators } = snapshot;
+  if (!composite || !Array.isArray(indicators)) {
+    console.error('current.json is missing composite or indicators — skipping narrative');
+    return;
+  }
   const redNames    = indicators.filter(i => i.alert === 'RED')   .slice(0, 5).map(i => i.name);
   const yellowNames = indicators.filter(i => i.alert === 'YELLOW').slice(0, 4).map(i => i.name);
   const greenNames  = indicators.filter(i => i.alert === 'GREEN') .slice(0, 3).map(i => i.name);

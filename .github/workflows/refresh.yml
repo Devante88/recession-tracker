@@ -136,6 +136,9 @@ jobs:
       - name: Generate RSS feed for alert state changes
         run: node scripts/feed.mjs
 
+      - name: Validate snapshot integrity before publishing
+        run: node scripts/check-snapshot.mjs
+
       - name: Generate AI narrative briefing
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -159,9 +162,6 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           ALERT_EMAIL: ${{ secrets.ALERT_EMAIL }}
         run: node scripts/weekly-summary.mjs
-
-      - name: Validate snapshot integrity before publishing
-        run: node scripts/check-snapshot.mjs
 
       - name: Commit and push if changed
         run: |
