@@ -69,8 +69,8 @@ const SEED = {
   DRTSCILM:      { latest:      8.4, mean:    5,  std: 11    },
   // Delinquency near 3.0 threshold
   DRCCLACBS:     { latest:      2.88, mean:  2.42, std: 0.52 },
-  // NFIB just above 95 threshold
-  NFIBOPTMI:     { latest:     97.3, mean:  99.5, std: 4.8   },
+  // NFIB removed from registry; entry retained here for reference only
+  // NFIBOPTMI: { latest: 97.3, mean: 99.5, std: 4.8 },
   // FRED reports in thousands; threshold=5500 (= 5.5M openings)
   JTSJOL:        { latest:   7580,   mean:  8350, std: 960   },
 

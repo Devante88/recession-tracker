@@ -188,7 +188,7 @@ function renderHeader(current) {
   const count = (current.indicators || []).length;
   const subtitle = document.getElementById('headerSubtitle');
   if (subtitle && count) {
-    subtitle.textContent = `${count} macro + market + micro + global indicators · FRED data · Updated weekdays`;
+    subtitle.textContent = `${count} macro + market + micro + global indicators · FRED data · Updated daily`;
   }
   const methCount = document.getElementById('methIndicatorCount');
   if (methCount && count) methCount.textContent = count;
@@ -201,7 +201,7 @@ function renderHeader(current) {
       genEl.style.color = days >= 1 ? 'var(--yellow)' : '';
     }
 
-    // The feed refreshes every weekday morning, so being more than one
+    // The feed refreshes every morning (including weekends), so being more than one
     // business day behind means a scheduled run was missed.
     const missedRefreshes = businessDaysBetween(genAt, new Date());
     if (missedRefreshes >= 1) {
