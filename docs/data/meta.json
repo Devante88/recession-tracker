@@ -1,38 +1,26 @@
 {
-  "as_of": "2026-06-10",
+  "as_of": "2026-06-11",
   "total": 45,
-  "fresh": 40,
-  "stale_count": 5,
+  "fresh": 42,
+  "stale_count": 3,
   "missing_count": 0,
   "stale": [
     {
-      "fred_id": "STLFSI3",
-      "latest_date": "2022-10-28",
-      "days": 1321,
-      "sla": 21
-    },
-    {
-      "fred_id": "USSLIND",
-      "latest_date": "2020-02-01",
-      "days": 2321,
-      "sla": 75
-    },
-    {
       "fred_id": "CSUSHPISA",
       "latest_date": "2026-03-01",
-      "days": 101,
+      "days": 102,
       "sla": 75
     },
     {
       "fred_id": "EURYLDCRV",
       "latest_date": "2026-01-01",
-      "days": 160,
+      "days": 161,
       "sla": 75
     },
     {
       "fred_id": "LRHUTTTTEZM156S",
       "latest_date": "2023-01-01",
-      "days": 1256,
+      "days": 1257,
       "sla": 75
     }
   ],
@@ -40,7 +28,7 @@
   "series": [
     {
       "fred_id": "T10Y3M",
-      "latest_date": "2026-06-09",
+      "latest_date": "2026-06-10",
       "days": 1,
       "sla": 10,
       "stale": false,
@@ -48,7 +36,7 @@
     },
     {
       "fred_id": "T10Y2Y",
-      "latest_date": "2026-06-09",
+      "latest_date": "2026-06-10",
       "days": 1,
       "sla": 10,
       "stale": false,
@@ -57,7 +45,7 @@
     {
       "fred_id": "BAA10YM",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -65,14 +53,14 @@
     {
       "fred_id": "NFCI",
       "latest_date": "2026-06-05",
-      "days": 5,
+      "days": 6,
       "sla": 21,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "VIXCLS",
-      "latest_date": "2026-06-09",
+      "latest_date": "2026-06-10",
       "days": 1,
       "sla": 10,
       "stale": false,
@@ -80,7 +68,7 @@
     },
     {
       "fred_id": "BAMLH0A0HYM2",
-      "latest_date": "2026-06-09",
+      "latest_date": "2026-06-10",
       "days": 1,
       "sla": 10,
       "stale": false,
@@ -88,7 +76,7 @@
     },
     {
       "fred_id": "T10YIE",
-      "latest_date": "2026-06-09",
+      "latest_date": "2026-06-10",
       "days": 1,
       "sla": 10,
       "stale": false,
@@ -97,7 +85,7 @@
     {
       "fred_id": "WALCL",
       "latest_date": "2026-06-03",
-      "days": 7,
+      "days": 8,
       "sla": 21,
       "stale": false,
       "missing": false
@@ -105,30 +93,30 @@
     {
       "fred_id": "M2SL",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
     },
     {
-      "fred_id": "STLFSI3",
-      "latest_date": "2022-10-28",
-      "days": 1321,
+      "fred_id": "STLFSI4",
+      "latest_date": "2026-06-05",
+      "days": 6,
       "sla": 21,
-      "stale": true,
+      "stale": false,
       "missing": false
     },
     {
-      "fred_id": "USSLIND",
-      "latest_date": "2020-02-01",
-      "days": 2321,
+      "fred_id": "CFNAI",
+      "latest_date": "2026-04-01",
+      "days": 71,
       "sla": 75,
-      "stale": true,
+      "stale": false,
       "missing": false
     },
     {
       "fred_id": "USEPUINDXD",
-      "latest_date": "2026-06-09",
+      "latest_date": "2026-06-10",
       "days": 1,
       "sla": 10,
       "stale": false,
@@ -137,7 +125,7 @@
     {
       "fred_id": "UNRATE",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -145,15 +133,15 @@
     {
       "fred_id": "SAHMREALTIME",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "ICSA",
-      "latest_date": "2026-05-30",
-      "days": 11,
+      "latest_date": "2026-06-06",
+      "days": 5,
       "sla": 21,
       "stale": false,
       "missing": false
@@ -161,7 +149,7 @@
     {
       "fred_id": "PAYEMS",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -169,7 +157,7 @@
     {
       "fred_id": "JTSQUR",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -177,7 +165,7 @@
     {
       "fred_id": "UMCSENT",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -185,7 +173,7 @@
     {
       "fred_id": "CIVPART",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -193,7 +181,7 @@
     {
       "fred_id": "CPIAUCSL",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -201,7 +189,7 @@
     {
       "fred_id": "CPILFESL",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -209,7 +197,7 @@
     {
       "fred_id": "PCEPI",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -217,7 +205,7 @@
     {
       "fred_id": "FEDFUNDS",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -225,7 +213,7 @@
     {
       "fred_id": "CES0500000003",
       "latest_date": "2026-05-01",
-      "days": 40,
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -233,7 +221,7 @@
     {
       "fred_id": "GDPC1",
       "latest_date": "2026-01-01",
-      "days": 160,
+      "days": 161,
       "sla": 200,
       "stale": false,
       "missing": false
@@ -241,7 +229,7 @@
     {
       "fred_id": "INDPRO",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -249,7 +237,7 @@
     {
       "fred_id": "RSAFS",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -257,7 +245,7 @@
     {
       "fred_id": "W875RX1",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -265,7 +253,7 @@
     {
       "fred_id": "HOUST",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -273,7 +261,7 @@
     {
       "fred_id": "WEI",
       "latest_date": "2026-05-30",
-      "days": 11,
+      "days": 12,
       "sla": 21,
       "stale": false,
       "missing": false
@@ -281,7 +269,7 @@
     {
       "fred_id": "PSAVERT",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -289,7 +277,7 @@
     {
       "fred_id": "CSUSHPISA",
       "latest_date": "2026-03-01",
-      "days": 101,
+      "days": 102,
       "sla": 75,
       "stale": true,
       "missing": false
@@ -297,7 +285,7 @@
     {
       "fred_id": "TCU",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -305,7 +293,7 @@
     {
       "fred_id": "PERMIT",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -313,7 +301,7 @@
     {
       "fred_id": "MORTGAGE30US",
       "latest_date": "2026-06-04",
-      "days": 6,
+      "days": 7,
       "sla": 21,
       "stale": false,
       "missing": false
@@ -321,7 +309,7 @@
     {
       "fred_id": "NEWORDER",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -329,7 +317,7 @@
     {
       "fred_id": "DRTSCILM",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 200,
       "stale": false,
       "missing": false
@@ -337,7 +325,7 @@
     {
       "fred_id": "DRCCLACBS",
       "latest_date": "2026-01-01",
-      "days": 160,
+      "days": 161,
       "sla": 200,
       "stale": false,
       "missing": false
@@ -345,15 +333,15 @@
     {
       "fred_id": "JTSJOL",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "PPIACO",
-      "latest_date": "2026-04-01",
-      "days": 70,
+      "latest_date": "2026-05-01",
+      "days": 41,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -361,7 +349,7 @@
     {
       "fred_id": "G7LOLITOAASTSAM",
       "latest_date": "2026-04-01",
-      "days": 70,
+      "days": 71,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -369,7 +357,7 @@
     {
       "fred_id": "EURYLDCRV",
       "latest_date": "2026-01-01",
-      "days": 160,
+      "days": 161,
       "sla": 75,
       "stale": true,
       "missing": false
@@ -377,7 +365,7 @@
     {
       "fred_id": "LRHUTTTTEZM156S",
       "latest_date": "2023-01-01",
-      "days": 1256,
+      "days": 1257,
       "sla": 75,
       "stale": true,
       "missing": false
@@ -385,7 +373,7 @@
     {
       "fred_id": "CLVMNACSCAB1GQEA",
       "latest_date": "2026-01-01",
-      "days": 160,
+      "days": 161,
       "sla": 200,
       "stale": false,
       "missing": false
@@ -393,7 +381,7 @@
     {
       "fred_id": "DTWEXBGS",
       "latest_date": "2026-06-05",
-      "days": 5,
+      "days": 6,
       "sla": 75,
       "stale": false,
       "missing": false
