@@ -1,31 +1,31 @@
 {
-  "as_of": "2026-06-11",
-  "generated_at": "2026-06-11T15:29:53.217Z",
+  "as_of": "2026-06-12",
+  "generated_at": "2026-06-12T14:29:17.151Z",
   "composite": {
-    "score": 38.3,
+    "score": 38.2,
     "alert": "YELLOW",
     "rating": 4,
     "confidence": 1,
-    "recession_probability_12mo": 0.208,
+    "recession_probability_12mo": 0.225,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.76,
-    "ensemble_score": 22.6
+    "yield_curve_spread": 0.67,
+    "ensemble_score": 23.1
   },
   "geopolitical": {
-    "score": 10.8,
+    "score": 5.1,
     "flag": "CALM",
     "source": "market-proxy",
     "gpr": null,
     "market": {
-      "score": 10.8,
+      "score": 5.1,
       "flag": "CALM",
       "channels": [
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 22.22,
-          "display": "22.2",
-          "sub_score": 19.2,
+          "value": 19.44,
+          "display": "19.4",
+          "sub_score": 6.5,
           "firing": false
         },
         {
@@ -52,18 +52,18 @@
   },
   "factor_contributions": [
     {
-      "name": "Yield Curve 10Y-3M",
-      "fred_id": "T10Y3M",
-      "layer": "financial_lead",
-      "score": 18.2,
-      "contrib": -1.584
-    },
-    {
       "name": "Sahm Rule (Real-Time)",
       "fred_id": "SAHMREALTIME",
       "layer": "labor",
       "score": 14.8,
       "contrib": -1.533
+    },
+    {
+      "name": "Yield Curve 10Y-3M",
+      "fred_id": "T10Y3M",
+      "layer": "financial_lead",
+      "score": 20,
+      "contrib": -1.495
     },
     {
       "name": "Payroll Employment",
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 26.1,
+      "score": 25.5,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -162,12 +162,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.76,
-      "latest_date": "2026-06-10",
-      "score": 18.2,
-      "level_score": 4.6,
-      "momentum_score": 50.2,
-      "percentile_rank": 40,
+      "latest_value": 0.67,
+      "latest_date": "2026-06-11",
+      "score": 20,
+      "level_score": 6.4,
+      "momentum_score": 51.9,
+      "percentile_rank": 41,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -270,8 +270,8 @@
           "value": 0.76
         },
         {
-          "date": "2026-06-10",
-          "value": 0.76
+          "date": "2026-06-11",
+          "value": 0.67
         }
       ]
     },
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.42,
-      "latest_date": "2026-06-10",
-      "score": 25.3,
-      "level_score": 15.7,
-      "momentum_score": 47.8,
-      "percentile_rank": 47,
+      "latest_value": 0.4,
+      "latest_date": "2026-06-11",
+      "score": 26.9,
+      "level_score": 16.8,
+      "momentum_score": 50.6,
+      "percentile_rank": 51,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -390,8 +390,8 @@
           "value": 0.47
         },
         {
-          "date": "2026-06-10",
-          "value": 0.42
+          "date": "2026-06-11",
+          "value": 0.4
         }
       ]
     },
@@ -642,13 +642,13 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 22.22,
-      "latest_date": "2026-06-10",
-      "score": 43.1,
-      "level_score": 39.1,
-      "momentum_score": 52.7,
-      "percentile_rank": 76,
-      "anomaly": false,
+      "latest_value": 19.44,
+      "latest_date": "2026-06-11",
+      "score": 35.9,
+      "level_score": 29.1,
+      "momentum_score": 51.7,
+      "percentile_rank": 68,
+      "anomaly": true,
       "stale": false,
       "alert": "YELLOW",
       "threshold": 25,
@@ -750,8 +750,8 @@
           "value": 15.32
         },
         {
-          "date": "2026-06-10",
-          "value": 22.22
+          "date": "2026-06-11",
+          "value": 19.44
         }
       ]
     },
@@ -882,15 +882,15 @@
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
-      "latest_value": 2.34,
-      "latest_date": "2026-06-10",
-      "score": 23.7,
-      "level_score": 11.6,
-      "momentum_score": 52,
-      "percentile_rank": 56,
-      "anomaly": false,
+      "latest_value": 2.29,
+      "latest_date": "2026-06-11",
+      "score": 30.1,
+      "level_score": 18.3,
+      "momentum_score": 57.7,
+      "percentile_rank": 61,
+      "anomaly": true,
       "stale": false,
-      "alert": "GREEN",
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
@@ -990,8 +990,8 @@
           "value": 2.38
         },
         {
-          "date": "2026-06-10",
-          "value": 2.34
+          "date": "2026-06-11",
+          "value": 2.29
         }
       ]
     },
@@ -1002,20 +1002,20 @@
       "category": "macro",
       "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions.",
       "weight": 0.0599,
-      "latest_value": 6711495,
-      "latest_date": "2026-06-03",
-      "score": 16,
+      "latest_value": 6725397,
+      "latest_date": "2026-06-10",
+      "score": 15.9,
       "level_score": 1.4,
       "momentum_score": 50,
-      "percentile_rank": 26,
+      "percentile_rank": 27,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "direct",
       "frequency": "weekly",
-      "norm_mean": 3963375.1894,
-      "norm_std": 2579916.2571,
+      "norm_mean": 3965628.062,
+      "norm_std": 2580069.0475,
       "history": [
         {
           "date": "2024-07-31",
@@ -1110,8 +1110,8 @@
           "value": 6704383
         },
         {
-          "date": "2026-06-03",
-          "value": 6711495
+          "date": "2026-06-10",
+          "value": 6725397
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 244.89,
-      "latest_date": "2026-06-10",
-      "score": 62.7,
-      "level_score": 77.1,
-      "momentum_score": 28.9,
-      "percentile_rank": 68,
+      "latest_value": 220.41,
+      "latest_date": "2026-06-11",
+      "score": 48.7,
+      "level_score": 63.6,
+      "momentum_score": 14.1,
+      "percentile_rank": 64,
       "anomaly": false,
       "stale": false,
-      "alert": "RED",
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 199.8018,
-      "norm_std": 148.3716,
+      "norm_mean": 199.7775,
+      "norm_std": 148.3387,
       "history": [
         {
           "date": "2024-07-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-05-31",
-          "value": 399.86
+          "value": 394.49
         },
         {
-          "date": "2026-06-10",
-          "value": 244.89
+          "date": "2026-06-11",
+          "value": 220.41
         }
       ]
     },
@@ -3642,8 +3642,8 @@
       "category": "macro",
       "description": "NY Fed Weekly Economic Index; 10 daily/weekly indicators scaled to match YoY GDP growth.",
       "weight": 0.0904,
-      "latest_value": 3.23,
-      "latest_date": "2026-05-30",
+      "latest_value": 2.9,
+      "latest_date": "2026-06-06",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -3657,10 +3657,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-06-29",
-          "value": 2.39
-        },
         {
           "date": "2024-07-27",
           "value": 1.71
@@ -3751,7 +3747,11 @@
         },
         {
           "date": "2026-05-30",
-          "value": 3.23
+          "value": 3.22
+        },
+        {
+          "date": "2026-06-06",
+          "value": 2.9
         }
       ]
     },
@@ -4242,20 +4242,20 @@
       "category": "macro",
       "description": "30-year fixed mortgage rate; rising rates directly reduce housing affordability and construction, leading the real economy by 6–12 months.",
       "weight": 0.08,
-      "latest_value": 6.48,
-      "latest_date": "2026-06-04",
-      "score": 60.2,
-      "level_score": 62.1,
-      "momentum_score": 55.7,
+      "latest_value": 6.52,
+      "latest_date": "2026-06-11",
+      "score": 60,
+      "level_score": 64.1,
+      "momentum_score": 50.5,
       "percentile_rank": 53,
       "anomaly": false,
       "stale": false,
-      "alert": "RED",
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "weekly",
-      "norm_mean": 6.2307,
-      "norm_std": 2.0157,
+      "norm_mean": 6.229,
+      "norm_std": 2.014,
       "history": [
         {
           "date": "2024-07-25",
@@ -4350,8 +4350,8 @@
           "value": 6.53
         },
         {
-          "date": "2026-06-04",
-          "value": 6.48
+          "date": "2026-06-11",
+          "value": 6.52
         }
       ]
     },
