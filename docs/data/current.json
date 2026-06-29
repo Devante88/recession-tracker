@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-06-28",
-  "generated_at": "2026-06-28T14:51:30.818Z",
+  "as_of": "2026-06-29",
+  "generated_at": "2026-06-29T15:25:53.081Z",
   "composite": {
     "score": 40.7,
     "alert": "YELLOW",
@@ -12,27 +12,27 @@
     "ensemble_score": 24.8
   },
   "geopolitical": {
-    "score": 4.6,
+    "score": 3.6,
     "flag": "CALM",
     "source": "market-proxy",
     "gpr": null,
     "market": {
-      "score": 4.6,
+      "score": 3.6,
       "flag": "CALM",
       "channels": [
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 18.89,
-          "display": "18.9",
-          "sub_score": 4,
+          "value": 18.41,
+          "display": "18.4",
+          "sub_score": 1.9,
           "firing": false
         },
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.78,
-          "display": "2.78%",
+          "value": 2.83,
+          "display": "2.83%",
           "sub_score": 0,
           "firing": false
         },
@@ -642,12 +642,12 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 18.89,
-      "latest_date": "2026-06-25",
-      "score": 35.6,
-      "level_score": 27.3,
-      "momentum_score": 54.8,
-      "percentile_rank": 67,
+      "latest_value": 18.41,
+      "latest_date": "2026-06-26",
+      "score": 32.1,
+      "level_score": 25.8,
+      "momentum_score": 46.6,
+      "percentile_rank": 62,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
@@ -750,8 +750,8 @@
           "value": 15.32
         },
         {
-          "date": "2026-06-25",
-          "value": 18.89
+          "date": "2026-06-26",
+          "value": 18.41
         }
       ]
     },
@@ -762,12 +762,12 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.78,
-      "latest_date": "2026-06-25",
-      "score": 25.5,
-      "level_score": 14.5,
+      "latest_value": 2.83,
+      "latest_date": "2026-06-26",
+      "score": 25.8,
+      "level_score": 15,
       "momentum_score": 51.2,
-      "percentile_rank": 81,
+      "percentile_rank": 82,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -870,8 +870,8 @@
           "value": 2.74
         },
         {
-          "date": "2026-06-25",
-          "value": 2.78
+          "date": "2026-06-26",
+          "value": 2.83
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 541.59,
-      "latest_date": "2026-06-21",
-      "score": 85,
+      "latest_value": 502.49,
+      "latest_date": "2026-06-28",
+      "score": 88.8,
       "level_score": 100,
-      "momentum_score": 50.2,
-      "percentile_rank": 75,
+      "momentum_score": 62.6,
+      "percentile_rank": 77,
       "anomaly": false,
       "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 200.2922,
-      "norm_std": 148.6651,
+      "norm_mean": 200.4994,
+      "norm_std": 148.813,
       "history": [
         {
           "date": "2024-07-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-05-31",
-          "value": 390.49
+          "value": 388.99
         },
         {
-          "date": "2026-06-21",
-          "value": 541.59
+          "date": "2026-06-28",
+          "value": 502.49
         }
       ]
     },
