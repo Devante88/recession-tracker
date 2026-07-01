@@ -100,8 +100,8 @@
     },
     {
       "fred_id": "STLFSI4",
-      "latest_date": "2026-06-19",
-      "days": 12,
+      "latest_date": "2026-06-26",
+      "days": 5,
       "sla": 21,
       "stale": false,
       "missing": false
