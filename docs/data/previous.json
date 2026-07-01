@@ -1,8 +1,8 @@
 {
   "as_of": "2026-06-30",
-  "generated_at": "2026-06-30T13:51:02.458Z",
+  "generated_at": "2026-06-30T15:32:59.515Z",
   "composite": {
-    "score": 40.4,
+    "score": 40.3,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
@@ -31,8 +31,8 @@
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.83,
-          "display": "2.83%",
+          "value": 2.8,
+          "display": "2.80%",
           "sub_score": 0,
           "firing": false
         },
@@ -124,12 +124,12 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 30.8,
+      "score": 30.7,
       "alert": "YELLOW",
       "weight": 0.27
     },
     "labor": {
-      "score": 36,
+      "score": 35.9,
       "alert": "YELLOW",
       "weight": 0.22
     },
@@ -144,7 +144,7 @@
       "weight": 0.18
     },
     "micro": {
-      "score": 34.6,
+      "score": 34.4,
       "alert": "YELLOW",
       "weight": 0.09
     },
@@ -762,12 +762,12 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.83,
-      "latest_date": "2026-06-26",
-      "score": 25.8,
-      "level_score": 15,
-      "momentum_score": 51.2,
-      "percentile_rank": 82,
+      "latest_value": 2.8,
+      "latest_date": "2026-06-29",
+      "score": 25.4,
+      "level_score": 14.7,
+      "momentum_score": 50.4,
+      "percentile_rank": 81,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -870,8 +870,8 @@
           "value": 2.74
         },
         {
-          "date": "2026-06-26",
-          "value": 2.83
+          "date": "2026-06-29",
+          "value": 2.8
         }
       ]
     },
@@ -2083,10 +2083,10 @@
       "description": "Worker confidence proxy. Falling quits = labor market cooling.",
       "weight": 0.1188,
       "latest_value": 1.9,
-      "latest_date": "2026-04-01",
-      "score": 55,
+      "latest_date": "2026-05-01",
+      "score": 53.5,
       "level_score": 55,
-      "momentum_score": 55,
+      "momentum_score": 50,
       "percentile_rank": 60,
       "anomaly": false,
       "stale": false,
@@ -2097,10 +2097,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-05-01",
-          "value": 2.1
-        },
         {
           "date": "2024-06-01",
           "value": 2.1
@@ -2191,6 +2187,10 @@
         },
         {
           "date": "2026-04-01",
+          "value": 1.9
+        },
+        {
+          "date": "2026-05-01",
           "value": 1.9
         }
       ]
@@ -4722,13 +4722,13 @@
       "category": "micro",
       "description": "Employer demand (FRED: thousands). 5,500 = 5.5M openings, near recessionary trough.",
       "weight": 0.2118,
-      "latest_value": 7618,
-      "latest_date": "2026-04-01",
-      "score": 26,
-      "level_score": 17.6,
-      "momentum_score": 45.6,
-      "percentile_rank": 26,
-      "anomaly": true,
+      "latest_value": 7594,
+      "latest_date": "2026-05-01",
+      "score": 25,
+      "level_score": 17.9,
+      "momentum_score": 41.7,
+      "percentile_rank": 25,
+      "anomaly": false,
       "stale": false,
       "alert": "GREEN",
       "threshold": 5500,
@@ -4737,10 +4737,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-05-01",
-          "value": 7782
-        },
         {
           "date": "2024-06-01",
           "value": 7416
@@ -4831,7 +4827,11 @@
         },
         {
           "date": "2026-04-01",
-          "value": 7618
+          "value": 7585
+        },
+        {
+          "date": "2026-05-01",
+          "value": 7594
         }
       ]
     },
