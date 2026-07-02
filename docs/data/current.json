@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-07-01",
-  "generated_at": "2026-07-01T15:47:03.578Z",
+  "as_of": "2026-07-02",
+  "generated_at": "2026-07-02T13:26:05.087Z",
   "composite": {
-    "score": 40.2,
+    "score": 38.9,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
-    "recession_probability_12mo": 0.246,
+    "recession_probability_12mo": 0.234,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.57,
-    "ensemble_score": 24.5
+    "yield_curve_spread": 0.63,
+    "ensemble_score": 23.1
   },
   "geopolitical": {
     "score": 3.7,
@@ -62,8 +62,8 @@
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
-      "score": 21.4,
-      "contrib": -1.427
+      "score": 19.5,
+      "contrib": -1.524
     },
     {
       "name": "Payroll Employment",
@@ -108,28 +108,28 @@
       "contrib": 0.98
     },
     {
+      "name": "Baa-10Y Credit Spread",
+      "fred_id": "BAA10YM",
+      "layer": "financial_lead",
+      "score": 22.4,
+      "contrib": -0.919
+    },
+    {
       "name": "Chicago Fed NFCI",
       "fred_id": "NFCI",
       "layer": "financial_lead",
       "score": 15,
       "contrib": -0.873
-    },
-    {
-      "name": "Baa-10Y Credit Spread",
-      "fred_id": "BAA10YM",
-      "layer": "financial_lead",
-      "score": 24.3,
-      "contrib": -0.855
     }
   ],
   "layers": {
     "financial_lead": {
-      "score": 30.4,
-      "alert": "YELLOW",
+      "score": 25.4,
+      "alert": "GREEN",
       "weight": 0.27
     },
     "labor": {
-      "score": 35.9,
+      "score": 35.8,
       "alert": "YELLOW",
       "weight": 0.22
     },
@@ -162,12 +162,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.57,
-      "latest_date": "2026-06-30",
-      "score": 21.4,
-      "level_score": 9.3,
-      "momentum_score": 49.7,
-      "percentile_rank": 42,
+      "latest_value": 0.63,
+      "latest_date": "2026-07-01",
+      "score": 19.5,
+      "level_score": 7.4,
+      "momentum_score": 47.5,
+      "percentile_rank": 41,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -177,10 +177,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-31",
-          "value": -1.32
-        },
         {
           "date": "2024-08-30",
           "value": -1.3
@@ -272,6 +268,10 @@
         {
           "date": "2026-06-30",
           "value": 0.57
+        },
+        {
+          "date": "2026-07-01",
+          "value": 0.63
         }
       ]
     },
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.3,
-      "latest_date": "2026-06-30",
-      "score": 31.4,
-      "level_score": 23.1,
-      "momentum_score": 50.7,
-      "percentile_rank": 56,
+      "latest_value": 0.31,
+      "latest_date": "2026-07-01",
+      "score": 30.7,
+      "level_score": 22.4,
+      "momentum_score": 50,
+      "percentile_rank": 55,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
@@ -297,10 +297,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-31",
-          "value": -0.2
-        },
         {
           "date": "2024-08-30",
           "value": 0
@@ -392,6 +388,10 @@
         {
           "date": "2026-06-30",
           "value": 0.3
+        },
+        {
+          "date": "2026-07-01",
+          "value": 0.31
         }
       ]
     },
@@ -402,12 +402,12 @@
       "category": "macro",
       "description": "Corporate spread as a credit-stress proxy. Threshold calibrated to widening regimes.",
       "weight": 0.1232,
-      "latest_value": 1.62,
-      "latest_date": "2026-05-01",
-      "score": 24.3,
-      "level_score": 13.7,
-      "momentum_score": 49,
-      "percentile_rank": 64,
+      "latest_value": 1.53,
+      "latest_date": "2026-06-01",
+      "score": 22.4,
+      "level_score": 12.3,
+      "momentum_score": 45.7,
+      "percentile_rank": 61,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -417,10 +417,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-06-01",
-          "value": 1.51
-        },
         {
           "date": "2024-07-01",
           "value": 1.59
@@ -512,6 +508,10 @@
         {
           "date": "2026-05-01",
           "value": 1.62
+        },
+        {
+          "date": "2026-06-01",
+          "value": 1.53
         }
       ]
     },
@@ -882,11 +882,11 @@
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
-      "latest_value": 2.24,
-      "latest_date": "2026-06-30",
-      "score": 32.4,
-      "level_score": 27.8,
-      "momentum_score": 43.2,
+      "latest_value": 2.23,
+      "latest_date": "2026-07-01",
+      "score": 33.9,
+      "level_score": 30,
+      "momentum_score": 42.9,
       "percentile_rank": 63,
       "anomaly": false,
       "stale": false,
@@ -894,13 +894,9 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1506,
+      "norm_mean": 2.1507,
       "norm_std": 0.3754,
       "history": [
-        {
-          "date": "2024-07-31",
-          "value": 2.24
-        },
         {
           "date": "2024-08-30",
           "value": 2.15
@@ -992,6 +988,10 @@
         {
           "date": "2026-06-30",
           "value": 2.24
+        },
+        {
+          "date": "2026-07-01",
+          "value": 2.23
         }
       ]
     },
@@ -1482,25 +1482,21 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 309.32,
-      "latest_date": "2026-06-30",
-      "score": 82.6,
-      "level_score": 94.8,
-      "momentum_score": 54,
-      "percentile_rank": 75,
-      "anomaly": false,
+      "latest_value": 163.74,
+      "latest_date": "2026-07-01",
+      "score": 18.9,
+      "level_score": 27,
+      "momentum_score": 0,
+      "percentile_rank": 49,
+      "anomaly": true,
       "stale": false,
-      "alert": "RED",
+      "alert": "GREEN",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 200.8479,
-      "norm_std": 149.6405,
+      "norm_mean": 200.8919,
+      "norm_std": 149.631,
       "history": [
-        {
-          "date": "2024-07-31",
-          "value": 53.04
-        },
         {
           "date": "2024-08-31",
           "value": 66.18
@@ -1591,7 +1587,11 @@
         },
         {
           "date": "2026-06-30",
-          "value": 309.32
+          "value": 353.02
+        },
+        {
+          "date": "2026-07-01",
+          "value": 163.74
         }
       ]
     },
@@ -1843,10 +1843,10 @@
       "description": "Fast labor deterioration signal. Threshold = sustained recessionary level.",
       "weight": 0.1584,
       "latest_value": 215000,
-      "latest_date": "2026-06-20",
-      "score": 31.3,
+      "latest_date": "2026-06-27",
+      "score": 30.9,
       "level_score": 24.4,
-      "momentum_score": 47.5,
+      "momentum_score": 46.1,
       "percentile_rank": 18,
       "anomaly": false,
       "stale": false,
@@ -1950,7 +1950,7 @@
           "value": 225000
         },
         {
-          "date": "2026-06-20",
+          "date": "2026-06-27",
           "value": 215000
         }
       ]
@@ -2803,7 +2803,7 @@
       "description": "Policy rate level. Z-score normalized.",
       "weight": 0.2,
       "latest_value": 3.63,
-      "latest_date": "2026-05-01",
+      "latest_date": "2026-06-01",
       "score": 32.5,
       "level_score": 25,
       "momentum_score": 49.8,
@@ -2814,13 +2814,9 @@
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 4.5982,
-      "norm_std": 3.5313,
+      "norm_mean": 4.5971,
+      "norm_std": 3.5294,
       "history": [
-        {
-          "date": "2024-06-01",
-          "value": 5.33
-        },
         {
           "date": "2024-07-01",
           "value": 5.33
@@ -2911,6 +2907,10 @@
         },
         {
           "date": "2026-05-01",
+          "value": 3.63
+        },
+        {
+          "date": "2026-06-01",
           "value": 3.63
         }
       ]
