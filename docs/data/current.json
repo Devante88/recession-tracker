@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-07-02",
-  "generated_at": "2026-07-02T15:20:35.743Z",
+  "as_of": "2026-07-03",
+  "generated_at": "2026-07-03T13:29:45.695Z",
   "composite": {
-    "score": 39,
+    "score": 38.8,
     "alert": "YELLOW",
-    "rating": 5,
+    "rating": 4,
     "confidence": 1,
-    "recession_probability_12mo": 0.234,
+    "recession_probability_12mo": 0.225,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.63,
-    "ensemble_score": 22.2
+    "yield_curve_spread": 0.67,
+    "ensemble_score": 21.8
   },
   "geopolitical": {
     "score": 3.7,
@@ -55,8 +55,8 @@
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
-      "score": 19.5,
-      "contrib": -1.524
+      "score": 18,
+      "contrib": -1.598
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 25.4,
+      "score": 24.9,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -139,7 +139,7 @@
       "weight": 0.14
     },
     "real_economy": {
-      "score": 39.7,
+      "score": 39.4,
       "alert": "YELLOW",
       "weight": 0.18
     },
@@ -162,12 +162,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.63,
-      "latest_date": "2026-07-01",
-      "score": 19.5,
-      "level_score": 7.4,
-      "momentum_score": 47.5,
-      "percentile_rank": 41,
+      "latest_value": 0.67,
+      "latest_date": "2026-07-02",
+      "score": 18,
+      "level_score": 6.4,
+      "momentum_score": 44.9,
+      "percentile_rank": 40,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -270,8 +270,8 @@
           "value": 0.57
         },
         {
-          "date": "2026-07-01",
-          "value": 0.63
+          "date": "2026-07-02",
+          "value": 0.67
         }
       ]
     },
@@ -282,15 +282,15 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.31,
-      "latest_date": "2026-07-01",
-      "score": 30.7,
-      "level_score": 22.4,
-      "momentum_score": 50,
-      "percentile_rank": 55,
+      "latest_value": 0.35,
+      "latest_date": "2026-07-02",
+      "score": 27.4,
+      "level_score": 19.8,
+      "momentum_score": 45.2,
+      "percentile_rank": 51,
       "anomaly": false,
       "stale": false,
-      "alert": "YELLOW",
+      "alert": "GREEN",
       "threshold": 0,
       "direction": "direct",
       "frequency": "daily",
@@ -390,8 +390,8 @@
           "value": 0.3
         },
         {
-          "date": "2026-07-01",
-          "value": 0.31
+          "date": "2026-07-02",
+          "value": 0.35
         }
       ]
     },
@@ -883,18 +883,18 @@
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
       "latest_value": 2.23,
-      "latest_date": "2026-07-01",
-      "score": 33.9,
-      "level_score": 30,
-      "momentum_score": 42.9,
-      "percentile_rank": 63,
+      "latest_date": "2026-07-02",
+      "score": 35.4,
+      "level_score": 30.1,
+      "momentum_score": 47.7,
+      "percentile_rank": 65,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1507,
+      "norm_mean": 2.1508,
       "norm_std": 0.3754,
       "history": [
         {
@@ -990,7 +990,7 @@
           "value": 2.24
         },
         {
-          "date": "2026-07-01",
+          "date": "2026-07-02",
           "value": 2.23
         }
       ]
@@ -1002,11 +1002,11 @@
       "category": "macro",
       "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions.",
       "weight": 0.0599,
-      "latest_value": 6735645,
-      "latest_date": "2026-06-24",
-      "score": 15.9,
+      "latest_value": 6724564,
+      "latest_date": "2026-07-01",
+      "score": 16,
       "level_score": 1.4,
-      "momentum_score": 49.9,
+      "momentum_score": 50,
       "percentile_rank": 27,
       "anomaly": false,
       "stale": false,
@@ -1014,13 +1014,9 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "weekly",
-      "norm_mean": 3970140.1246,
-      "norm_std": 2580386.513,
+      "norm_mean": 3972381.3157,
+      "norm_std": 2580531.92,
       "history": [
-        {
-          "date": "2024-07-31",
-          "value": 7178391
-        },
         {
           "date": "2024-08-28",
           "value": 7123238
@@ -1112,6 +1108,10 @@
         {
           "date": "2026-06-24",
           "value": 6735645
+        },
+        {
+          "date": "2026-07-01",
+          "value": 6724564
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 163.74,
-      "latest_date": "2026-07-01",
-      "score": 18.9,
-      "level_score": 27,
-      "momentum_score": 0,
+      "latest_value": 147.45,
+      "latest_date": "2026-07-02",
+      "score": 18.7,
+      "level_score": 19.3,
+      "momentum_score": 17.4,
       "percentile_rank": 49,
-      "anomaly": true,
+      "anomaly": false,
       "stale": false,
       "alert": "GREEN",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 200.8919,
-      "norm_std": 149.631,
+      "norm_mean": 200.9164,
+      "norm_std": 149.6018,
       "history": [
         {
           "date": "2024-08-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-06-30",
-          "value": 353.02
+          "value": 336.96
         },
         {
-          "date": "2026-07-01",
-          "value": 163.74
+          "date": "2026-07-02",
+          "value": 147.45
         }
       ]
     },
@@ -3642,8 +3642,8 @@
       "category": "macro",
       "description": "NY Fed Weekly Economic Index; 10 daily/weekly indicators scaled to match YoY GDP growth.",
       "weight": 0.0904,
-      "latest_value": 2.5,
-      "latest_date": "2026-06-20",
+      "latest_value": 2.57,
+      "latest_date": "2026-06-27",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -3750,8 +3750,8 @@
           "value": 3.22
         },
         {
-          "date": "2026-06-20",
-          "value": 2.5
+          "date": "2026-06-27",
+          "value": 2.57
         }
       ]
     },
@@ -3882,8 +3882,8 @@
       "category": "macro",
       "description": "S&P/Case-Shiller national home price index; housing wealth leads consumer spending 6–12 months.",
       "weight": 0.0753,
-      "latest_value": 331.265,
-      "latest_date": "2026-03-01",
+      "latest_value": 330.873,
+      "latest_date": "2026-04-01",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -3894,104 +3894,104 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 153.5278,
-      "norm_std": 74.0703,
+      "norm_mean": 153.9028,
+      "norm_std": 74.4393,
       "history": [
         {
-          "date": "2024-04-01",
-          "value": 319.092
-        },
-        {
           "date": "2024-05-01",
-          "value": 319.977
+          "value": 319.966
         },
         {
           "date": "2024-06-01",
-          "value": 320.764
+          "value": 320.75
         },
         {
           "date": "2024-07-01",
-          "value": 321.635
+          "value": 321.619
         },
         {
           "date": "2024-08-01",
-          "value": 322.5
+          "value": 322.486
         },
         {
           "date": "2024-09-01",
-          "value": 323.526
+          "value": 323.52
         },
         {
           "date": "2024-10-01",
-          "value": 324.539
+          "value": 324.54
         },
         {
           "date": "2024-11-01",
-          "value": 325.95
+          "value": 325.949
         },
         {
           "date": "2024-12-01",
-          "value": 327.56
+          "value": 327.598
         },
         {
           "date": "2025-01-01",
-          "value": 329.001
+          "value": 328.981
         },
         {
           "date": "2025-02-01",
-          "value": 329.573
+          "value": 329.531
         },
         {
           "date": "2025-03-01",
-          "value": 329.078
+          "value": 328.974
         },
         {
           "date": "2025-04-01",
-          "value": 328.092
+          "value": 328.108
         },
         {
           "date": "2025-05-01",
-          "value": 327.486
+          "value": 327.462
         },
         {
           "date": "2025-06-01",
-          "value": 326.966
+          "value": 326.946
         },
         {
           "date": "2025-07-01",
-          "value": 326.917
+          "value": 326.909
         },
         {
           "date": "2025-08-01",
-          "value": 327.28
+          "value": 327.284
         },
         {
           "date": "2025-09-01",
-          "value": 327.759
+          "value": 327.769
         },
         {
           "date": "2025-10-01",
-          "value": 328.831
+          "value": 328.849
         },
         {
           "date": "2025-11-01",
-          "value": 330.149
+          "value": 330.201
         },
         {
           "date": "2025-12-01",
-          "value": 331.304
+          "value": 331.403
         },
         {
           "date": "2026-01-01",
-          "value": 331.851
+          "value": 332.055
         },
         {
           "date": "2026-02-01",
-          "value": 331.998
+          "value": 332.071
         },
         {
           "date": "2026-03-01",
-          "value": 331.265
+          "value": 331.359
+        },
+        {
+          "date": "2026-04-01",
+          "value": 330.873
         }
       ]
     },
@@ -4242,25 +4242,21 @@
       "category": "macro",
       "description": "30-year fixed mortgage rate; rising rates directly reduce housing affordability and construction, leading the real economy by 6–12 months.",
       "weight": 0.08,
-      "latest_value": 6.49,
-      "latest_date": "2026-06-25",
-      "score": 59.1,
-      "level_score": 62.9,
-      "momentum_score": 50.5,
-      "percentile_rank": 53,
+      "latest_value": 6.43,
+      "latest_date": "2026-07-02",
+      "score": 55.8,
+      "level_score": 60.1,
+      "momentum_score": 45.8,
+      "percentile_rank": 52,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "weekly",
-      "norm_mean": 6.2256,
-      "norm_std": 2.0107,
+      "norm_mean": 6.2239,
+      "norm_std": 2.0091,
       "history": [
-        {
-          "date": "2024-07-25",
-          "value": 6.78
-        },
         {
           "date": "2024-08-29",
           "value": 6.35
@@ -4352,6 +4348,10 @@
         {
           "date": "2026-06-25",
           "value": 6.49
+        },
+        {
+          "date": "2026-07-02",
+          "value": 6.43
         }
       ]
     },

@@ -1,15 +1,15 @@
 {
   "as_of": "2026-07-02",
-  "generated_at": "2026-07-02T13:26:05.087Z",
+  "generated_at": "2026-07-02T15:20:35.743Z",
   "composite": {
-    "score": 38.9,
+    "score": 39,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
     "recession_probability_12mo": 0.234,
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.63,
-    "ensemble_score": 23.1
+    "ensemble_score": 22.2
   },
   "geopolitical": {
     "score": 3.7,
@@ -23,16 +23,16 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 16.45,
-          "display": "16.4",
+          "value": 16.59,
+          "display": "16.6",
           "sub_score": 0,
           "firing": false
         },
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.75,
-          "display": "2.75%",
+          "value": 2.74,
+          "display": "2.74%",
           "sub_score": 0,
           "firing": false
         },
@@ -52,18 +52,18 @@
   },
   "factor_contributions": [
     {
-      "name": "Sahm Rule (Real-Time)",
-      "fred_id": "SAHMREALTIME",
-      "layer": "labor",
-      "score": 14.8,
-      "contrib": -1.533
-    },
-    {
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
       "score": 19.5,
       "contrib": -1.524
+    },
+    {
+      "name": "Sahm Rule (Real-Time)",
+      "fred_id": "SAHMREALTIME",
+      "layer": "labor",
+      "score": 15.6,
+      "contrib": -1.498
     },
     {
       "name": "Payroll Employment",
@@ -76,8 +76,8 @@
       "name": "Unemployment Rate",
       "fred_id": "UNRATE",
       "layer": "labor",
-      "score": 17.5,
-      "contrib": -1.134
+      "score": 17,
+      "contrib": -1.151
     },
     {
       "name": "CPI All Items YoY",
@@ -129,7 +129,7 @@
       "weight": 0.27
     },
     "labor": {
-      "score": 35.8,
+      "score": 36.4,
       "alert": "YELLOW",
       "weight": 0.22
     },
@@ -642,12 +642,12 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 16.45,
-      "latest_date": "2026-06-30",
-      "score": 27.1,
-      "level_score": 20.3,
-      "momentum_score": 43,
-      "percentile_rank": 54,
+      "latest_value": 16.59,
+      "latest_date": "2026-07-01",
+      "score": 27.9,
+      "level_score": 20.7,
+      "momentum_score": 44.8,
+      "percentile_rank": 55,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -657,10 +657,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-31",
-          "value": 16.36
-        },
         {
           "date": "2024-08-30",
           "value": 15
@@ -752,6 +748,10 @@
         {
           "date": "2026-06-30",
           "value": 16.45
+        },
+        {
+          "date": "2026-07-01",
+          "value": 16.59
         }
       ]
     },
@@ -762,11 +762,11 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.75,
-      "latest_date": "2026-06-30",
-      "score": 24.8,
-      "level_score": 14.2,
-      "momentum_score": 49.7,
+      "latest_value": 2.74,
+      "latest_date": "2026-07-01",
+      "score": 24.6,
+      "level_score": 14.1,
+      "momentum_score": 49.1,
       "percentile_rank": 81,
       "anomaly": false,
       "stale": false,
@@ -777,10 +777,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-31",
-          "value": 3.25
-        },
         {
           "date": "2024-08-31",
           "value": 3.17
@@ -872,6 +868,10 @@
         {
           "date": "2026-06-30",
           "value": 2.75
+        },
+        {
+          "date": "2026-07-01",
+          "value": 2.74
         }
       ]
     },
@@ -1602,11 +1602,11 @@
       "category": "macro",
       "description": "Headline U3 unemployment. Z-score normalized.",
       "weight": 0.1584,
-      "latest_value": 4.3,
-      "latest_date": "2026-05-01",
-      "score": 17.5,
-      "level_score": 3.9,
-      "momentum_score": 49,
+      "latest_value": 4.2,
+      "latest_date": "2026-06-01",
+      "score": 17,
+      "level_score": 3.2,
+      "momentum_score": 49.2,
       "percentile_rank": 37,
       "anomaly": false,
       "stale": false,
@@ -1614,13 +1614,9 @@
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 5.6594,
-      "norm_std": 1.7034,
+      "norm_mean": 5.6578,
+      "norm_std": 1.7032,
       "history": [
-        {
-          "date": "2024-05-01",
-          "value": 3.9
-        },
         {
           "date": "2024-06-01",
           "value": 4.1
@@ -1712,6 +1708,10 @@
         {
           "date": "2026-05-01",
           "value": 4.3
+        },
+        {
+          "date": "2026-06-01",
+          "value": 4.2
         }
       ]
     },
@@ -1722,11 +1722,11 @@
       "category": "macro",
       "description": "Triggers at 0.5 when unemployment 3mo avg rises 0.5pp above its 12mo low. Historically coincident with recession start.",
       "weight": 0.198,
-      "latest_value": 0.1,
-      "latest_date": "2026-05-01",
-      "score": 14.8,
-      "level_score": 3.9,
-      "momentum_score": 40.2,
+      "latest_value": 0.07,
+      "latest_date": "2026-06-01",
+      "score": 15.6,
+      "level_score": 3.1,
+      "momentum_score": 44.8,
       "percentile_rank": 70,
       "anomaly": false,
       "stale": false,
@@ -1737,10 +1737,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-05-01",
-          "value": 0.37
-        },
         {
           "date": "2024-06-01",
           "value": 0.43
@@ -1832,6 +1828,10 @@
         {
           "date": "2026-05-01",
           "value": 0.1
+        },
+        {
+          "date": "2026-06-01",
+          "value": 0.07
         }
       ]
     },
@@ -1962,8 +1962,8 @@
       "category": "macro",
       "description": "Nonfarm payroll trend. Z-score normalized.",
       "weight": 0.1584,
-      "latest_value": 159001,
-      "latest_date": "2026-05-01",
+      "latest_value": 158984,
+      "latest_date": "2026-06-01",
       "score": 15.1,
       "level_score": 0.1,
       "momentum_score": 50,
@@ -1974,13 +1974,9 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 93706.2126,
-      "norm_std": 38811.6436,
+      "norm_mean": 93768.2819,
+      "norm_std": 38845.2114,
       "history": [
-        {
-          "date": "2024-06-01",
-          "value": 157695
-        },
         {
           "date": "2024-07-01",
           "value": 157748
@@ -2067,11 +2063,15 @@
         },
         {
           "date": "2026-04-01",
-          "value": 158829
+          "value": 158798
         },
         {
           "date": "2026-05-01",
-          "value": 159001
+          "value": 158927
+        },
+        {
+          "date": "2026-06-01",
+          "value": 158984
         }
       ]
     },
@@ -2322,25 +2322,21 @@
       "category": "macro",
       "description": "Civilian labor force participation rate; declining LFPR signals discouraged workers exiting.",
       "weight": 0.1,
-      "latest_value": 61.8,
-      "latest_date": "2026-05-01",
-      "score": 72.9,
-      "level_score": 80.7,
-      "momentum_score": 54.7,
-      "percentile_rank": 59,
-      "anomaly": false,
+      "latest_value": 61.5,
+      "latest_date": "2026-06-01",
+      "score": 77.8,
+      "level_score": 86.3,
+      "momentum_score": 58,
+      "percentile_rank": 60,
+      "anomaly": true,
       "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 62.8272,
-      "norm_std": 2.8771,
+      "norm_mean": 62.8258,
+      "norm_std": 2.8759,
       "history": [
-        {
-          "date": "2024-05-01",
-          "value": 62.6
-        },
         {
           "date": "2024-06-01",
           "value": 62.6
@@ -2432,6 +2428,10 @@
         {
           "date": "2026-05-01",
           "value": 61.8
+        },
+        {
+          "date": "2026-06-01",
+          "value": 61.5
         }
       ]
     },
@@ -2922,25 +2922,21 @@
       "category": "micro",
       "description": "Wage pressure signal. Z-score normalized.",
       "weight": 0.2,
-      "latest_value": 37.53,
-      "latest_date": "2026-05-01",
+      "latest_value": 37.64,
+      "latest_date": "2026-06-01",
       "score": 85,
       "level_score": 100,
       "momentum_score": 50,
-      "percentile_rank": 70,
+      "percentile_rank": 69,
       "anomaly": false,
       "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 26.8703,
-      "norm_std": 4.9143,
+      "norm_mean": 26.9143,
+      "norm_std": 4.952,
       "history": [
-        {
-          "date": "2024-06-01",
-          "value": 35.01
-        },
         {
           "date": "2024-07-01",
           "value": 35.08
@@ -3031,7 +3027,11 @@
         },
         {
           "date": "2026-05-01",
-          "value": 37.53
+          "value": 37.51
+        },
+        {
+          "date": "2026-06-01",
+          "value": 37.64
         }
       ]
     },
@@ -4362,7 +4362,7 @@
       "category": "micro",
       "description": "Census new orders for nondefense capital goods ex aircraft. Goods-sector demand proxy.",
       "weight": 0.2118,
-      "latest_value": 84027,
+      "latest_value": 83951,
       "latest_date": "2026-05-01",
       "score": 15,
       "level_score": 0,
@@ -4374,8 +4374,8 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 60476.4369,
-      "norm_std": 10231.4754,
+      "norm_mean": 60476.4102,
+      "norm_std": 10231.3949,
       "history": [
         {
           "date": "2024-06-01",
@@ -4467,11 +4467,11 @@
         },
         {
           "date": "2026-04-01",
-          "value": 82713
+          "value": 82778
         },
         {
           "date": "2026-05-01",
-          "value": 84027
+          "value": 83951
         }
       ]
     },
