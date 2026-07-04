@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-07-03",
-  "generated_at": "2026-07-03T15:14:51.170Z",
+  "as_of": "2026-07-04",
+  "generated_at": "2026-07-04T12:55:36.284Z",
   "composite": {
     "score": 38.8,
     "alert": "YELLOW",
@@ -31,8 +31,8 @@
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.74,
-          "display": "2.74%",
+          "value": 2.75,
+          "display": "2.75%",
           "sub_score": 0,
           "firing": false
         },
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 24.9,
+      "score": 25,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -762,11 +762,11 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.74,
-      "latest_date": "2026-07-01",
-      "score": 24.6,
-      "level_score": 14.1,
-      "momentum_score": 49.1,
+      "latest_value": 2.75,
+      "latest_date": "2026-07-02",
+      "score": 24.8,
+      "level_score": 14.2,
+      "momentum_score": 49.5,
       "percentile_rank": 81,
       "anomaly": false,
       "stale": false,
@@ -870,8 +870,8 @@
           "value": 2.75
         },
         {
-          "date": "2026-07-01",
-          "value": 2.74
+          "date": "2026-07-02",
+          "value": 2.75
         }
       ]
     },
