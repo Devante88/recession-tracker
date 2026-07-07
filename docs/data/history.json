@@ -295,20 +295,20 @@
       "inflation": 71.1,
       "real_economy": 39.1,
       "micro": 34.4,
-      "global": 23.2
+      "global": 23.3
     }
   },
   {
     "date": "2026-07-31",
-    "composite": 41.5,
+    "composite": 41.9,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 34.6,
+      "financial_lead": 36,
       "labor": 45.4,
       "inflation": 71.1,
       "real_economy": 38.2,
       "micro": 34.4,
-      "global": 22.8
+      "global": 22.3
     }
   }
 ]
