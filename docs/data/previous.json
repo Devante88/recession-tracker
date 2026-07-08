@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-07-07",
-  "generated_at": "2026-07-07T15:45:53.052Z",
+  "as_of": "2026-07-08",
+  "generated_at": "2026-07-08T13:24:37.237Z",
   "composite": {
-    "score": 40.3,
+    "score": 38.9,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
-    "recession_probability_12mo": 0.238,
+    "recession_probability_12mo": 0.221,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.61,
-    "ensemble_score": 22.7
+    "yield_curve_spread": 0.69,
+    "ensemble_score": 21.7
   },
   "geopolitical": {
     "score": 3.3,
@@ -52,18 +52,18 @@
   },
   "factor_contributions": [
     {
+      "name": "Yield Curve 10Y-3M",
+      "fred_id": "T10Y3M",
+      "layer": "financial_lead",
+      "score": 18.7,
+      "contrib": -1.561
+    },
+    {
       "name": "Sahm Rule (Real-Time)",
       "fred_id": "SAHMREALTIME",
       "layer": "labor",
       "score": 15.6,
       "contrib": -1.498
-    },
-    {
-      "name": "Yield Curve 10Y-3M",
-      "fred_id": "T10Y3M",
-      "layer": "financial_lead",
-      "score": 20.2,
-      "contrib": -1.485
     },
     {
       "name": "Payroll Employment",
@@ -124,8 +124,8 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 30.4,
-      "alert": "YELLOW",
+      "score": 25.3,
+      "alert": "GREEN",
       "weight": 0.27
     },
     "labor": {
@@ -162,11 +162,11 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.61,
-      "latest_date": "2026-07-06",
-      "score": 20.2,
-      "level_score": 8,
-      "momentum_score": 48.7,
+      "latest_value": 0.69,
+      "latest_date": "2026-07-07",
+      "score": 18.7,
+      "level_score": 6,
+      "momentum_score": 48.5,
       "percentile_rank": 41,
       "anomaly": false,
       "stale": false,
@@ -270,8 +270,8 @@
           "value": 0.57
         },
         {
-          "date": "2026-07-06",
-          "value": 0.61
+          "date": "2026-07-07",
+          "value": 0.69
         }
       ]
     },
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.35,
-      "latest_date": "2026-07-06",
-      "score": 27.8,
-      "level_score": 19.8,
-      "momentum_score": 46.6,
-      "percentile_rank": 52,
+      "latest_value": 0.36,
+      "latest_date": "2026-07-07",
+      "score": 27.4,
+      "level_score": 19.2,
+      "momentum_score": 46.7,
+      "percentile_rank": 51,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -390,8 +390,8 @@
           "value": 0.3
         },
         {
-          "date": "2026-07-06",
-          "value": 0.35
+          "date": "2026-07-07",
+          "value": 0.36
         }
       ]
     },
@@ -522,8 +522,8 @@
       "category": "macro",
       "description": "Broad financial conditions index. Positive = tighter than average.",
       "weight": 0.0924,
-      "latest_value": -0.504,
-      "latest_date": "2026-06-26",
+      "latest_value": -0.515,
+      "latest_date": "2026-07-03",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -537,10 +537,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-26",
-          "value": -0.362
-        },
         {
           "date": "2024-08-30",
           "value": -0.392
@@ -579,7 +575,7 @@
         },
         {
           "date": "2025-05-30",
-          "value": -0.467
+          "value": -0.466
         },
         {
           "date": "2025-06-27",
@@ -599,7 +595,7 @@
         },
         {
           "date": "2025-10-31",
-          "value": -0.513
+          "value": -0.512
         },
         {
           "date": "2025-11-28",
@@ -623,15 +619,19 @@
         },
         {
           "date": "2026-04-24",
-          "value": -0.491
+          "value": -0.492
         },
         {
           "date": "2026-05-29",
-          "value": -0.504
+          "value": -0.497
         },
         {
           "date": "2026-06-26",
-          "value": -0.504
+          "value": -0.505
+        },
+        {
+          "date": "2026-07-03",
+          "value": -0.515
         }
       ]
     },
@@ -882,19 +882,19 @@
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
-      "latest_value": 2.24,
-      "latest_date": "2026-07-06",
-      "score": 34.5,
-      "level_score": 27.9,
-      "momentum_score": 50,
-      "percentile_rank": 63,
+      "latest_value": 2.25,
+      "latest_date": "2026-07-07",
+      "score": 31.8,
+      "level_score": 25.8,
+      "momentum_score": 45.7,
+      "percentile_rank": 61,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.151,
+      "norm_mean": 2.1511,
       "norm_std": 0.3755,
       "history": [
         {
@@ -990,8 +990,8 @@
           "value": 2.24
         },
         {
-          "date": "2026-07-06",
-          "value": 2.24
+          "date": "2026-07-07",
+          "value": 2.25
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 279.09,
-      "latest_date": "2026-07-06",
-      "score": 92.3,
-      "level_score": 89,
-      "momentum_score": 100,
-      "percentile_rank": 79,
+      "latest_value": 181.76,
+      "latest_date": "2026-07-07",
+      "score": 26.2,
+      "level_score": 37.5,
+      "momentum_score": 0,
+      "percentile_rank": 54,
       "anomaly": false,
       "stale": false,
-      "alert": "RED",
+      "alert": "GREEN",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 200.9287,
-      "norm_std": 149.6072,
+      "norm_mean": 200.9259,
+      "norm_std": 149.608,
       "history": [
         {
           "date": "2024-08-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-06-30",
-          "value": 332.75
+          "value": 331.73
         },
         {
-          "date": "2026-07-06",
-          "value": 279.09
+          "date": "2026-07-07",
+          "value": 181.76
         }
       ]
     },
