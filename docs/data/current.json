@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-07-08",
-  "generated_at": "2026-07-08T15:25:22.994Z",
+  "as_of": "2026-07-09",
+  "generated_at": "2026-07-09T14:25:26.704Z",
   "composite": {
-    "score": 38.9,
+    "score": 39.6,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
     "recession_probability_12mo": 0.221,
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.69,
-    "ensemble_score": 21.7
+    "ensemble_score": 21.9
   },
   "geopolitical": {
     "score": 3.3,
@@ -23,8 +23,8 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 16.13,
-          "display": "16.1",
+          "value": 16.9,
+          "display": "16.9",
           "sub_score": 0,
           "firing": false
         },
@@ -55,8 +55,8 @@
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
-      "score": 18.7,
-      "contrib": -1.561
+      "score": 19,
+      "contrib": -1.545
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 25.3,
+      "score": 28,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -163,10 +163,10 @@
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
       "latest_value": 0.69,
-      "latest_date": "2026-07-07",
-      "score": 18.7,
+      "latest_date": "2026-07-08",
+      "score": 19,
       "level_score": 6,
-      "momentum_score": 48.5,
+      "momentum_score": 49.5,
       "percentile_rank": 41,
       "anomaly": false,
       "stale": false,
@@ -270,7 +270,7 @@
           "value": 0.57
         },
         {
-          "date": "2026-07-07",
+          "date": "2026-07-08",
           "value": 0.69
         }
       ]
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.36,
-      "latest_date": "2026-07-07",
-      "score": 27.4,
-      "level_score": 19.2,
-      "momentum_score": 46.7,
-      "percentile_rank": 51,
+      "latest_value": 0.35,
+      "latest_date": "2026-07-08",
+      "score": 28.8,
+      "level_score": 19.8,
+      "momentum_score": 50,
+      "percentile_rank": 53,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -390,8 +390,8 @@
           "value": 0.3
         },
         {
-          "date": "2026-07-07",
-          "value": 0.36
+          "date": "2026-07-08",
+          "value": 0.35
         }
       ]
     },
@@ -642,15 +642,15 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 16.13,
-      "latest_date": "2026-07-07",
-      "score": 28.6,
-      "level_score": 19.5,
-      "momentum_score": 49.9,
-      "percentile_rank": 57,
+      "latest_value": 16.9,
+      "latest_date": "2026-07-08",
+      "score": 30.9,
+      "level_score": 21.5,
+      "momentum_score": 52.8,
+      "percentile_rank": 61,
       "anomaly": false,
       "stale": false,
-      "alert": "GREEN",
+      "alert": "YELLOW",
       "threshold": 25,
       "direction": "inverse",
       "frequency": "daily",
@@ -750,8 +750,8 @@
           "value": 16.45
         },
         {
-          "date": "2026-07-07",
-          "value": 16.13
+          "date": "2026-07-08",
+          "value": 16.9
         }
       ]
     },
@@ -883,9 +883,9 @@
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
       "latest_value": 2.25,
-      "latest_date": "2026-07-07",
+      "latest_date": "2026-07-08",
       "score": 31.8,
-      "level_score": 25.8,
+      "level_score": 25.9,
       "momentum_score": 45.7,
       "percentile_rank": 61,
       "anomaly": false,
@@ -990,7 +990,7 @@
           "value": 2.24
         },
         {
-          "date": "2026-07-07",
+          "date": "2026-07-08",
           "value": 2.25
         }
       ]
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 181.76,
-      "latest_date": "2026-07-07",
-      "score": 26.2,
-      "level_score": 37.5,
-      "momentum_score": 0,
-      "percentile_rank": 54,
+      "latest_value": 238.46,
+      "latest_date": "2026-07-08",
+      "score": 60.5,
+      "level_score": 73.1,
+      "momentum_score": 31.1,
+      "percentile_rank": 68,
       "anomaly": false,
       "stale": false,
-      "alert": "GREEN",
+      "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 200.9259,
-      "norm_std": 149.608,
+      "norm_mean": 200.986,
+      "norm_std": 149.6053,
       "history": [
         {
           "date": "2024-08-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-06-30",
-          "value": 331.73
+          "value": 331.46
         },
         {
-          "date": "2026-07-07",
-          "value": 181.76
+          "date": "2026-07-08",
+          "value": 238.46
         }
       ]
     },
@@ -1843,10 +1843,10 @@
       "description": "Fast labor deterioration signal. Threshold = sustained recessionary level.",
       "weight": 0.1584,
       "latest_value": 215000,
-      "latest_date": "2026-06-27",
-      "score": 30.9,
+      "latest_date": "2026-07-04",
+      "score": 31.1,
       "level_score": 24.4,
-      "momentum_score": 46.1,
+      "momentum_score": 46.9,
       "percentile_rank": 18,
       "anomaly": false,
       "stale": false,
@@ -1857,10 +1857,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-27",
-          "value": 248000
-        },
         {
           "date": "2024-08-31",
           "value": 227000
@@ -1951,6 +1947,10 @@
         },
         {
           "date": "2026-06-27",
+          "value": 217000
+        },
+        {
+          "date": "2026-07-04",
           "value": 215000
         }
       ]
