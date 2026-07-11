@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-07-10",
-  "generated_at": "2026-07-10T15:34:45.410Z",
+  "as_of": "2026-07-11",
+  "generated_at": "2026-07-11T12:47:12.998Z",
   "composite": {
-    "score": 40.1,
+    "score": 40.2,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
@@ -55,8 +55,8 @@
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
-      "score": 18.1,
-      "contrib": -1.591
+      "score": 18.7,
+      "contrib": -1.56
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 29.7,
+      "score": 29.9,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -163,11 +163,11 @@
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
       "latest_value": 0.71,
-      "latest_date": "2026-07-09",
-      "score": 18.1,
+      "latest_date": "2026-07-10",
+      "score": 18.7,
       "level_score": 5.5,
-      "momentum_score": 47.5,
-      "percentile_rank": 40,
+      "momentum_score": 49.6,
+      "percentile_rank": 41,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -270,7 +270,7 @@
           "value": 0.57
         },
         {
-          "date": "2026-07-09",
+          "date": "2026-07-10",
           "value": 0.71
         }
       ]
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.38,
-      "latest_date": "2026-07-09",
-      "score": 27,
-      "level_score": 17.9,
-      "momentum_score": 48.2,
-      "percentile_rank": 51,
+      "latest_value": 0.35,
+      "latest_date": "2026-07-10",
+      "score": 29,
+      "level_score": 19.8,
+      "momentum_score": 50.6,
+      "percentile_rank": 53,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -390,8 +390,8 @@
           "value": 0.3
         },
         {
-          "date": "2026-07-09",
-          "value": 0.38
+          "date": "2026-07-10",
+          "value": 0.35
         }
       ]
     },
@@ -763,11 +763,11 @@
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
       "latest_value": 2.7,
-      "latest_date": "2026-07-08",
+      "latest_date": "2026-07-09",
       "score": 24.5,
       "level_score": 13.7,
-      "momentum_score": 49.6,
-      "percentile_rank": 81,
+      "momentum_score": 49.8,
+      "percentile_rank": 82,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -870,7 +870,7 @@
           "value": 2.75
         },
         {
-          "date": "2026-07-08",
+          "date": "2026-07-09",
           "value": 2.7
         }
       ]
@@ -882,11 +882,11 @@
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
-      "latest_value": 2.23,
-      "latest_date": "2026-07-09",
-      "score": 36.8,
-      "level_score": 30.2,
-      "momentum_score": 52.2,
+      "latest_value": 2.24,
+      "latest_date": "2026-07-10",
+      "score": 35.2,
+      "level_score": 28,
+      "momentum_score": 52.1,
       "percentile_rank": 65,
       "anomaly": false,
       "stale": false,
@@ -894,7 +894,7 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1512,
+      "norm_mean": 2.1513,
       "norm_std": 0.3755,
       "history": [
         {
@@ -990,8 +990,8 @@
           "value": 2.24
         },
         {
-          "date": "2026-07-09",
-          "value": 2.23
+          "date": "2026-07-10",
+          "value": 2.24
         }
       ]
     },
