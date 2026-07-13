@@ -68,8 +68,8 @@
     },
     {
       "fred_id": "BAMLH0A0HYM2",
-      "latest_date": "2026-07-09",
-      "days": 4,
+      "latest_date": "2026-07-10",
+      "days": 3,
       "sla": 10,
       "stale": false,
       "missing": false
