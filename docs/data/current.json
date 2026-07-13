@@ -1,8 +1,8 @@
 {
-  "as_of": "2026-07-12",
-  "generated_at": "2026-07-12T14:28:20.435Z",
+  "as_of": "2026-07-13",
+  "generated_at": "2026-07-13T13:57:06.284Z",
   "composite": {
-    "score": 40.2,
+    "score": 40.1,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
@@ -23,8 +23,8 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 15.84,
-          "display": "15.8",
+          "value": 15.03,
+          "display": "15.0",
           "sub_score": 0,
           "firing": false
         },
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 29.9,
+      "score": 29.8,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -642,12 +642,12 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 15.84,
-      "latest_date": "2026-07-09",
-      "score": 28.3,
-      "level_score": 18.8,
-      "momentum_score": 50.6,
-      "percentile_rank": 57,
+      "latest_value": 15.03,
+      "latest_date": "2026-07-10",
+      "score": 26,
+      "level_score": 16.9,
+      "momentum_score": 47.4,
+      "percentile_rank": 51,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -750,8 +750,8 @@
           "value": 16.45
         },
         {
-          "date": "2026-07-09",
-          "value": 15.84
+          "date": "2026-07-10",
+          "value": 15.03
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 310.02,
-      "latest_date": "2026-07-09",
-      "score": 86.6,
-      "level_score": 94.9,
-      "momentum_score": 67.4,
+      "latest_value": 374.04,
+      "latest_date": "2026-07-12",
+      "score": 87.6,
+      "level_score": 99,
+      "momentum_score": 60.9,
       "percentile_rank": 76,
-      "anomaly": true,
+      "anomaly": false,
       "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 201.0081,
-      "norm_std": 149.628,
+      "norm_mean": 201.1873,
+      "norm_std": 149.6699,
       "history": [
         {
           "date": "2024-08-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-06-30",
-          "value": 331.46
+          "value": 330.44
         },
         {
-          "date": "2026-07-09",
-          "value": 310.02
+          "date": "2026-07-12",
+          "value": 374.04
         }
       ]
     },
