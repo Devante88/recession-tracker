@@ -60,16 +60,16 @@
     },
     {
       "fred_id": "VIXCLS",
-      "latest_date": "2026-07-10",
-      "days": 4,
+      "latest_date": "2026-07-13",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "BAMLH0A0HYM2",
-      "latest_date": "2026-07-10",
-      "days": 4,
+      "latest_date": "2026-07-13",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
@@ -116,8 +116,8 @@
     },
     {
       "fred_id": "USEPUINDXD",
-      "latest_date": "2026-07-12",
-      "days": 2,
+      "latest_date": "2026-07-13",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
@@ -180,16 +180,16 @@
     },
     {
       "fred_id": "CPIAUCSL",
-      "latest_date": "2026-05-01",
-      "days": 74,
+      "latest_date": "2026-06-01",
+      "days": 43,
       "sla": 75,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "CPILFESL",
-      "latest_date": "2026-05-01",
-      "days": 74,
+      "latest_date": "2026-06-01",
+      "days": 43,
       "sla": 75,
       "stale": false,
       "missing": false
