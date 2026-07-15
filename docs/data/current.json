@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-07-14",
-  "generated_at": "2026-07-14T14:57:16.263Z",
+  "as_of": "2026-07-15",
+  "generated_at": "2026-07-15T13:04:57.319Z",
   "composite": {
-    "score": 39.7,
+    "score": 40.1,
     "alert": "YELLOW",
     "rating": 5,
     "confidence": 1,
-    "recession_probability_12mo": 0.214,
+    "recession_probability_12mo": 0.212,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.73,
-    "ensemble_score": 21.7
+    "yield_curve_spread": 0.74,
+    "ensemble_score": 21.8
   },
   "geopolitical": {
     "score": 2.9,
@@ -56,7 +56,7 @@
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
       "score": 18.3,
-      "contrib": -1.58
+      "contrib": -1.583
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 28.3,
+      "score": 29.6,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -162,11 +162,11 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.73,
-      "latest_date": "2026-07-13",
+      "latest_value": 0.74,
+      "latest_date": "2026-07-14",
       "score": 18.3,
-      "level_score": 5.1,
-      "momentum_score": 49.2,
+      "level_score": 4.9,
+      "momentum_score": 49.4,
       "percentile_rank": 40,
       "anomaly": false,
       "stale": false,
@@ -270,8 +270,8 @@
           "value": 0.57
         },
         {
-          "date": "2026-07-13",
-          "value": 0.73
+          "date": "2026-07-14",
+          "value": 0.74
         }
       ]
     },
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.36,
-      "latest_date": "2026-07-13",
-      "score": 28.2,
-      "level_score": 19.2,
-      "momentum_score": 49.4,
-      "percentile_rank": 52,
+      "latest_value": 0.4,
+      "latest_date": "2026-07-14",
+      "score": 26.4,
+      "level_score": 16.8,
+      "momentum_score": 48.9,
+      "percentile_rank": 49,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -390,8 +390,8 @@
           "value": 0.3
         },
         {
-          "date": "2026-07-13",
-          "value": 0.36
+          "date": "2026-07-14",
+          "value": 0.4
         }
       ]
     },
@@ -522,8 +522,8 @@
       "category": "macro",
       "description": "Broad financial conditions index. Positive = tighter than average.",
       "weight": 0.0924,
-      "latest_value": -0.515,
-      "latest_date": "2026-07-03",
+      "latest_value": -0.538,
+      "latest_date": "2026-07-10",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -539,99 +539,99 @@
       "history": [
         {
           "date": "2024-08-30",
-          "value": -0.392
+          "value": -0.389
         },
         {
           "date": "2024-09-27",
-          "value": -0.428
+          "value": -0.425
         },
         {
           "date": "2024-10-25",
-          "value": -0.445
+          "value": -0.443
         },
         {
           "date": "2024-11-29",
-          "value": -0.475
+          "value": -0.473
         },
         {
           "date": "2024-12-27",
-          "value": -0.484
+          "value": -0.482
         },
         {
           "date": "2025-01-31",
-          "value": -0.508
-        },
-        {
-          "date": "2025-02-28",
-          "value": -0.48
-        },
-        {
-          "date": "2025-03-28",
-          "value": -0.41
-        },
-        {
-          "date": "2025-04-25",
-          "value": -0.391
-        },
-        {
-          "date": "2025-05-30",
-          "value": -0.466
-        },
-        {
-          "date": "2025-06-27",
-          "value": -0.496
-        },
-        {
-          "date": "2025-07-25",
-          "value": -0.518
-        },
-        {
-          "date": "2025-08-29",
-          "value": -0.527
-        },
-        {
-          "date": "2025-09-26",
-          "value": -0.525
-        },
-        {
-          "date": "2025-10-31",
-          "value": -0.512
-        },
-        {
-          "date": "2025-11-28",
-          "value": -0.508
-        },
-        {
-          "date": "2025-12-26",
-          "value": -0.536
-        },
-        {
-          "date": "2026-01-30",
-          "value": -0.563
-        },
-        {
-          "date": "2026-02-27",
-          "value": -0.506
-        },
-        {
-          "date": "2026-03-27",
-          "value": -0.457
-        },
-        {
-          "date": "2026-04-24",
-          "value": -0.492
-        },
-        {
-          "date": "2026-05-29",
-          "value": -0.497
-        },
-        {
-          "date": "2026-06-26",
           "value": -0.505
         },
         {
-          "date": "2026-07-03",
+          "date": "2025-02-28",
+          "value": -0.477
+        },
+        {
+          "date": "2025-03-28",
+          "value": -0.407
+        },
+        {
+          "date": "2025-04-25",
+          "value": -0.388
+        },
+        {
+          "date": "2025-05-30",
+          "value": -0.464
+        },
+        {
+          "date": "2025-06-27",
+          "value": -0.493
+        },
+        {
+          "date": "2025-07-25",
           "value": -0.515
+        },
+        {
+          "date": "2025-08-29",
+          "value": -0.524
+        },
+        {
+          "date": "2025-09-26",
+          "value": -0.522
+        },
+        {
+          "date": "2025-10-31",
+          "value": -0.51
+        },
+        {
+          "date": "2025-11-28",
+          "value": -0.505
+        },
+        {
+          "date": "2025-12-26",
+          "value": -0.533
+        },
+        {
+          "date": "2026-01-30",
+          "value": -0.56
+        },
+        {
+          "date": "2026-02-27",
+          "value": -0.503
+        },
+        {
+          "date": "2026-03-27",
+          "value": -0.454
+        },
+        {
+          "date": "2026-04-24",
+          "value": -0.49
+        },
+        {
+          "date": "2026-05-29",
+          "value": -0.495
+        },
+        {
+          "date": "2026-06-26",
+          "value": -0.51
+        },
+        {
+          "date": "2026-07-10",
+          "value": -0.538
         }
       ]
     },
@@ -882,11 +882,11 @@
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
-      "latest_value": 2.26,
-      "latest_date": "2026-07-13",
-      "score": 31.1,
-      "level_score": 23.9,
-      "momentum_score": 48,
+      "latest_value": 2.25,
+      "latest_date": "2026-07-14",
+      "score": 31.9,
+      "level_score": 25.9,
+      "momentum_score": 45.7,
       "percentile_rank": 61,
       "anomaly": false,
       "stale": false,
@@ -894,7 +894,7 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1514,
+      "norm_mean": 2.1515,
       "norm_std": 0.3754,
       "history": [
         {
@@ -990,8 +990,8 @@
           "value": 2.24
         },
         {
-          "date": "2026-07-13",
-          "value": 2.26
+          "date": "2026-07-14",
+          "value": 2.25
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 234.73,
-      "latest_date": "2026-07-13",
-      "score": 67.1,
-      "level_score": 71.1,
-      "momentum_score": 58,
-      "percentile_rank": 70,
+      "latest_value": 362.99,
+      "latest_date": "2026-07-14",
+      "score": 88.2,
+      "level_score": 98.7,
+      "momentum_score": 63.9,
+      "percentile_rank": 77,
       "anomaly": false,
       "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 201.1233,
-      "norm_std": 149.6283,
+      "norm_mean": 201.1484,
+      "norm_std": 149.6547,
       "history": [
         {
           "date": "2024-08-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-06-30",
-          "value": 330.44
+          "value": 330.42
         },
         {
-          "date": "2026-07-13",
-          "value": 234.73
+          "date": "2026-07-14",
+          "value": 362.99
         }
       ]
     },
