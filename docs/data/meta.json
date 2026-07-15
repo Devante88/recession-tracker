@@ -60,16 +60,16 @@
     },
     {
       "fred_id": "VIXCLS",
-      "latest_date": "2026-07-13",
-      "days": 2,
+      "latest_date": "2026-07-14",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "BAMLH0A0HYM2",
-      "latest_date": "2026-07-13",
-      "days": 2,
+      "latest_date": "2026-07-14",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
@@ -340,8 +340,8 @@
     },
     {
       "fred_id": "PPIACO",
-      "latest_date": "2026-05-01",
-      "days": 75,
+      "latest_date": "2026-06-01",
+      "days": 44,
       "sla": 75,
       "stale": false,
       "missing": false

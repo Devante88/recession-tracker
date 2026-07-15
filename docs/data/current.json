@@ -1,6 +1,6 @@
 {
   "as_of": "2026-07-15",
-  "generated_at": "2026-07-15T13:04:57.319Z",
+  "generated_at": "2026-07-15T14:56:25.805Z",
   "composite": {
     "score": 40.1,
     "alert": "YELLOW",
@@ -23,16 +23,16 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 17.16,
-          "display": "17.2",
+          "value": 16.5,
+          "display": "16.5",
           "sub_score": 0,
           "firing": false
         },
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.69,
-          "display": "2.69%",
+          "value": 2.72,
+          "display": "2.72%",
           "sub_score": 0,
           "firing": false
         },
@@ -642,15 +642,15 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 17.16,
-      "latest_date": "2026-07-13",
-      "score": 30.7,
-      "level_score": 22.2,
-      "momentum_score": 50.7,
-      "percentile_rank": 61,
+      "latest_value": 16.5,
+      "latest_date": "2026-07-14",
+      "score": 29.8,
+      "level_score": 20.4,
+      "momentum_score": 51.7,
+      "percentile_rank": 60,
       "anomaly": false,
       "stale": false,
-      "alert": "YELLOW",
+      "alert": "GREEN",
       "threshold": 25,
       "direction": "inverse",
       "frequency": "daily",
@@ -750,8 +750,8 @@
           "value": 16.45
         },
         {
-          "date": "2026-07-13",
-          "value": 17.16
+          "date": "2026-07-14",
+          "value": 16.5
         }
       ]
     },
@@ -762,11 +762,11 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.69,
-      "latest_date": "2026-07-13",
-      "score": 24.5,
-      "level_score": 13.6,
-      "momentum_score": 49.9,
+      "latest_value": 2.72,
+      "latest_date": "2026-07-14",
+      "score": 24.8,
+      "level_score": 13.9,
+      "momentum_score": 50.2,
       "percentile_rank": 82,
       "anomaly": false,
       "stale": false,
@@ -870,8 +870,8 @@
           "value": 2.75
         },
         {
-          "date": "2026-07-13",
-          "value": 2.69
+          "date": "2026-07-14",
+          "value": 2.72
         }
       ]
     },
@@ -4842,8 +4842,8 @@
       "category": "macro",
       "description": "Producer Price Index for all commodities; rising PPI compresses margins and signals cost-push stress.",
       "weight": 0.1528,
-      "latest_value": 292.504,
-      "latest_date": "2026-05-01",
+      "latest_value": 286.827,
+      "latest_date": "2026-06-01",
       "score": 85,
       "level_score": 100,
       "momentum_score": 50,
@@ -4854,13 +4854,9 @@
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 80.4037,
-      "norm_std": 72.8018,
+      "norm_mean": 80.5539,
+      "norm_std": 72.9855,
       "history": [
-        {
-          "date": "2024-06-01",
-          "value": 255.914
-        },
         {
           "date": "2024-07-01",
           "value": 257.321
@@ -4939,19 +4935,23 @@
         },
         {
           "date": "2026-02-01",
-          "value": 269.553
+          "value": 269.535
         },
         {
           "date": "2026-03-01",
-          "value": 275.979
+          "value": 276.046
         },
         {
           "date": "2026-04-01",
-          "value": 282.7
+          "value": 282.779
         },
         {
           "date": "2026-05-01",
-          "value": 292.504
+          "value": 290.489
+        },
+        {
+          "date": "2026-06-01",
+          "value": 286.827
         }
       ]
     },
