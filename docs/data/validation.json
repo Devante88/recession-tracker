@@ -1,22 +1,22 @@
 {
-  "generated_at": "2026-07-31T15:23:25.663Z",
+  "generated_at": "2026-08-01T12:50:18.147Z",
   "yellow": {
     "flag_level": "YELLOW",
-    "months": 38,
+    "months": 39,
     "span": {
       "first": "2023-06",
-      "last": "2026-07"
+      "last": "2026-08"
     },
     "recession_months": 0,
-    "expansion_months": 38,
+    "expansion_months": 39,
     "hit_rate": null,
     "false_positive_rate": 1,
     "precision": 0,
     "avg_lead_months": null,
-    "brier": 0.2112,
+    "brier": 0.2106,
     "confusion": {
       "tp": 0,
-      "fp": 38,
+      "fp": 39,
       "tn": 0,
       "fn": 0
     },
@@ -24,22 +24,22 @@
   },
   "red": {
     "flag_level": "RED",
-    "months": 38,
+    "months": 39,
     "span": {
       "first": "2023-06",
-      "last": "2026-07"
+      "last": "2026-08"
     },
     "recession_months": 0,
-    "expansion_months": 38,
+    "expansion_months": 39,
     "hit_rate": null,
     "false_positive_rate": 0,
     "precision": null,
     "avg_lead_months": null,
-    "brier": 0.2112,
+    "brier": 0.2106,
     "confusion": {
       "tp": 0,
       "fp": 0,
-      "tn": 38,
+      "tn": 39,
       "fn": 0
     },
     "episodes": []
