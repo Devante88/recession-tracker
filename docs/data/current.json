@@ -1,6 +1,6 @@
 {
   "as_of": "2026-08-04",
-  "generated_at": "2026-08-04T13:41:07.490Z",
+  "generated_at": "2026-08-04T15:27:11.738Z",
   "composite": {
     "score": 37.9,
     "alert": "YELLOW",
@@ -31,8 +31,8 @@
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.84,
-          "display": "2.84%",
+          "value": 2.85,
+          "display": "2.85%",
           "sub_score": 0,
           "firing": false
         },
@@ -129,7 +129,7 @@
       "weight": 0.27
     },
     "labor": {
-      "score": 35.9,
+      "score": 35.5,
       "alert": "YELLOW",
       "weight": 0.22
     },
@@ -144,7 +144,7 @@
       "weight": 0.18
     },
     "micro": {
-      "score": 33.1,
+      "score": 33.7,
       "alert": "YELLOW",
       "weight": 0.09
     },
@@ -762,12 +762,12 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.84,
-      "latest_date": "2026-07-30",
+      "latest_value": 2.85,
+      "latest_date": "2026-07-31",
       "score": 25.7,
-      "level_score": 15.1,
-      "momentum_score": 50.3,
-      "percentile_rank": 84,
+      "level_score": 15.2,
+      "momentum_score": 50.1,
+      "percentile_rank": 85,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -870,8 +870,8 @@
           "value": 2.75
         },
         {
-          "date": "2026-07-30",
-          "value": 2.84
+          "date": "2026-07-31",
+          "value": 2.85
         }
       ]
     },
@@ -2082,12 +2082,12 @@
       "category": "micro",
       "description": "Worker confidence proxy. Falling quits = labor market cooling.",
       "weight": 0.1188,
-      "latest_value": 1.9,
-      "latest_date": "2026-05-01",
-      "score": 53.5,
-      "level_score": 55,
+      "latest_value": 2,
+      "latest_date": "2026-06-01",
+      "score": 50,
+      "level_score": 50,
       "momentum_score": 50,
-      "percentile_rank": 60,
+      "percentile_rank": 48,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
@@ -2097,10 +2097,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-06-01",
-          "value": 2.1
-        },
         {
           "date": "2024-07-01",
           "value": 2.1
@@ -2191,7 +2187,11 @@
         },
         {
           "date": "2026-05-01",
-          "value": 1.9
+          "value": 2
+        },
+        {
+          "date": "2026-06-01",
+          "value": 2
         }
       ]
     },
@@ -4362,7 +4362,7 @@
       "category": "micro",
       "description": "Census new orders for nondefense capital goods ex aircraft. Goods-sector demand proxy.",
       "weight": 0.2118,
-      "latest_value": 85089,
+      "latest_value": 85393,
       "latest_date": "2026-06-01",
       "score": 15,
       "level_score": 0,
@@ -4374,8 +4374,8 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 60536.9395,
-      "norm_std": 10292.4891,
+      "norm_mean": 60537.7312,
+      "norm_std": 10294.3844,
       "history": [
         {
           "date": "2024-07-01",
@@ -4467,11 +4467,11 @@
         },
         {
           "date": "2026-05-01",
-          "value": 84337
+          "value": 84360
         },
         {
           "date": "2026-06-01",
-          "value": 85089
+          "value": 85393
         }
       ]
     },
@@ -4722,12 +4722,12 @@
       "category": "micro",
       "description": "Employer demand (FRED: thousands). 5,500 = 5.5M openings, near recessionary trough.",
       "weight": 0.2118,
-      "latest_value": 7594,
-      "latest_date": "2026-05-01",
-      "score": 25,
-      "level_score": 17.9,
-      "momentum_score": 41.7,
-      "percentile_rank": 25,
+      "latest_value": 7359,
+      "latest_date": "2026-06-01",
+      "score": 27.5,
+      "level_score": 20.6,
+      "momentum_score": 43.8,
+      "percentile_rank": 28,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -4737,10 +4737,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-06-01",
-          "value": 7416
-        },
         {
           "date": "2024-07-01",
           "value": 7426
@@ -4831,7 +4827,11 @@
         },
         {
           "date": "2026-05-01",
-          "value": 7594
+          "value": 7537
+        },
+        {
+          "date": "2026-06-01",
+          "value": 7359
         }
       ]
     },

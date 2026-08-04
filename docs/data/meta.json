@@ -1,16 +1,10 @@
 {
   "as_of": "2026-08-04",
   "total": 45,
-  "fresh": 39,
-  "stale_count": 6,
+  "fresh": 41,
+  "stale_count": 4,
   "missing_count": 0,
   "stale": [
-    {
-      "fred_id": "JTSQUR",
-      "latest_date": "2026-05-01",
-      "days": 95,
-      "sla": 75
-    },
     {
       "fred_id": "CSUSHPISA",
       "latest_date": "2026-05-01",
@@ -22,12 +16,6 @@
       "latest_date": "2026-01-01",
       "days": 215,
       "sla": 200
-    },
-    {
-      "fred_id": "JTSJOL",
-      "latest_date": "2026-05-01",
-      "days": 95,
-      "sla": 75
     },
     {
       "fred_id": "EURYLDCRV",
@@ -86,8 +74,8 @@
     },
     {
       "fred_id": "BAMLH0A0HYM2",
-      "latest_date": "2026-07-30",
-      "days": 5,
+      "latest_date": "2026-07-31",
+      "days": 4,
       "sla": 10,
       "stale": false,
       "missing": false
@@ -174,10 +162,10 @@
     },
     {
       "fred_id": "JTSQUR",
-      "latest_date": "2026-05-01",
-      "days": 95,
+      "latest_date": "2026-06-01",
+      "days": 64,
       "sla": 75,
-      "stale": true,
+      "stale": false,
       "missing": false
     },
     {
@@ -350,10 +338,10 @@
     },
     {
       "fred_id": "JTSJOL",
-      "latest_date": "2026-05-01",
-      "days": 95,
+      "latest_date": "2026-06-01",
+      "days": 64,
       "sla": 75,
-      "stale": true,
+      "stale": false,
       "missing": false
     },
     {

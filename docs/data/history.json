@@ -261,14 +261,14 @@
   },
   {
     "date": "2026-05-31",
-    "composite": 42.3,
+    "composite": 42.2,
     "alert": "YELLOW",
     "layers": {
       "financial_lead": 34,
-      "labor": 47.9,
+      "labor": 47.3,
       "inflation": 71.1,
       "real_economy": 40.4,
-      "micro": 36.3,
+      "micro": 36.4,
       "global": 21.2
     }
   },
@@ -278,10 +278,10 @@
     "alert": "YELLOW",
     "layers": {
       "financial_lead": 34.1,
-      "labor": 45.7,
+      "labor": 45.3,
       "inflation": 71,
       "real_economy": 31.8,
-      "micro": 36.3,
+      "micro": 36.9,
       "global": 23.3
     }
   },
@@ -291,23 +291,23 @@
     "alert": "YELLOW",
     "layers": {
       "financial_lead": 27.1,
-      "labor": 44.8,
+      "labor": 44.4,
       "inflation": 71,
       "real_economy": 34.2,
-      "micro": 33.1,
+      "micro": 33.7,
       "global": 21
     }
   },
   {
     "date": "2026-08-31",
-    "composite": 38.1,
+    "composite": 38,
     "alert": "YELLOW",
     "layers": {
       "financial_lead": 26.5,
-      "labor": 44.4,
+      "labor": 44,
       "inflation": 71,
       "real_economy": 34.1,
-      "micro": 33.1,
+      "micro": 33.7,
       "global": 21
     }
   }
