@@ -66,8 +66,8 @@
     },
     {
       "fred_id": "VIXCLS",
-      "latest_date": "2026-08-03",
-      "days": 2,
+      "latest_date": "2026-08-04",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
