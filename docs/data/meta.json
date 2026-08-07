@@ -66,8 +66,8 @@
     },
     {
       "fred_id": "VIXCLS",
-      "latest_date": "2026-08-05",
-      "days": 2,
+      "latest_date": "2026-08-06",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
@@ -122,24 +122,24 @@
     },
     {
       "fred_id": "USEPUINDXD",
-      "latest_date": "2026-08-05",
-      "days": 2,
+      "latest_date": "2026-08-06",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "UNRATE",
-      "latest_date": "2026-06-01",
-      "days": 67,
+      "latest_date": "2026-07-01",
+      "days": 37,
       "sla": 75,
       "stale": false,
       "missing": false
     },
     {
       "fred_id": "SAHMREALTIME",
-      "latest_date": "2026-06-01",
-      "days": 67,
+      "latest_date": "2026-07-01",
+      "days": 37,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -154,8 +154,8 @@
     },
     {
       "fred_id": "PAYEMS",
-      "latest_date": "2026-06-01",
-      "days": 67,
+      "latest_date": "2026-07-01",
+      "days": 37,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -178,8 +178,8 @@
     },
     {
       "fred_id": "CIVPART",
-      "latest_date": "2026-06-01",
-      "days": 67,
+      "latest_date": "2026-07-01",
+      "days": 37,
       "sla": 75,
       "stale": false,
       "missing": false
@@ -218,8 +218,8 @@
     },
     {
       "fred_id": "CES0500000003",
-      "latest_date": "2026-06-01",
-      "days": 67,
+      "latest_date": "2026-07-01",
+      "days": 37,
       "sla": 75,
       "stale": false,
       "missing": false
