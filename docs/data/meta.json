@@ -66,8 +66,8 @@
     },
     {
       "fred_id": "VIXCLS",
-      "latest_date": "2026-08-06",
-      "days": 4,
+      "latest_date": "2026-08-07",
+      "days": 3,
       "sla": 10,
       "stale": false,
       "missing": false
@@ -122,8 +122,8 @@
     },
     {
       "fred_id": "USEPUINDXD",
-      "latest_date": "2026-08-06",
-      "days": 4,
+      "latest_date": "2026-08-09",
+      "days": 1,
       "sla": 10,
       "stale": false,
       "missing": false
