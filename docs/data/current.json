@@ -1,15 +1,15 @@
 {
   "as_of": "2026-08-14",
-  "generated_at": "2026-08-14T12:36:28.090Z",
+  "generated_at": "2026-08-14T14:17:47.478Z",
   "composite": {
-    "score": 38.4,
+    "score": 38,
     "alert": "YELLOW",
     "rating": 4,
     "confidence": 1,
     "recession_probability_12mo": 0.208,
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.76,
-    "ensemble_score": 19.4
+    "ensemble_score": 19.3
   },
   "geopolitical": {
     "score": 0,
@@ -23,7 +23,7 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 14.55,
+          "value": 14.63,
           "display": "14.6",
           "sub_score": 0,
           "firing": false
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 27,
+      "score": 25.3,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -642,12 +642,12 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 14.55,
-      "latest_date": "2026-08-12",
-      "score": 25.8,
-      "level_score": 15.8,
-      "momentum_score": 49.2,
-      "percentile_rank": 52,
+      "latest_value": 14.63,
+      "latest_date": "2026-08-13",
+      "score": 25.6,
+      "level_score": 16,
+      "momentum_score": 48.1,
+      "percentile_rank": 51,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -750,8 +750,8 @@
           "value": 15.99
         },
         {
-          "date": "2026-08-12",
-          "value": 14.55
+          "date": "2026-08-13",
+          "value": 14.63
         }
       ]
     },
@@ -763,7 +763,7 @@
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
       "latest_value": 2.71,
-      "latest_date": "2026-08-12",
+      "latest_date": "2026-08-13",
       "score": 24.7,
       "level_score": 13.8,
       "momentum_score": 50.1,
@@ -870,7 +870,7 @@
           "value": 2.85
         },
         {
-          "date": "2026-08-12",
+          "date": "2026-08-13",
           "value": 2.71
         }
       ]
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 273.78,
-      "latest_date": "2026-08-12",
-      "score": 72.8,
-      "level_score": 86.8,
-      "momentum_score": 40.2,
-      "percentile_rank": 71,
+      "latest_value": 219.75,
+      "latest_date": "2026-08-13",
+      "score": 48.6,
+      "level_score": 60.9,
+      "momentum_score": 20,
+      "percentile_rank": 63,
       "anomaly": false,
       "stale": false,
-      "alert": "RED",
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 203.0092,
-      "norm_std": 150.4933,
+      "norm_mean": 203.0757,
+      "norm_std": 150.4823,
       "history": [
         {
           "date": "2024-09-30",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-07-31",
-          "value": 253.04
+          "value": 252.46
         },
         {
-          "date": "2026-08-12",
-          "value": 273.78
+          "date": "2026-08-13",
+          "value": 219.75
         }
       ]
     },

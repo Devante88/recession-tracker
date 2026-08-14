@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-08-13",
-  "generated_at": "2026-08-13T14:24:28.439Z",
+  "as_of": "2026-08-14",
+  "generated_at": "2026-08-14T12:36:28.090Z",
   "composite": {
-    "score": 38.3,
+    "score": 38.4,
     "alert": "YELLOW",
     "rating": 4,
     "confidence": 1,
-    "recession_probability_12mo": 0.198,
+    "recession_probability_12mo": 0.208,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.81,
-    "ensemble_score": 19
+    "yield_curve_spread": 0.76,
+    "ensemble_score": 19.4
   },
   "geopolitical": {
     "score": 0,
@@ -55,8 +55,8 @@
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
-      "score": 17.5,
-      "contrib": -1.622
+      "score": 18.5,
+      "contrib": -1.571
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 26.4,
+      "score": 27,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -139,7 +139,7 @@
       "weight": 0.14
     },
     "real_economy": {
-      "score": 37.8,
+      "score": 37.7,
       "alert": "YELLOW",
       "weight": 0.18
     },
@@ -162,11 +162,11 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.81,
-      "latest_date": "2026-08-12",
-      "score": 17.5,
-      "level_score": 3.8,
-      "momentum_score": 49.5,
+      "latest_value": 0.76,
+      "latest_date": "2026-08-13",
+      "score": 18.5,
+      "level_score": 4.6,
+      "momentum_score": 51.1,
       "percentile_rank": 40,
       "anomaly": false,
       "stale": false,
@@ -270,8 +270,8 @@
           "value": 0.92
         },
         {
-          "date": "2026-08-12",
-          "value": 0.81
+          "date": "2026-08-13",
+          "value": 0.76
         }
       ]
     },
@@ -283,10 +283,10 @@
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
       "latest_value": 0.48,
-      "latest_date": "2026-08-12",
-      "score": 23.7,
+      "latest_date": "2026-08-13",
+      "score": 23.8,
       "level_score": 12.8,
-      "momentum_score": 49.1,
+      "momentum_score": 49.5,
       "percentile_rank": 47,
       "anomaly": false,
       "stale": false,
@@ -390,7 +390,7 @@
           "value": 0.47
         },
         {
-          "date": "2026-08-12",
+          "date": "2026-08-13",
           "value": 0.48
         }
       ]
@@ -882,20 +882,20 @@
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
-      "latest_value": 2.26,
-      "latest_date": "2026-08-12",
-      "score": 31.6,
-      "level_score": 24.5,
-      "momentum_score": 48,
-      "percentile_rank": 62,
+      "latest_value": 2.24,
+      "latest_date": "2026-08-13",
+      "score": 38,
+      "level_score": 28.7,
+      "momentum_score": 59.6,
+      "percentile_rank": 66,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1547,
-      "norm_std": 0.3747,
+      "norm_mean": 2.1549,
+      "norm_std": 0.3746,
       "history": [
         {
           "date": "2024-09-30",
@@ -990,8 +990,8 @@
           "value": 2.28
         },
         {
-          "date": "2026-08-12",
-          "value": 2.26
+          "date": "2026-08-13",
+          "value": 2.24
         }
       ]
     },
@@ -1002,10 +1002,10 @@
       "category": "macro",
       "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions.",
       "weight": 0.0599,
-      "latest_value": 6748567,
-      "latest_date": "2026-08-05",
+      "latest_value": 6759955,
+      "latest_date": "2026-08-12",
       "score": 15.9,
-      "level_score": 1.4,
+      "level_score": 1.3,
       "momentum_score": 50,
       "percentile_rank": 27,
       "anomaly": false,
@@ -1014,8 +1014,8 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "weekly",
-      "norm_mean": 3983605.6799,
-      "norm_std": 2581304.0482,
+      "norm_mean": 3985853.736,
+      "norm_std": 2581466.9622,
       "history": [
         {
           "date": "2024-09-25",
@@ -1110,8 +1110,8 @@
           "value": 6738190
         },
         {
-          "date": "2026-08-05",
-          "value": 6748567
+          "date": "2026-08-12",
+          "value": 6759955
         }
       ]
     },
@@ -3282,8 +3282,8 @@
       "category": "macro",
       "description": "Consumer demand. Z-score normalized.",
       "weight": 0.1025,
-      "latest_value": 768553,
-      "latest_date": "2026-06-01",
+      "latest_value": 763602,
+      "latest_date": "2026-07-01",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -3294,13 +3294,9 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 387019.2899,
-      "norm_std": 159073.0787,
+      "norm_mean": 387920.9446,
+      "norm_std": 159937.6428,
       "history": [
-        {
-          "date": "2024-07-01",
-          "value": 698835
-        },
         {
           "date": "2024-08-01",
           "value": 697039
@@ -3343,11 +3339,11 @@
         },
         {
           "date": "2025-06-01",
-          "value": 720164
+          "value": 719484
         },
         {
           "date": "2025-07-01",
-          "value": 727727
+          "value": 727176
         },
         {
           "date": "2025-08-01",
@@ -3387,11 +3383,15 @@
         },
         {
           "date": "2026-05-01",
-          "value": 766876
+          "value": 766192
         },
         {
           "date": "2026-06-01",
-          "value": 768553
+          "value": 768072
+        },
+        {
+          "date": "2026-07-01",
+          "value": 763602
         }
       ]
     },
@@ -3642,8 +3642,8 @@
       "category": "macro",
       "description": "NY Fed Weekly Economic Index; 10 daily/weekly indicators scaled to match YoY GDP growth.",
       "weight": 0.0904,
-      "latest_value": 2.68,
-      "latest_date": "2026-08-01",
+      "latest_value": 2.7,
+      "latest_date": "2026-08-08",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -3750,8 +3750,8 @@
           "value": 2.42
         },
         {
-          "date": "2026-08-01",
-          "value": 2.68
+          "date": "2026-08-08",
+          "value": 2.7
         }
       ]
     },
@@ -4242,11 +4242,11 @@
       "category": "macro",
       "description": "30-year fixed mortgage rate; rising rates directly reduce housing affordability and construction, leading the real economy by 6–12 months.",
       "weight": 0.08,
-      "latest_value": 6.69,
-      "latest_date": "2026-08-06",
-      "score": 67.3,
-      "level_score": 72.1,
-      "momentum_score": 56,
+      "latest_value": 6.67,
+      "latest_date": "2026-08-13",
+      "score": 66.1,
+      "level_score": 71.4,
+      "momentum_score": 53.8,
       "percentile_rank": 56,
       "anomaly": false,
       "stale": false,
@@ -4254,8 +4254,8 @@
       "threshold": null,
       "direction": "inverse",
       "frequency": "weekly",
-      "norm_mean": 6.2153,
-      "norm_std": 2.0002,
+      "norm_mean": 6.2135,
+      "norm_std": 1.9982,
       "history": [
         {
           "date": "2024-09-26",
@@ -4350,8 +4350,8 @@
           "value": 6.66
         },
         {
-          "date": "2026-08-06",
-          "value": 6.69
+          "date": "2026-08-13",
+          "value": 6.67
         }
       ]
     },
@@ -5322,7 +5322,7 @@
       "category": "macro",
       "description": "Euro area real GDP, chained 2010 EUR, ECB/Eurostat. Z-score normalized.",
       "weight": 0.17,
-      "latest_value": 2927313.3,
+      "latest_value": 2927347.4,
       "latest_date": "2026-04-01",
       "score": 15,
       "level_score": 0.1,
@@ -5334,8 +5334,8 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "quarterly",
-      "norm_mean": 2381618.8198,
-      "norm_std": 311786.5738,
+      "norm_mean": 2381619.0905,
+      "norm_std": 311787.0474,
       "history": [
         {
           "date": "2020-07-01",
@@ -5431,7 +5431,7 @@
         },
         {
           "date": "2026-04-01",
-          "value": 2927313.3
+          "value": 2927347.4
         }
       ]
     },
