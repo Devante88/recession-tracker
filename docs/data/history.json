@@ -60,7 +60,7 @@
       "labor": 35.5,
       "inflation": 78.9,
       "real_economy": 46.8,
-      "micro": 26,
+      "micro": 25.9,
       "global": 43.1
     }
   },
@@ -69,11 +69,11 @@
     "composite": 44.6,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 40.4,
+      "financial_lead": 40.5,
       "labor": 43,
       "inflation": 78.3,
       "real_economy": 31.1,
-      "micro": 33.8,
+      "micro": 33.7,
       "global": 46.6
     }
   },
@@ -138,7 +138,7 @@
       "labor": 48.1,
       "inflation": 73,
       "real_economy": 36.4,
-      "micro": 36.5,
+      "micro": 36.6,
       "global": 45.8
     }
   },
@@ -147,7 +147,7 @@
     "composite": 46.5,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 39.8,
+      "financial_lead": 39.7,
       "labor": 48.7,
       "inflation": 72.2,
       "real_economy": 38.9,
@@ -164,7 +164,7 @@
       "labor": 46.8,
       "inflation": 71.1,
       "real_economy": 38.4,
-      "micro": 38.3,
+      "micro": 38.4,
       "global": 43.3
     }
   },
@@ -190,20 +190,20 @@
       "labor": 52.6,
       "inflation": 70.9,
       "real_economy": 39.4,
-      "micro": 38.7,
+      "micro": 38.8,
       "global": 33.8
     }
   },
   {
     "date": "2025-12-31",
-    "composite": 42.3,
+    "composite": 42.4,
     "alert": "YELLOW",
     "layers": {
       "financial_lead": 32.6,
       "labor": 51.1,
       "inflation": 70.9,
       "real_economy": 30.2,
-      "micro": 40.1,
+      "micro": 40.2,
       "global": 33.3
     }
   },
@@ -216,7 +216,7 @@
       "labor": 51.4,
       "inflation": 71,
       "real_economy": 35.7,
-      "micro": 36,
+      "micro": 35.9,
       "global": 21.1
     }
   },
@@ -228,87 +228,87 @@
       "financial_lead": 33.2,
       "labor": 49.6,
       "inflation": 71,
-      "real_economy": 29.9,
+      "real_economy": 30,
       "micro": 36.7,
       "global": 21.1
     }
   },
   {
     "date": "2026-03-31",
-    "composite": 43.4,
+    "composite": 42.9,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 41.3,
+      "financial_lead": 39.7,
       "labor": 47.4,
       "inflation": 71,
-      "real_economy": 34.1,
-      "micro": 36.8,
+      "real_economy": 33.9,
+      "micro": 36.7,
       "global": 24.3
     }
   },
   {
     "date": "2026-04-30",
-    "composite": 39.2,
+    "composite": 39,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 27.9,
+      "financial_lead": 27.6,
       "labor": 47,
       "inflation": 71,
-      "real_economy": 33.2,
-      "micro": 36.8,
+      "real_economy": 32.5,
+      "micro": 36.6,
       "global": 21.2
     }
   },
   {
     "date": "2026-05-31",
-    "composite": 42.2,
+    "composite": 42,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 34,
+      "financial_lead": 32.5,
       "labor": 47.3,
       "inflation": 71.1,
-      "real_economy": 40.4,
-      "micro": 36.4,
+      "real_economy": 41.4,
+      "micro": 36.2,
       "global": 21.2
     }
   },
   {
     "date": "2026-06-30",
-    "composite": 40.5,
+    "composite": 40.3,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 34.1,
+      "financial_lead": 33.9,
       "labor": 45.3,
       "inflation": 71,
-      "real_economy": 31.8,
-      "micro": 36.9,
+      "real_economy": 31.3,
+      "micro": 36.7,
       "global": 23.3
     }
   },
   {
     "date": "2026-07-31",
-    "composite": 38.2,
+    "composite": 39.2,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 31.4,
-      "labor": 38.5,
+      "financial_lead": 33.9,
+      "labor": 38,
       "inflation": 71,
-      "real_economy": 34.2,
-      "micro": 33.7,
+      "real_economy": 36.8,
+      "micro": 33.5,
       "global": 21
     }
   },
   {
     "date": "2026-08-31",
-    "composite": 36.7,
+    "composite": 36.6,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 26.2,
-      "labor": 38.5,
+      "financial_lead": 25.5,
+      "labor": 37.7,
       "inflation": 71,
-      "real_economy": 33.9,
-      "micro": 33.7,
-      "global": 21.1
+      "real_economy": 35.3,
+      "micro": 33.5,
+      "global": 21
     }
   }
 ]
