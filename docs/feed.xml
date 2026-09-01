@@ -5,14 +5,14 @@
     <link>https://devante88.github.io/recession-tracker</link>
     <description>Updates when the composite recession risk alert changes between GREEN, YELLOW, and RED.</description>
     <language>en-us</language>
-    <lastBuildDate>Sun, 30 Aug 2026 15:36:05 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 01 Sep 2026 15:40:17 GMT</lastBuildDate>
     
     <item>
-      <title>YELLOW — composite 52.5 (as of 2024-09-30)</title>
-      <link>https://devante88.github.io/recession-tracker/?date=2024-09-30</link>
-      <guid isPermaLink="false">recession-tracker-2024-09-30-YELLOW</guid>
-      <pubDate>Mon, 30 Sep 2024 12:00:00 GMT</pubDate>
-      <description>Initial reading: YELLOW at 52.5.</description>
+      <title>YELLOW — composite 50.9 (as of 2024-10-31)</title>
+      <link>https://devante88.github.io/recession-tracker/?date=2024-10-31</link>
+      <guid isPermaLink="false">recession-tracker-2024-10-31-YELLOW</guid>
+      <pubDate>Thu, 31 Oct 2024 12:00:00 GMT</pubDate>
+      <description>Initial reading: YELLOW at 50.9.</description>
     </item>
   </channel>
 </rss>

@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-08-30",
-  "generated_at": "2026-08-30T15:36:05.057Z",
+  "as_of": "2026-09-01",
+  "generated_at": "2026-09-01T15:40:16.323Z",
   "composite": {
-    "score": 37.2,
+    "score": 39.4,
     "alert": "YELLOW",
-    "rating": 4,
+    "rating": 5,
     "confidence": 1,
-    "recession_probability_12mo": 0.195,
+    "recession_probability_12mo": 0.193,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.83,
-    "ensemble_score": 18.6
+    "yield_curve_spread": 0.84,
+    "ensemble_score": 19.2
   },
   "geopolitical": {
     "score": 0,
@@ -23,8 +23,8 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 14.51,
-          "display": "14.5",
+          "value": 14.92,
+          "display": "14.9",
           "sub_score": 0,
           "firing": false
         },
@@ -39,8 +39,8 @@
         {
           "fred_id": "DTWEXBGS",
           "name": "Safe-haven USD",
-          "value": 118.0628,
-          "display": "118.1",
+          "value": 118.7479,
+          "display": "118.7",
           "sub_score": 0,
           "firing": false
         }
@@ -56,7 +56,7 @@
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
       "score": 17.2,
-      "contrib": -1.636
+      "contrib": -1.635
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -108,28 +108,28 @@
       "contrib": 0.98
     },
     {
+      "name": "Economic Policy Uncertainty",
+      "fred_id": "USEPUINDXD",
+      "layer": "financial_lead",
+      "score": 96.8,
+      "contrib": 0.885
+    },
+    {
       "name": "Baa-10Y Credit Spread",
       "fred_id": "BAA10YM",
       "layer": "financial_lead",
       "score": 23.7,
       "contrib": -0.875
-    },
-    {
-      "name": "Chicago Fed NFCI",
-      "fred_id": "NFCI",
-      "layer": "financial_lead",
-      "score": 15,
-      "contrib": -0.873
     }
   ],
   "layers": {
     "financial_lead": {
-      "score": 22.9,
+      "score": 29.1,
       "alert": "GREEN",
       "weight": 0.27
     },
     "labor": {
-      "score": 35.7,
+      "score": 36.1,
       "alert": "YELLOW",
       "weight": 0.22
     },
@@ -144,13 +144,13 @@
       "weight": 0.18
     },
     "micro": {
-      "score": 33.5,
+      "score": 34.4,
       "alert": "YELLOW",
       "weight": 0.09
     },
     "global": {
-      "score": 26.9,
-      "alert": "GREEN",
+      "score": 30.2,
+      "alert": "YELLOW",
       "weight": 0.1
     }
   },
@@ -162,11 +162,11 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.83,
-      "latest_date": "2026-08-28",
+      "latest_value": 0.84,
+      "latest_date": "2026-08-31",
       "score": 17.2,
-      "level_score": 3.5,
-      "momentum_score": 49.3,
+      "level_score": 3.4,
+      "momentum_score": 49.6,
       "percentile_rank": 40,
       "anomaly": false,
       "stale": false,
@@ -270,8 +270,8 @@
           "value": 0.92
         },
         {
-          "date": "2026-08-28",
-          "value": 0.83
+          "date": "2026-08-31",
+          "value": 0.84
         }
       ]
     },
@@ -282,13 +282,13 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.39,
-      "latest_date": "2026-08-28",
-      "score": 28.4,
-      "level_score": 17.4,
-      "momentum_score": 54.1,
-      "percentile_rank": 53,
-      "anomaly": true,
+      "latest_value": 0.41,
+      "latest_date": "2026-08-31",
+      "score": 27.3,
+      "level_score": 16.2,
+      "momentum_score": 53,
+      "percentile_rank": 52,
+      "anomaly": false,
       "stale": false,
       "alert": "GREEN",
       "threshold": 0,
@@ -390,8 +390,8 @@
           "value": 0.47
         },
         {
-          "date": "2026-08-28",
-          "value": 0.39
+          "date": "2026-08-31",
+          "value": 0.41
         }
       ]
     },
@@ -642,12 +642,12 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 14.51,
-      "latest_date": "2026-08-27",
-      "score": 25.1,
-      "level_score": 15.7,
-      "momentum_score": 46.9,
-      "percentile_rank": 51,
+      "latest_value": 14.92,
+      "latest_date": "2026-08-31",
+      "score": 26.4,
+      "level_score": 16.6,
+      "momentum_score": 49.3,
+      "percentile_rank": 54,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -750,8 +750,8 @@
           "value": 15.99
         },
         {
-          "date": "2026-08-27",
-          "value": 14.51
+          "date": "2026-08-31",
+          "value": 14.92
         }
       ]
     },
@@ -763,11 +763,11 @@
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
       "latest_value": 2.63,
-      "latest_date": "2026-08-27",
+      "latest_date": "2026-08-31",
       "score": 24,
       "level_score": 13.1,
-      "momentum_score": 49.4,
-      "percentile_rank": 85,
+      "momentum_score": 49.6,
+      "percentile_rank": 86,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -870,7 +870,7 @@
           "value": 2.85
         },
         {
-          "date": "2026-08-27",
+          "date": "2026-08-31",
           "value": 2.63
         }
       ]
@@ -883,7 +883,7 @@
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
       "latest_value": 2.31,
-      "latest_date": "2026-08-28",
+      "latest_date": "2026-08-31",
       "score": 26.9,
       "level_score": 16.4,
       "momentum_score": 51.4,
@@ -894,8 +894,8 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1578,
-      "norm_std": 0.3737,
+      "norm_mean": 2.1581,
+      "norm_std": 0.3736,
       "history": [
         {
           "date": "2024-09-30",
@@ -990,7 +990,7 @@
           "value": 2.28
         },
         {
-          "date": "2026-08-28",
+          "date": "2026-08-31",
           "value": 2.31
         }
       ]
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 131.19,
-      "latest_date": "2026-08-27",
-      "score": 9,
-      "level_score": 12.8,
-      "momentum_score": 0,
-      "percentile_rank": 35,
-      "anomaly": true,
+      "latest_value": 318.13,
+      "latest_date": "2026-08-31",
+      "score": 96.8,
+      "level_score": 95.5,
+      "momentum_score": 100,
+      "percentile_rank": 83,
+      "anomaly": false,
       "stale": false,
-      "alert": "GREEN",
+      "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 203.3286,
-      "norm_std": 150.4706,
+      "norm_mean": 203.3104,
+      "norm_std": 150.475,
       "history": [
         {
           "date": "2024-09-30",
@@ -1590,8 +1590,8 @@
           "value": 251.66
         },
         {
-          "date": "2026-08-27",
-          "value": 131.19
+          "date": "2026-08-31",
+          "value": 318.13
         }
       ]
     },
@@ -2082,12 +2082,12 @@
       "category": "micro",
       "description": "Worker confidence proxy. Falling quits = labor market cooling.",
       "weight": 0.1188,
-      "latest_value": 2,
-      "latest_date": "2026-06-01",
-      "score": 50,
-      "level_score": 50,
+      "latest_value": 1.9,
+      "latest_date": "2026-07-01",
+      "score": 53.5,
+      "level_score": 55,
       "momentum_score": 50,
-      "percentile_rank": 48,
+      "percentile_rank": 60,
       "anomaly": false,
       "stale": false,
       "alert": "YELLOW",
@@ -2097,10 +2097,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-01",
-          "value": 2.1
-        },
         {
           "date": "2024-08-01",
           "value": 2.1
@@ -2192,6 +2188,10 @@
         {
           "date": "2026-06-01",
           "value": 2
+        },
+        {
+          "date": "2026-07-01",
+          "value": 1.9
         }
       ]
     },
@@ -4722,25 +4722,21 @@
       "category": "micro",
       "description": "Employer demand (FRED: thousands). 5,500 = 5.5M openings, near recessionary trough.",
       "weight": 0.2118,
-      "latest_value": 7359,
-      "latest_date": "2026-06-01",
-      "score": 27.5,
-      "level_score": 20.6,
-      "momentum_score": 43.8,
-      "percentile_rank": 28,
+      "latest_value": 7271,
+      "latest_date": "2026-07-01",
+      "score": 31.2,
+      "level_score": 21.6,
+      "momentum_score": 53.6,
+      "percentile_rank": 31,
       "anomaly": false,
       "stale": false,
-      "alert": "GREEN",
+      "alert": "YELLOW",
       "threshold": 5500,
       "direction": "direct",
       "frequency": "monthly",
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-01",
-          "value": 7426
-        },
         {
           "date": "2024-08-01",
           "value": 7520
@@ -4831,7 +4827,11 @@
         },
         {
           "date": "2026-06-01",
-          "value": 7359
+          "value": 7182
+        },
+        {
+          "date": "2026-07-01",
+          "value": 7271
         }
       ]
     },
@@ -5442,20 +5442,20 @@
       "category": "macro",
       "description": "Nominal broad trade-weighted US dollar index. A stronger dollar tightens global financial conditions and pressures EM economies.",
       "weight": 0.15,
-      "latest_value": 118.0628,
-      "latest_date": "2026-08-21",
-      "score": 28.2,
-      "level_score": 27.7,
-      "momentum_score": 29.4,
-      "percentile_rank": 40,
-      "anomaly": false,
+      "latest_value": 118.7479,
+      "latest_date": "2026-08-28",
+      "score": 48.2,
+      "level_score": 42.5,
+      "momentum_score": 61.6,
+      "percentile_rank": 45,
+      "anomaly": true,
       "stale": false,
-      "alert": "GREEN",
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 119.0553,
-      "norm_std": 4.1304,
+      "norm_mean": 119.06,
+      "norm_std": 4.1271,
       "history": [
         {
           "date": "2024-09-30",
@@ -5550,8 +5550,8 @@
           "value": 119.7034
         },
         {
-          "date": "2026-08-21",
-          "value": 118.0628
+          "date": "2026-08-28",
+          "value": 118.7479
         }
       ]
     }
