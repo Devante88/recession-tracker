@@ -287,10 +287,10 @@
   },
   {
     "date": "2026-08-31",
-    "composite": 38.3,
+    "composite": 38,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 31.2,
+      "financial_lead": 30.1,
       "labor": 38.1,
       "inflation": 71,
       "real_economy": 35.3,
@@ -300,10 +300,10 @@
   },
   {
     "date": "2026-09-30",
-    "composite": 38,
+    "composite": 36.5,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 31,
+      "financial_lead": 25.4,
       "labor": 37.4,
       "inflation": 71,
       "real_economy": 34.9,
