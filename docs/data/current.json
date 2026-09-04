@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-09-03",
-  "generated_at": "2026-09-03T15:21:51.933Z",
+  "as_of": "2026-09-04",
+  "generated_at": "2026-09-04T15:16:59.526Z",
   "composite": {
-    "score": 39,
+    "score": 38.2,
     "alert": "YELLOW",
-    "rating": 5,
+    "rating": 4,
     "confidence": 1,
-    "recession_probability_12mo": 0.187,
+    "recession_probability_12mo": 0.186,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.87,
-    "ensemble_score": 19.2
+    "yield_curve_spread": 0.88,
+    "ensemble_score": 18.9
   },
   "geopolitical": {
     "score": 0,
@@ -23,16 +23,16 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 15.2,
-          "display": "15.2",
+          "value": 14.32,
+          "display": "14.3",
           "sub_score": 0,
           "firing": false
         },
         {
           "fred_id": "BAMLH0A0HYM2",
           "name": "Credit risk (HY spread)",
-          "value": 2.66,
-          "display": "2.66%",
+          "value": 2.65,
+          "display": "2.65%",
           "sub_score": 0,
           "firing": false
         },
@@ -56,14 +56,14 @@
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
       "score": 16.9,
-      "contrib": -1.649
+      "contrib": -1.653
     },
     {
       "name": "Sahm Rule (Real-Time)",
       "fred_id": "SAHMREALTIME",
       "layer": "labor",
       "score": 14.9,
-      "contrib": -1.527
+      "contrib": -1.531
     },
     {
       "name": "Payroll Employment",
@@ -124,12 +124,12 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 27.7,
+      "score": 24.8,
       "alert": "GREEN",
       "weight": 0.27
     },
     "labor": {
-      "score": 36.1,
+      "score": 35.8,
       "alert": "YELLOW",
       "weight": 0.22
     },
@@ -139,7 +139,7 @@
       "weight": 0.14
     },
     "real_economy": {
-      "score": 39,
+      "score": 39.2,
       "alert": "YELLOW",
       "weight": 0.18
     },
@@ -162,10 +162,10 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.87,
-      "latest_date": "2026-09-02",
+      "latest_value": 0.88,
+      "latest_date": "2026-09-03",
       "score": 16.9,
-      "level_score": 3,
+      "level_score": 2.9,
       "momentum_score": 49.5,
       "percentile_rank": 41,
       "anomaly": false,
@@ -270,8 +270,8 @@
           "value": 0.84
         },
         {
-          "date": "2026-09-02",
-          "value": 0.87
+          "date": "2026-09-03",
+          "value": 0.88
         }
       ]
     },
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.4,
-      "latest_date": "2026-09-02",
-      "score": 26.6,
-      "level_score": 16.8,
-      "momentum_score": 49.4,
-      "percentile_rank": 51,
+      "latest_value": 0.43,
+      "latest_date": "2026-09-03",
+      "score": 25.3,
+      "level_score": 15.2,
+      "momentum_score": 48.9,
+      "percentile_rank": 49,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -390,8 +390,8 @@
           "value": 0.41
         },
         {
-          "date": "2026-09-02",
-          "value": 0.4
+          "date": "2026-09-03",
+          "value": 0.43
         }
       ]
     },
@@ -642,12 +642,12 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 15.2,
-      "latest_date": "2026-09-02",
-      "score": 27.6,
-      "level_score": 17.3,
-      "momentum_score": 51.7,
-      "percentile_rank": 57,
+      "latest_value": 14.32,
+      "latest_date": "2026-09-03",
+      "score": 25.3,
+      "level_score": 15.3,
+      "momentum_score": 48.7,
+      "percentile_rank": 52,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -750,8 +750,8 @@
           "value": 14.92
         },
         {
-          "date": "2026-09-02",
-          "value": 15.2
+          "date": "2026-09-03",
+          "value": 14.32
         }
       ]
     },
@@ -762,12 +762,12 @@
       "category": "macro",
       "description": "ICE BofA US high-yield option-adjusted spread. Above 5% = elevated credit risk.",
       "weight": 0.0616,
-      "latest_value": 2.66,
-      "latest_date": "2026-09-02",
-      "score": 24.5,
-      "level_score": 13.3,
-      "momentum_score": 50.5,
-      "percentile_rank": 87,
+      "latest_value": 2.65,
+      "latest_date": "2026-09-03",
+      "score": 24.3,
+      "level_score": 13.2,
+      "momentum_score": 50.2,
+      "percentile_rank": 86,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -870,8 +870,8 @@
           "value": 2.63
         },
         {
-          "date": "2026-09-02",
-          "value": 2.66
+          "date": "2026-09-03",
+          "value": 2.65
         }
       ]
     },
@@ -882,11 +882,11 @@
       "category": "macro",
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
-      "latest_value": 2.34,
-      "latest_date": "2026-09-02",
-      "score": 22.6,
-      "level_score": 12.5,
-      "momentum_score": 46,
+      "latest_value": 2.35,
+      "latest_date": "2026-09-03",
+      "score": 21.5,
+      "level_score": 11.4,
+      "momentum_score": 44.9,
       "percentile_rank": 53,
       "anomaly": false,
       "stale": false,
@@ -894,8 +894,8 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1585,
-      "norm_std": 0.3734,
+      "norm_mean": 2.1589,
+      "norm_std": 0.3732,
       "history": [
         {
           "date": "2024-10-31",
@@ -990,8 +990,8 @@
           "value": 2.31
         },
         {
-          "date": "2026-09-02",
-          "value": 2.34
+          "date": "2026-09-03",
+          "value": 2.35
         }
       ]
     },
@@ -1002,8 +1002,8 @@
       "category": "macro",
       "description": "Federal Reserve total assets; QT (shrinking) tightens financial conditions.",
       "weight": 0.0599,
-      "latest_value": 6730912,
-      "latest_date": "2026-08-26",
+      "latest_value": 6737204,
+      "latest_date": "2026-09-02",
       "score": 16,
       "level_score": 1.4,
       "momentum_score": 50,
@@ -1014,13 +1014,9 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "weekly",
-      "norm_mean": 3990303.941,
-      "norm_std": 2581748.7343,
+      "norm_mean": 3992522.7617,
+      "norm_std": 2581885.4457,
       "history": [
-        {
-          "date": "2024-09-25",
-          "value": 7080059
-        },
         {
           "date": "2024-10-30",
           "value": 7013490
@@ -1112,6 +1108,10 @@
         {
           "date": "2026-08-26",
           "value": 6730912
+        },
+        {
+          "date": "2026-09-02",
+          "value": 6737204
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 276.46,
-      "latest_date": "2026-09-02",
-      "score": 77.5,
-      "level_score": 87.5,
-      "momentum_score": 54.3,
-      "percentile_rank": 72,
-      "anomaly": true,
+      "latest_value": 205.69,
+      "latest_date": "2026-09-03",
+      "score": 40.8,
+      "level_score": 51.5,
+      "momentum_score": 15.9,
+      "percentile_rank": 61,
+      "anomaly": false,
       "stale": false,
-      "alert": "RED",
+      "alert": "YELLOW",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 203.3241,
-      "norm_std": 150.4491,
+      "norm_mean": 203.3628,
+      "norm_std": 150.4262,
       "history": [
         {
           "date": "2024-10-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-08-31",
-          "value": 274.31
+          "value": 270.57
         },
         {
-          "date": "2026-09-02",
-          "value": 276.46
+          "date": "2026-09-03",
+          "value": 205.69
         }
       ]
     },
@@ -1603,7 +1603,7 @@
       "description": "Headline U3 unemployment. Z-score normalized.",
       "weight": 0.1584,
       "latest_value": 4.1,
-      "latest_date": "2026-07-01",
+      "latest_date": "2026-08-01",
       "score": 16.3,
       "level_score": 2.5,
       "momentum_score": 48.5,
@@ -1614,13 +1614,9 @@
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 5.6562,
-      "norm_std": 1.703,
+      "norm_mean": 5.6545,
+      "norm_std": 1.7029,
       "history": [
-        {
-          "date": "2024-07-01",
-          "value": 4.2
-        },
         {
           "date": "2024-08-01",
           "value": 4.2
@@ -1712,6 +1708,10 @@
         {
           "date": "2026-07-01",
           "value": 4.1
+        },
+        {
+          "date": "2026-08-01",
+          "value": 4.1
         }
       ]
     },
@@ -1722,11 +1722,11 @@
       "category": "macro",
       "description": "Triggers at 0.5 when unemployment 3mo avg rises 0.5pp above its 12mo low. Historically coincident with recession start.",
       "weight": 0.198,
-      "latest_value": -0.03,
-      "latest_date": "2026-07-01",
+      "latest_value": -0.07,
+      "latest_date": "2026-08-01",
       "score": 14.9,
-      "level_score": 1.4,
-      "momentum_score": 46.5,
+      "level_score": 1,
+      "momentum_score": 47.1,
       "percentile_rank": 70,
       "anomaly": false,
       "stale": false,
@@ -1737,10 +1737,6 @@
       "norm_mean": null,
       "norm_std": null,
       "history": [
-        {
-          "date": "2024-07-01",
-          "value": 0.53
-        },
         {
           "date": "2024-08-01",
           "value": 0.57
@@ -1832,6 +1828,10 @@
         {
           "date": "2026-07-01",
           "value": -0.03
+        },
+        {
+          "date": "2026-08-01",
+          "value": -0.07
         }
       ]
     },
@@ -1962,8 +1962,8 @@
       "category": "macro",
       "description": "Nonfarm payroll trend. Z-score normalized.",
       "weight": 0.1584,
-      "latest_value": 158858,
-      "latest_date": "2026-07-01",
+      "latest_value": 159075,
+      "latest_date": "2026-08-01",
       "score": 15.1,
       "level_score": 0.1,
       "momentum_score": 50,
@@ -1974,13 +1974,9 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 93830.0523,
-      "norm_std": 38878.2849,
+      "norm_mean": 93892.135,
+      "norm_std": 38911.888,
       "history": [
-        {
-          "date": "2024-08-01",
-          "value": 157757
-        },
         {
           "date": "2024-09-01",
           "value": 157912
@@ -2067,11 +2063,15 @@
         },
         {
           "date": "2026-06-01",
-          "value": 158881
+          "value": 158892
         },
         {
           "date": "2026-07-01",
-          "value": 158858
+          "value": 158913
+        },
+        {
+          "date": "2026-08-01",
+          "value": 159075
         }
       ]
     },
@@ -2322,25 +2322,21 @@
       "category": "macro",
       "description": "Civilian labor force participation rate; declining LFPR signals discouraged workers exiting.",
       "weight": 0.1,
-      "latest_value": 61.4,
-      "latest_date": "2026-07-01",
-      "score": 78.7,
-      "level_score": 87.9,
-      "momentum_score": 57.3,
-      "percentile_rank": 61,
+      "latest_value": 61.6,
+      "latest_date": "2026-08-01",
+      "score": 75.4,
+      "level_score": 84.6,
+      "momentum_score": 54,
+      "percentile_rank": 60,
       "anomaly": false,
       "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "direct",
       "frequency": "monthly",
-      "norm_mean": 62.8243,
-      "norm_std": 2.8748,
+      "norm_mean": 62.823,
+      "norm_std": 2.8735,
       "history": [
-        {
-          "date": "2024-07-01",
-          "value": 62.7
-        },
         {
           "date": "2024-08-01",
           "value": 62.7
@@ -2432,6 +2428,10 @@
         {
           "date": "2026-07-01",
           "value": 61.4
+        },
+        {
+          "date": "2026-08-01",
+          "value": 61.6
         }
       ]
     },
@@ -2922,8 +2922,8 @@
       "category": "micro",
       "description": "Wage pressure signal. Z-score normalized.",
       "weight": 0.2,
-      "latest_value": 37.62,
-      "latest_date": "2026-07-01",
+      "latest_value": 37.75,
+      "latest_date": "2026-08-01",
       "score": 85,
       "level_score": 100,
       "momentum_score": 50,
@@ -2934,13 +2934,9 @@
       "threshold": null,
       "direction": "inverse",
       "frequency": "monthly",
-      "norm_mean": 26.9578,
-      "norm_std": 4.9883,
+      "norm_mean": 27.0017,
+      "norm_std": 5.0255,
       "history": [
-        {
-          "date": "2024-08-01",
-          "value": 35.22
-        },
         {
           "date": "2024-09-01",
           "value": 35.34
@@ -3027,11 +3023,15 @@
         },
         {
           "date": "2026-06-01",
-          "value": 37.6
+          "value": 37.59
         },
         {
           "date": "2026-07-01",
-          "value": 37.62
+          "value": 37.65
+        },
+        {
+          "date": "2026-08-01",
+          "value": 37.75
         }
       ]
     },
@@ -3642,8 +3642,8 @@
       "category": "macro",
       "description": "NY Fed Weekly Economic Index; 10 daily/weekly indicators scaled to match YoY GDP growth.",
       "weight": 0.0904,
-      "latest_value": 2.85,
-      "latest_date": "2026-08-22",
+      "latest_value": 3.06,
+      "latest_date": "2026-08-29",
       "score": 15,
       "level_score": 0,
       "momentum_score": 50,
@@ -3750,8 +3750,8 @@
           "value": 2.42
         },
         {
-          "date": "2026-08-22",
-          "value": 2.85
+          "date": "2026-08-29",
+          "value": 3.06
         }
       ]
     },
@@ -4242,25 +4242,21 @@
       "category": "macro",
       "description": "30-year fixed mortgage rate; rising rates directly reduce housing affordability and construction, leading the real economy by 6–12 months.",
       "weight": 0.08,
-      "latest_value": 6.66,
-      "latest_date": "2026-08-27",
-      "score": 64.4,
-      "level_score": 71.2,
-      "momentum_score": 48.8,
-      "percentile_rank": 55,
+      "latest_value": 6.71,
+      "latest_date": "2026-09-03",
+      "score": 66.8,
+      "level_score": 73.3,
+      "momentum_score": 51.6,
+      "percentile_rank": 56,
       "anomaly": false,
       "stale": false,
       "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "weekly",
-      "norm_mean": 6.2099,
-      "norm_std": 1.9941,
+      "norm_mean": 6.2081,
+      "norm_std": 1.992,
       "history": [
-        {
-          "date": "2024-09-26",
-          "value": 6.08
-        },
         {
           "date": "2024-10-31",
           "value": 6.72
@@ -4352,6 +4348,10 @@
         {
           "date": "2026-08-27",
           "value": 6.66
+        },
+        {
+          "date": "2026-09-03",
+          "value": 6.71
         }
       ]
     },
