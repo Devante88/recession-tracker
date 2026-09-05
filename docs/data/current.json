@@ -1,14 +1,14 @@
 {
-  "as_of": "2026-09-04",
-  "generated_at": "2026-09-04T15:16:59.526Z",
+  "as_of": "2026-09-05",
+  "generated_at": "2026-09-05T14:06:10.709Z",
   "composite": {
     "score": 38.2,
     "alert": "YELLOW",
     "rating": 4,
     "confidence": 1,
-    "recession_probability_12mo": 0.186,
+    "recession_probability_12mo": 0.187,
     "yield_curve_inversion_days": 0,
-    "yield_curve_spread": 0.88,
+    "yield_curve_spread": 0.87,
     "ensemble_score": 18.9
   },
   "geopolitical": {
@@ -55,8 +55,8 @@
       "name": "Yield Curve 10Y-3M",
       "fred_id": "T10Y3M",
       "layer": "financial_lead",
-      "score": 16.9,
-      "contrib": -1.653
+      "score": 17.1,
+      "contrib": -1.642
     },
     {
       "name": "Sahm Rule (Real-Time)",
@@ -124,7 +124,7 @@
   ],
   "layers": {
     "financial_lead": {
-      "score": 24.8,
+      "score": 25,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -162,11 +162,11 @@
       "category": "macro",
       "description": "Spread between 10Y and 3M Treasury yields. Inversion historically precedes recession by 6–18 months.",
       "weight": 0.1848,
-      "latest_value": 0.88,
-      "latest_date": "2026-09-03",
-      "score": 16.9,
-      "level_score": 2.9,
-      "momentum_score": 49.5,
+      "latest_value": 0.87,
+      "latest_date": "2026-09-04",
+      "score": 17.1,
+      "level_score": 3,
+      "momentum_score": 50,
       "percentile_rank": 41,
       "anomaly": false,
       "stale": false,
@@ -270,8 +270,8 @@
           "value": 0.84
         },
         {
-          "date": "2026-09-03",
-          "value": 0.88
+          "date": "2026-09-04",
+          "value": 0.87
         }
       ]
     },
@@ -282,12 +282,12 @@
       "category": "macro",
       "description": "Spread between 10Y and 2Y Treasury yields. Classic recession signal.",
       "weight": 0.0924,
-      "latest_value": 0.43,
-      "latest_date": "2026-09-03",
-      "score": 25.3,
-      "level_score": 15.2,
-      "momentum_score": 48.9,
-      "percentile_rank": 49,
+      "latest_value": 0.41,
+      "latest_date": "2026-09-04",
+      "score": 26.2,
+      "level_score": 16.2,
+      "momentum_score": 49.4,
+      "percentile_rank": 51,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -390,8 +390,8 @@
           "value": 0.41
         },
         {
-          "date": "2026-09-03",
-          "value": 0.43
+          "date": "2026-09-04",
+          "value": 0.41
         }
       ]
     },
@@ -883,10 +883,10 @@
       "description": "Market-implied 10-year inflation expectations; collapse signals deflation/growth fears.",
       "weight": 0.0599,
       "latest_value": 2.35,
-      "latest_date": "2026-09-03",
-      "score": 21.5,
-      "level_score": 11.4,
-      "momentum_score": 44.9,
+      "latest_date": "2026-09-04",
+      "score": 23,
+      "level_score": 11.5,
+      "momentum_score": 50,
       "percentile_rank": 53,
       "anomaly": false,
       "stale": false,
@@ -894,7 +894,7 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "daily",
-      "norm_mean": 2.1589,
+      "norm_mean": 2.1592,
       "norm_std": 0.3732,
       "history": [
         {
@@ -990,7 +990,7 @@
           "value": 2.31
         },
         {
-          "date": "2026-09-03",
+          "date": "2026-09-04",
           "value": 2.35
         }
       ]
