@@ -1,15 +1,15 @@
 {
-  "as_of": "2026-09-06",
-  "generated_at": "2026-09-06T14:31:37.287Z",
+  "as_of": "2026-09-08",
+  "generated_at": "2026-09-08T15:30:49.751Z",
   "composite": {
-    "score": 38.2,
+    "score": 39.4,
     "alert": "YELLOW",
-    "rating": 4,
+    "rating": 5,
     "confidence": 1,
     "recession_probability_12mo": 0.187,
     "yield_curve_inversion_days": 0,
     "yield_curve_spread": 0.87,
-    "ensemble_score": 18.9
+    "ensemble_score": 19.3
   },
   "geopolitical": {
     "score": 0,
@@ -23,8 +23,8 @@
         {
           "fred_id": "VIXCLS",
           "name": "Equity volatility (VIX)",
-          "value": 14.32,
-          "display": "14.3",
+          "value": 15.3,
+          "display": "15.3",
           "sub_score": 0,
           "firing": false
         },
@@ -108,23 +108,23 @@
       "contrib": 0.98
     },
     {
+      "name": "Economic Policy Uncertainty",
+      "fred_id": "USEPUINDXD",
+      "layer": "financial_lead",
+      "score": 100,
+      "contrib": 0.945
+    },
+    {
       "name": "Chicago Fed NFCI",
       "fred_id": "NFCI",
       "layer": "financial_lead",
       "score": 15,
       "contrib": -0.873
-    },
-    {
-      "name": "Baa-10Y Credit Spread",
-      "fred_id": "BAA10YM",
-      "layer": "financial_lead",
-      "score": 24.9,
-      "contrib": -0.835
     }
   ],
   "layers": {
     "financial_lead": {
-      "score": 25,
+      "score": 29.3,
       "alert": "GREEN",
       "weight": 0.27
     },
@@ -642,12 +642,12 @@
       "category": "macro",
       "description": "CBOE volatility index. Sustained levels above 25 indicate market stress.",
       "weight": 0.0616,
-      "latest_value": 14.32,
-      "latest_date": "2026-09-03",
-      "score": 25.3,
-      "level_score": 15.3,
-      "momentum_score": 48.7,
-      "percentile_rank": 52,
+      "latest_value": 15.3,
+      "latest_date": "2026-09-07",
+      "score": 27.3,
+      "level_score": 17.5,
+      "momentum_score": 50.2,
+      "percentile_rank": 56,
       "anomaly": false,
       "stale": false,
       "alert": "GREEN",
@@ -750,8 +750,8 @@
           "value": 14.92
         },
         {
-          "date": "2026-09-03",
-          "value": 14.32
+          "date": "2026-09-07",
+          "value": 15.3
         }
       ]
     },
@@ -1482,20 +1482,20 @@
       "category": "macro",
       "description": "US Economic Policy Uncertainty Index. Elevated uncertainty suppresses investment and hiring; spikes precede economic slowdowns.",
       "weight": 0.07,
-      "latest_value": 205.69,
-      "latest_date": "2026-09-03",
-      "score": 40.8,
-      "level_score": 51.5,
-      "momentum_score": 15.9,
-      "percentile_rank": 61,
+      "latest_value": 546.32,
+      "latest_date": "2026-09-07",
+      "score": 100,
+      "level_score": 100,
+      "momentum_score": 100,
+      "percentile_rank": 96,
       "anomaly": false,
       "stale": false,
-      "alert": "YELLOW",
+      "alert": "RED",
       "threshold": null,
       "direction": "inverse",
       "frequency": "daily",
-      "norm_mean": 203.3628,
-      "norm_std": 150.4262,
+      "norm_mean": 204.1188,
+      "norm_std": 151.4764,
       "history": [
         {
           "date": "2024-10-31",
@@ -1587,11 +1587,11 @@
         },
         {
           "date": "2026-08-31",
-          "value": 270.57
+          "value": 269.45
         },
         {
-          "date": "2026-09-03",
-          "value": 205.69
+          "date": "2026-09-07",
+          "value": 546.32
         }
       ]
     },
@@ -5322,11 +5322,11 @@
       "category": "macro",
       "description": "Euro area real GDP, chained 2010 EUR, ECB/Eurostat. Z-score normalized.",
       "weight": 0.17,
-      "latest_value": 2927347.4,
+      "latest_value": 2943716.9,
       "latest_date": "2026-04-01",
       "score": 15,
       "level_score": 0.1,
-      "momentum_score": 50,
+      "momentum_score": 49.9,
       "percentile_rank": 33,
       "anomaly": false,
       "stale": true,
@@ -5334,104 +5334,104 @@
       "threshold": null,
       "direction": "direct",
       "frequency": "quarterly",
-      "norm_mean": 2381619.0905,
-      "norm_std": 311787.0474,
+      "norm_mean": 2383842.8992,
+      "norm_std": 314465.8676,
       "history": [
         {
           "date": "2020-07-01",
-          "value": 2596916.7
+          "value": 2603201.7
         },
         {
           "date": "2020-10-01",
-          "value": 2604196.2
+          "value": 2609505.6
         },
         {
           "date": "2021-01-01",
-          "value": 2625551.5
+          "value": 2631792
         },
         {
           "date": "2021-04-01",
-          "value": 2682531.1
+          "value": 2688446.1
         },
         {
           "date": "2021-07-01",
-          "value": 2731240.5
+          "value": 2737709.2
         },
         {
           "date": "2021-10-01",
-          "value": 2751059.6
+          "value": 2757026.2
         },
         {
           "date": "2022-01-01",
-          "value": 2770829.7
+          "value": 2777643.1
         },
         {
           "date": "2022-04-01",
-          "value": 2797208.2
+          "value": 2803884.5
         },
         {
           "date": "2022-07-01",
-          "value": 2812085.1
+          "value": 2819054.7
         },
         {
           "date": "2022-10-01",
-          "value": 2810384.6
+          "value": 2817568.1
         },
         {
           "date": "2023-01-01",
-          "value": 2820963.6
+          "value": 2826246.7
         },
         {
           "date": "2023-04-01",
-          "value": 2827014.6
+          "value": 2832008.3
         },
         {
           "date": "2023-07-01",
-          "value": 2830824.1
+          "value": 2837185.5
         },
         {
           "date": "2023-10-01",
-          "value": 2831120.3
+          "value": 2837392.5
         },
         {
           "date": "2024-01-01",
-          "value": 2840811.4
+          "value": 2849620.1
         },
         {
           "date": "2024-04-01",
-          "value": 2846831.6
+          "value": 2856092
         },
         {
           "date": "2024-07-01",
-          "value": 2861111.2
+          "value": 2871409.4
         },
         {
           "date": "2024-10-01",
-          "value": 2869579.6
+          "value": 2880707.2
         },
         {
           "date": "2025-01-01",
-          "value": 2885901.5
+          "value": 2894822.3
         },
         {
           "date": "2025-04-01",
-          "value": 2885532.7
+          "value": 2895640.7
         },
         {
           "date": "2025-07-01",
-          "value": 2894547.1
+          "value": 2904592
         },
         {
           "date": "2025-10-01",
-          "value": 2900166.1
+          "value": 2911262.7
         },
         {
           "date": "2026-01-01",
-          "value": 2914427.3
+          "value": 2925200.5
         },
         {
           "date": "2026-04-01",
-          "value": 2927347.4
+          "value": 2943716.9
         }
       ]
     },
