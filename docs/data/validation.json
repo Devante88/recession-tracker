@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-11T15:23:07.803Z",
+  "generated_at": "2026-09-12T14:31:48.599Z",
   "yellow": {
     "flag_level": "YELLOW",
     "months": 40,
@@ -13,7 +13,7 @@
     "false_positive_rate": 1,
     "precision": 0,
     "avg_lead_months": null,
-    "brier": 0.21,
+    "brier": 0.2101,
     "confusion": {
       "tp": 0,
       "fp": 40,
@@ -35,7 +35,7 @@
     "false_positive_rate": 0,
     "precision": null,
     "avg_lead_months": null,
-    "brier": 0.21,
+    "brier": 0.2101,
     "confusion": {
       "tp": 0,
       "fp": 0,
