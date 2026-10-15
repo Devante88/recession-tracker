@@ -287,28 +287,28 @@
   },
   {
     "date": "2026-09-30",
-    "composite": 38.6,
+    "composite": 38.8,
     "alert": "YELLOW",
     "layers": {
       "financial_lead": 22.9,
-      "labor": 45.1,
+      "labor": 45.2,
       "inflation": 71.2,
       "real_economy": 39.8,
       "micro": 34.9,
-      "global": 22.4
+      "global": 24
     }
   },
   {
     "date": "2026-10-31",
-    "composite": 38.7,
+    "composite": 39.8,
     "alert": "YELLOW",
     "layers": {
-      "financial_lead": 23.9,
-      "labor": 44.9,
+      "financial_lead": 26.2,
+      "labor": 45,
       "inflation": 71.2,
-      "real_economy": 39.3,
+      "real_economy": 38.9,
       "micro": 34.9,
-      "global": 22.3
+      "global": 26.8
     }
   }
 ]
